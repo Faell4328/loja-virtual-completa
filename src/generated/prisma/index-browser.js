@@ -123,11 +123,14 @@ exports.Prisma.UserScalarFieldEnum = {
   email: 'email',
   password: 'password',
   phone: 'phone',
-  token: 'token',
-  tokenExpirationDate: 'tokenExpirationDate',
+  emailConfirmationToken: 'emailConfirmationToken',
+  emailConfirmationTokenExpirationDate: 'emailConfirmationTokenExpirationDate',
+  loginToken: 'loginToken',
+  loginTokenExpirationDate: 'loginTokenExpirationDate',
   resetPasswordToken: 'resetPasswordToken',
   resetPasswordTokenExpirationDate: 'resetPasswordTokenExpirationDate',
-  status: 'status'
+  status: 'status',
+  rule: 'rule'
 };
 
 exports.Prisma.AddressScalarFieldEnum = {
@@ -213,6 +216,11 @@ exports.UserStatus = exports.$Enums.UserStatus = {
   OK: 'OK',
   DEVENDO: 'DEVENDO',
   BLOCKED: 'BLOCKED'
+};
+
+exports.UserRule = exports.$Enums.UserRule = {
+  USER: 'USER',
+  ADMIN: 'ADMIN'
 };
 
 exports.StatusOrderItem = exports.$Enums.StatusOrderItem = {

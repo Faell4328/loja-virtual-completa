@@ -21,17 +21,25 @@ enum UserStatus {
   BLOCKED
 }
 
+enum UserRule {
+  USER
+  ADMIN
+}
+
 model User {
-  id                               String     @id @default(uuid())
-  name                             String
-  email                            String     @unique
-  password                         String
-  phone                            String?
-  token                            String?
-  tokenExpirationDate              DateTime?
-  resetPasswordToken               String?
-  resetPasswordTokenExpirationDate DateTime?
-  status                           UserStatus @default(PENDING_VALIDATION_EMAIL)
+  id                                   String     @id @default(uuid())
+  name                                 String
+  email                                String     @unique
+  password                             String
+  phone                                String?
+  emailConfirmationToken               String?
+  emailConfirmationTokenExpirationDate DateTime?
+  loginToken                           String?
+  loginTokenExpirationDate             DateTime?
+  resetPasswordToken                   String?
+  resetPasswordTokenExpirationDate     DateTime?
+  status                               UserStatus @default(PENDING_VALIDATION_EMAIL)
+  rule                                 UserRule   @default(USER)
 
   address   Address[]
   sale      Sale[]

@@ -73,6 +73,14 @@ export namespace $Enums {
 export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus]
 
 
+export const UserRule: {
+  USER: 'USER',
+  ADMIN: 'ADMIN'
+};
+
+export type UserRule = (typeof UserRule)[keyof typeof UserRule]
+
+
 export const StatusOrderItem: {
   CART: 'CART',
   ORDERED: 'ORDERED',
@@ -87,6 +95,10 @@ export type StatusOrderItem = (typeof StatusOrderItem)[keyof typeof StatusOrderI
 export type UserStatus = $Enums.UserStatus
 
 export const UserStatus: typeof $Enums.UserStatus
+
+export type UserRule = $Enums.UserRule
+
+export const UserRule: typeof $Enums.UserRule
 
 export type StatusOrderItem = $Enums.StatusOrderItem
 
@@ -1836,11 +1848,14 @@ export namespace Prisma {
     email: string | null
     password: string | null
     phone: string | null
-    token: string | null
-    tokenExpirationDate: Date | null
+    emailConfirmationToken: string | null
+    emailConfirmationTokenExpirationDate: Date | null
+    loginToken: string | null
+    loginTokenExpirationDate: Date | null
     resetPasswordToken: string | null
     resetPasswordTokenExpirationDate: Date | null
     status: $Enums.UserStatus | null
+    rule: $Enums.UserRule | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -1849,11 +1864,14 @@ export namespace Prisma {
     email: string | null
     password: string | null
     phone: string | null
-    token: string | null
-    tokenExpirationDate: Date | null
+    emailConfirmationToken: string | null
+    emailConfirmationTokenExpirationDate: Date | null
+    loginToken: string | null
+    loginTokenExpirationDate: Date | null
     resetPasswordToken: string | null
     resetPasswordTokenExpirationDate: Date | null
     status: $Enums.UserStatus | null
+    rule: $Enums.UserRule | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -1862,11 +1880,14 @@ export namespace Prisma {
     email: number
     password: number
     phone: number
-    token: number
-    tokenExpirationDate: number
+    emailConfirmationToken: number
+    emailConfirmationTokenExpirationDate: number
+    loginToken: number
+    loginTokenExpirationDate: number
     resetPasswordToken: number
     resetPasswordTokenExpirationDate: number
     status: number
+    rule: number
     _all: number
   }
 
@@ -1877,11 +1898,14 @@ export namespace Prisma {
     email?: true
     password?: true
     phone?: true
-    token?: true
-    tokenExpirationDate?: true
+    emailConfirmationToken?: true
+    emailConfirmationTokenExpirationDate?: true
+    loginToken?: true
+    loginTokenExpirationDate?: true
     resetPasswordToken?: true
     resetPasswordTokenExpirationDate?: true
     status?: true
+    rule?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -1890,11 +1914,14 @@ export namespace Prisma {
     email?: true
     password?: true
     phone?: true
-    token?: true
-    tokenExpirationDate?: true
+    emailConfirmationToken?: true
+    emailConfirmationTokenExpirationDate?: true
+    loginToken?: true
+    loginTokenExpirationDate?: true
     resetPasswordToken?: true
     resetPasswordTokenExpirationDate?: true
     status?: true
+    rule?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -1903,11 +1930,14 @@ export namespace Prisma {
     email?: true
     password?: true
     phone?: true
-    token?: true
-    tokenExpirationDate?: true
+    emailConfirmationToken?: true
+    emailConfirmationTokenExpirationDate?: true
+    loginToken?: true
+    loginTokenExpirationDate?: true
     resetPasswordToken?: true
     resetPasswordTokenExpirationDate?: true
     status?: true
+    rule?: true
     _all?: true
   }
 
@@ -1989,11 +2019,14 @@ export namespace Prisma {
     email: string
     password: string
     phone: string | null
-    token: string | null
-    tokenExpirationDate: Date | null
+    emailConfirmationToken: string | null
+    emailConfirmationTokenExpirationDate: Date | null
+    loginToken: string | null
+    loginTokenExpirationDate: Date | null
     resetPasswordToken: string | null
     resetPasswordTokenExpirationDate: Date | null
     status: $Enums.UserStatus
+    rule: $Enums.UserRule
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -2019,11 +2052,14 @@ export namespace Prisma {
     email?: boolean
     password?: boolean
     phone?: boolean
-    token?: boolean
-    tokenExpirationDate?: boolean
+    emailConfirmationToken?: boolean
+    emailConfirmationTokenExpirationDate?: boolean
+    loginToken?: boolean
+    loginTokenExpirationDate?: boolean
     resetPasswordToken?: boolean
     resetPasswordTokenExpirationDate?: boolean
     status?: boolean
+    rule?: boolean
     address?: boolean | User$addressArgs<ExtArgs>
     sale?: boolean | User$saleArgs<ExtArgs>
     OrderItem?: boolean | User$OrderItemArgs<ExtArgs>
@@ -2036,11 +2072,14 @@ export namespace Prisma {
     email?: boolean
     password?: boolean
     phone?: boolean
-    token?: boolean
-    tokenExpirationDate?: boolean
+    emailConfirmationToken?: boolean
+    emailConfirmationTokenExpirationDate?: boolean
+    loginToken?: boolean
+    loginTokenExpirationDate?: boolean
     resetPasswordToken?: boolean
     resetPasswordTokenExpirationDate?: boolean
     status?: boolean
+    rule?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -2049,11 +2088,14 @@ export namespace Prisma {
     email?: boolean
     password?: boolean
     phone?: boolean
-    token?: boolean
-    tokenExpirationDate?: boolean
+    emailConfirmationToken?: boolean
+    emailConfirmationTokenExpirationDate?: boolean
+    loginToken?: boolean
+    loginTokenExpirationDate?: boolean
     resetPasswordToken?: boolean
     resetPasswordTokenExpirationDate?: boolean
     status?: boolean
+    rule?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -2062,14 +2104,17 @@ export namespace Prisma {
     email?: boolean
     password?: boolean
     phone?: boolean
-    token?: boolean
-    tokenExpirationDate?: boolean
+    emailConfirmationToken?: boolean
+    emailConfirmationTokenExpirationDate?: boolean
+    loginToken?: boolean
+    loginTokenExpirationDate?: boolean
     resetPasswordToken?: boolean
     resetPasswordTokenExpirationDate?: boolean
     status?: boolean
+    rule?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "phone" | "token" | "tokenExpirationDate" | "resetPasswordToken" | "resetPasswordTokenExpirationDate" | "status", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "phone" | "emailConfirmationToken" | "emailConfirmationTokenExpirationDate" | "loginToken" | "loginTokenExpirationDate" | "resetPasswordToken" | "resetPasswordTokenExpirationDate" | "status" | "rule", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     address?: boolean | User$addressArgs<ExtArgs>
     sale?: boolean | User$saleArgs<ExtArgs>
@@ -2092,11 +2137,14 @@ export namespace Prisma {
       email: string
       password: string
       phone: string | null
-      token: string | null
-      tokenExpirationDate: Date | null
+      emailConfirmationToken: string | null
+      emailConfirmationTokenExpirationDate: Date | null
+      loginToken: string | null
+      loginTokenExpirationDate: Date | null
       resetPasswordToken: string | null
       resetPasswordTokenExpirationDate: Date | null
       status: $Enums.UserStatus
+      rule: $Enums.UserRule
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -2528,11 +2576,14 @@ export namespace Prisma {
     readonly email: FieldRef<"User", 'String'>
     readonly password: FieldRef<"User", 'String'>
     readonly phone: FieldRef<"User", 'String'>
-    readonly token: FieldRef<"User", 'String'>
-    readonly tokenExpirationDate: FieldRef<"User", 'DateTime'>
+    readonly emailConfirmationToken: FieldRef<"User", 'String'>
+    readonly emailConfirmationTokenExpirationDate: FieldRef<"User", 'DateTime'>
+    readonly loginToken: FieldRef<"User", 'String'>
+    readonly loginTokenExpirationDate: FieldRef<"User", 'DateTime'>
     readonly resetPasswordToken: FieldRef<"User", 'String'>
     readonly resetPasswordTokenExpirationDate: FieldRef<"User", 'DateTime'>
     readonly status: FieldRef<"User", 'UserStatus'>
+    readonly rule: FieldRef<"User", 'UserRule'>
   }
     
 
@@ -11773,11 +11824,14 @@ export namespace Prisma {
     email: 'email',
     password: 'password',
     phone: 'phone',
-    token: 'token',
-    tokenExpirationDate: 'tokenExpirationDate',
+    emailConfirmationToken: 'emailConfirmationToken',
+    emailConfirmationTokenExpirationDate: 'emailConfirmationTokenExpirationDate',
+    loginToken: 'loginToken',
+    loginTokenExpirationDate: 'loginTokenExpirationDate',
     resetPasswordToken: 'resetPasswordToken',
     resetPasswordTokenExpirationDate: 'resetPasswordTokenExpirationDate',
-    status: 'status'
+    status: 'status',
+    rule: 'rule'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -11943,6 +11997,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'UserRule'
+   */
+  export type EnumUserRuleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserRule'>
+    
+
+
+  /**
+   * Reference to a field of type 'UserRule[]'
+   */
+  export type ListEnumUserRuleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserRule[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -11996,11 +12064,14 @@ export namespace Prisma {
     email?: StringFilter<"User"> | string
     password?: StringFilter<"User"> | string
     phone?: StringNullableFilter<"User"> | string | null
-    token?: StringNullableFilter<"User"> | string | null
-    tokenExpirationDate?: DateTimeNullableFilter<"User"> | Date | string | null
+    emailConfirmationToken?: StringNullableFilter<"User"> | string | null
+    emailConfirmationTokenExpirationDate?: DateTimeNullableFilter<"User"> | Date | string | null
+    loginToken?: StringNullableFilter<"User"> | string | null
+    loginTokenExpirationDate?: DateTimeNullableFilter<"User"> | Date | string | null
     resetPasswordToken?: StringNullableFilter<"User"> | string | null
     resetPasswordTokenExpirationDate?: DateTimeNullableFilter<"User"> | Date | string | null
     status?: EnumUserStatusFilter<"User"> | $Enums.UserStatus
+    rule?: EnumUserRuleFilter<"User"> | $Enums.UserRule
     address?: AddressListRelationFilter
     sale?: SaleListRelationFilter
     OrderItem?: OrderItemListRelationFilter
@@ -12012,11 +12083,14 @@ export namespace Prisma {
     email?: SortOrder
     password?: SortOrder
     phone?: SortOrderInput | SortOrder
-    token?: SortOrderInput | SortOrder
-    tokenExpirationDate?: SortOrderInput | SortOrder
+    emailConfirmationToken?: SortOrderInput | SortOrder
+    emailConfirmationTokenExpirationDate?: SortOrderInput | SortOrder
+    loginToken?: SortOrderInput | SortOrder
+    loginTokenExpirationDate?: SortOrderInput | SortOrder
     resetPasswordToken?: SortOrderInput | SortOrder
     resetPasswordTokenExpirationDate?: SortOrderInput | SortOrder
     status?: SortOrder
+    rule?: SortOrder
     address?: AddressOrderByRelationAggregateInput
     sale?: SaleOrderByRelationAggregateInput
     OrderItem?: OrderItemOrderByRelationAggregateInput
@@ -12031,11 +12105,14 @@ export namespace Prisma {
     name?: StringFilter<"User"> | string
     password?: StringFilter<"User"> | string
     phone?: StringNullableFilter<"User"> | string | null
-    token?: StringNullableFilter<"User"> | string | null
-    tokenExpirationDate?: DateTimeNullableFilter<"User"> | Date | string | null
+    emailConfirmationToken?: StringNullableFilter<"User"> | string | null
+    emailConfirmationTokenExpirationDate?: DateTimeNullableFilter<"User"> | Date | string | null
+    loginToken?: StringNullableFilter<"User"> | string | null
+    loginTokenExpirationDate?: DateTimeNullableFilter<"User"> | Date | string | null
     resetPasswordToken?: StringNullableFilter<"User"> | string | null
     resetPasswordTokenExpirationDate?: DateTimeNullableFilter<"User"> | Date | string | null
     status?: EnumUserStatusFilter<"User"> | $Enums.UserStatus
+    rule?: EnumUserRuleFilter<"User"> | $Enums.UserRule
     address?: AddressListRelationFilter
     sale?: SaleListRelationFilter
     OrderItem?: OrderItemListRelationFilter
@@ -12047,11 +12124,14 @@ export namespace Prisma {
     email?: SortOrder
     password?: SortOrder
     phone?: SortOrderInput | SortOrder
-    token?: SortOrderInput | SortOrder
-    tokenExpirationDate?: SortOrderInput | SortOrder
+    emailConfirmationToken?: SortOrderInput | SortOrder
+    emailConfirmationTokenExpirationDate?: SortOrderInput | SortOrder
+    loginToken?: SortOrderInput | SortOrder
+    loginTokenExpirationDate?: SortOrderInput | SortOrder
     resetPasswordToken?: SortOrderInput | SortOrder
     resetPasswordTokenExpirationDate?: SortOrderInput | SortOrder
     status?: SortOrder
+    rule?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -12066,11 +12146,14 @@ export namespace Prisma {
     email?: StringWithAggregatesFilter<"User"> | string
     password?: StringWithAggregatesFilter<"User"> | string
     phone?: StringNullableWithAggregatesFilter<"User"> | string | null
-    token?: StringNullableWithAggregatesFilter<"User"> | string | null
-    tokenExpirationDate?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    emailConfirmationToken?: StringNullableWithAggregatesFilter<"User"> | string | null
+    emailConfirmationTokenExpirationDate?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    loginToken?: StringNullableWithAggregatesFilter<"User"> | string | null
+    loginTokenExpirationDate?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     resetPasswordToken?: StringNullableWithAggregatesFilter<"User"> | string | null
     resetPasswordTokenExpirationDate?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     status?: EnumUserStatusWithAggregatesFilter<"User"> | $Enums.UserStatus
+    rule?: EnumUserRuleWithAggregatesFilter<"User"> | $Enums.UserRule
   }
 
   export type AddressWhereInput = {
@@ -12548,11 +12631,14 @@ export namespace Prisma {
     email: string
     password: string
     phone?: string | null
-    token?: string | null
-    tokenExpirationDate?: Date | string | null
+    emailConfirmationToken?: string | null
+    emailConfirmationTokenExpirationDate?: Date | string | null
+    loginToken?: string | null
+    loginTokenExpirationDate?: Date | string | null
     resetPasswordToken?: string | null
     resetPasswordTokenExpirationDate?: Date | string | null
     status?: $Enums.UserStatus
+    rule?: $Enums.UserRule
     address?: AddressCreateNestedManyWithoutUserInput
     sale?: SaleCreateNestedManyWithoutUserInput
     OrderItem?: OrderItemCreateNestedManyWithoutUserInput
@@ -12564,11 +12650,14 @@ export namespace Prisma {
     email: string
     password: string
     phone?: string | null
-    token?: string | null
-    tokenExpirationDate?: Date | string | null
+    emailConfirmationToken?: string | null
+    emailConfirmationTokenExpirationDate?: Date | string | null
+    loginToken?: string | null
+    loginTokenExpirationDate?: Date | string | null
     resetPasswordToken?: string | null
     resetPasswordTokenExpirationDate?: Date | string | null
     status?: $Enums.UserStatus
+    rule?: $Enums.UserRule
     address?: AddressUncheckedCreateNestedManyWithoutUserInput
     sale?: SaleUncheckedCreateNestedManyWithoutUserInput
     OrderItem?: OrderItemUncheckedCreateNestedManyWithoutUserInput
@@ -12580,11 +12669,14 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
-    token?: NullableStringFieldUpdateOperationsInput | string | null
-    tokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailConfirmationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    emailConfirmationTokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    loginToken?: NullableStringFieldUpdateOperationsInput | string | null
+    loginTokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
     resetPasswordTokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    rule?: EnumUserRuleFieldUpdateOperationsInput | $Enums.UserRule
     address?: AddressUpdateManyWithoutUserNestedInput
     sale?: SaleUpdateManyWithoutUserNestedInput
     OrderItem?: OrderItemUpdateManyWithoutUserNestedInput
@@ -12596,11 +12688,14 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
-    token?: NullableStringFieldUpdateOperationsInput | string | null
-    tokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailConfirmationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    emailConfirmationTokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    loginToken?: NullableStringFieldUpdateOperationsInput | string | null
+    loginTokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
     resetPasswordTokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    rule?: EnumUserRuleFieldUpdateOperationsInput | $Enums.UserRule
     address?: AddressUncheckedUpdateManyWithoutUserNestedInput
     sale?: SaleUncheckedUpdateManyWithoutUserNestedInput
     OrderItem?: OrderItemUncheckedUpdateManyWithoutUserNestedInput
@@ -12612,11 +12707,14 @@ export namespace Prisma {
     email: string
     password: string
     phone?: string | null
-    token?: string | null
-    tokenExpirationDate?: Date | string | null
+    emailConfirmationToken?: string | null
+    emailConfirmationTokenExpirationDate?: Date | string | null
+    loginToken?: string | null
+    loginTokenExpirationDate?: Date | string | null
     resetPasswordToken?: string | null
     resetPasswordTokenExpirationDate?: Date | string | null
     status?: $Enums.UserStatus
+    rule?: $Enums.UserRule
   }
 
   export type UserUpdateManyMutationInput = {
@@ -12625,11 +12723,14 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
-    token?: NullableStringFieldUpdateOperationsInput | string | null
-    tokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailConfirmationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    emailConfirmationTokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    loginToken?: NullableStringFieldUpdateOperationsInput | string | null
+    loginTokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
     resetPasswordTokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    rule?: EnumUserRuleFieldUpdateOperationsInput | $Enums.UserRule
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -12638,11 +12739,14 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
-    token?: NullableStringFieldUpdateOperationsInput | string | null
-    tokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailConfirmationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    emailConfirmationTokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    loginToken?: NullableStringFieldUpdateOperationsInput | string | null
+    loginTokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
     resetPasswordTokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    rule?: EnumUserRuleFieldUpdateOperationsInput | $Enums.UserRule
   }
 
   export type AddressCreateInput = {
@@ -13156,6 +13260,13 @@ export namespace Prisma {
     not?: NestedEnumUserStatusFilter<$PrismaModel> | $Enums.UserStatus
   }
 
+  export type EnumUserRuleFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserRule | EnumUserRuleFieldRefInput<$PrismaModel>
+    in?: $Enums.UserRule[] | ListEnumUserRuleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.UserRule[] | ListEnumUserRuleFieldRefInput<$PrismaModel>
+    not?: NestedEnumUserRuleFilter<$PrismaModel> | $Enums.UserRule
+  }
+
   export type AddressListRelationFilter = {
     every?: AddressWhereInput
     some?: AddressWhereInput
@@ -13197,11 +13308,14 @@ export namespace Prisma {
     email?: SortOrder
     password?: SortOrder
     phone?: SortOrder
-    token?: SortOrder
-    tokenExpirationDate?: SortOrder
+    emailConfirmationToken?: SortOrder
+    emailConfirmationTokenExpirationDate?: SortOrder
+    loginToken?: SortOrder
+    loginTokenExpirationDate?: SortOrder
     resetPasswordToken?: SortOrder
     resetPasswordTokenExpirationDate?: SortOrder
     status?: SortOrder
+    rule?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -13210,11 +13324,14 @@ export namespace Prisma {
     email?: SortOrder
     password?: SortOrder
     phone?: SortOrder
-    token?: SortOrder
-    tokenExpirationDate?: SortOrder
+    emailConfirmationToken?: SortOrder
+    emailConfirmationTokenExpirationDate?: SortOrder
+    loginToken?: SortOrder
+    loginTokenExpirationDate?: SortOrder
     resetPasswordToken?: SortOrder
     resetPasswordTokenExpirationDate?: SortOrder
     status?: SortOrder
+    rule?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -13223,11 +13340,14 @@ export namespace Prisma {
     email?: SortOrder
     password?: SortOrder
     phone?: SortOrder
-    token?: SortOrder
-    tokenExpirationDate?: SortOrder
+    emailConfirmationToken?: SortOrder
+    emailConfirmationTokenExpirationDate?: SortOrder
+    loginToken?: SortOrder
+    loginTokenExpirationDate?: SortOrder
     resetPasswordToken?: SortOrder
     resetPasswordTokenExpirationDate?: SortOrder
     status?: SortOrder
+    rule?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -13288,6 +13408,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumUserStatusFilter<$PrismaModel>
     _max?: NestedEnumUserStatusFilter<$PrismaModel>
+  }
+
+  export type EnumUserRuleWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserRule | EnumUserRuleFieldRefInput<$PrismaModel>
+    in?: $Enums.UserRule[] | ListEnumUserRuleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.UserRule[] | ListEnumUserRuleFieldRefInput<$PrismaModel>
+    not?: NestedEnumUserRuleWithAggregatesFilter<$PrismaModel> | $Enums.UserRule
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumUserRuleFilter<$PrismaModel>
+    _max?: NestedEnumUserRuleFilter<$PrismaModel>
   }
 
   export type UserScalarRelationFilter = {
@@ -13723,6 +13853,10 @@ export namespace Prisma {
 
   export type EnumUserStatusFieldUpdateOperationsInput = {
     set?: $Enums.UserStatus
+  }
+
+  export type EnumUserRuleFieldUpdateOperationsInput = {
+    set?: $Enums.UserRule
   }
 
   export type AddressUpdateManyWithoutUserNestedInput = {
@@ -14259,6 +14393,13 @@ export namespace Prisma {
     not?: NestedEnumUserStatusFilter<$PrismaModel> | $Enums.UserStatus
   }
 
+  export type NestedEnumUserRuleFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserRule | EnumUserRuleFieldRefInput<$PrismaModel>
+    in?: $Enums.UserRule[] | ListEnumUserRuleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.UserRule[] | ListEnumUserRuleFieldRefInput<$PrismaModel>
+    not?: NestedEnumUserRuleFilter<$PrismaModel> | $Enums.UserRule
+  }
+
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -14337,6 +14478,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumUserStatusFilter<$PrismaModel>
     _max?: NestedEnumUserStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumUserRuleWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserRule | EnumUserRuleFieldRefInput<$PrismaModel>
+    in?: $Enums.UserRule[] | ListEnumUserRuleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.UserRule[] | ListEnumUserRuleFieldRefInput<$PrismaModel>
+    not?: NestedEnumUserRuleWithAggregatesFilter<$PrismaModel> | $Enums.UserRule
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumUserRuleFilter<$PrismaModel>
+    _max?: NestedEnumUserRuleFilter<$PrismaModel>
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -14611,11 +14762,14 @@ export namespace Prisma {
     email: string
     password: string
     phone?: string | null
-    token?: string | null
-    tokenExpirationDate?: Date | string | null
+    emailConfirmationToken?: string | null
+    emailConfirmationTokenExpirationDate?: Date | string | null
+    loginToken?: string | null
+    loginTokenExpirationDate?: Date | string | null
     resetPasswordToken?: string | null
     resetPasswordTokenExpirationDate?: Date | string | null
     status?: $Enums.UserStatus
+    rule?: $Enums.UserRule
     sale?: SaleCreateNestedManyWithoutUserInput
     OrderItem?: OrderItemCreateNestedManyWithoutUserInput
   }
@@ -14626,11 +14780,14 @@ export namespace Prisma {
     email: string
     password: string
     phone?: string | null
-    token?: string | null
-    tokenExpirationDate?: Date | string | null
+    emailConfirmationToken?: string | null
+    emailConfirmationTokenExpirationDate?: Date | string | null
+    loginToken?: string | null
+    loginTokenExpirationDate?: Date | string | null
     resetPasswordToken?: string | null
     resetPasswordTokenExpirationDate?: Date | string | null
     status?: $Enums.UserStatus
+    rule?: $Enums.UserRule
     sale?: SaleUncheckedCreateNestedManyWithoutUserInput
     OrderItem?: OrderItemUncheckedCreateNestedManyWithoutUserInput
   }
@@ -14657,11 +14814,14 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
-    token?: NullableStringFieldUpdateOperationsInput | string | null
-    tokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailConfirmationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    emailConfirmationTokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    loginToken?: NullableStringFieldUpdateOperationsInput | string | null
+    loginTokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
     resetPasswordTokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    rule?: EnumUserRuleFieldUpdateOperationsInput | $Enums.UserRule
     sale?: SaleUpdateManyWithoutUserNestedInput
     OrderItem?: OrderItemUpdateManyWithoutUserNestedInput
   }
@@ -14672,11 +14832,14 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
-    token?: NullableStringFieldUpdateOperationsInput | string | null
-    tokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailConfirmationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    emailConfirmationTokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    loginToken?: NullableStringFieldUpdateOperationsInput | string | null
+    loginTokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
     resetPasswordTokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    rule?: EnumUserRuleFieldUpdateOperationsInput | $Enums.UserRule
     sale?: SaleUncheckedUpdateManyWithoutUserNestedInput
     OrderItem?: OrderItemUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -15125,11 +15288,14 @@ export namespace Prisma {
     email: string
     password: string
     phone?: string | null
-    token?: string | null
-    tokenExpirationDate?: Date | string | null
+    emailConfirmationToken?: string | null
+    emailConfirmationTokenExpirationDate?: Date | string | null
+    loginToken?: string | null
+    loginTokenExpirationDate?: Date | string | null
     resetPasswordToken?: string | null
     resetPasswordTokenExpirationDate?: Date | string | null
     status?: $Enums.UserStatus
+    rule?: $Enums.UserRule
     address?: AddressCreateNestedManyWithoutUserInput
     OrderItem?: OrderItemCreateNestedManyWithoutUserInput
   }
@@ -15140,11 +15306,14 @@ export namespace Prisma {
     email: string
     password: string
     phone?: string | null
-    token?: string | null
-    tokenExpirationDate?: Date | string | null
+    emailConfirmationToken?: string | null
+    emailConfirmationTokenExpirationDate?: Date | string | null
+    loginToken?: string | null
+    loginTokenExpirationDate?: Date | string | null
     resetPasswordToken?: string | null
     resetPasswordTokenExpirationDate?: Date | string | null
     status?: $Enums.UserStatus
+    rule?: $Enums.UserRule
     address?: AddressUncheckedCreateNestedManyWithoutUserInput
     OrderItem?: OrderItemUncheckedCreateNestedManyWithoutUserInput
   }
@@ -15187,11 +15356,14 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
-    token?: NullableStringFieldUpdateOperationsInput | string | null
-    tokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailConfirmationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    emailConfirmationTokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    loginToken?: NullableStringFieldUpdateOperationsInput | string | null
+    loginTokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
     resetPasswordTokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    rule?: EnumUserRuleFieldUpdateOperationsInput | $Enums.UserRule
     address?: AddressUpdateManyWithoutUserNestedInput
     OrderItem?: OrderItemUpdateManyWithoutUserNestedInput
   }
@@ -15202,11 +15374,14 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
-    token?: NullableStringFieldUpdateOperationsInput | string | null
-    tokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailConfirmationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    emailConfirmationTokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    loginToken?: NullableStringFieldUpdateOperationsInput | string | null
+    loginTokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
     resetPasswordTokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    rule?: EnumUserRuleFieldUpdateOperationsInput | $Enums.UserRule
     address?: AddressUncheckedUpdateManyWithoutUserNestedInput
     OrderItem?: OrderItemUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -15217,11 +15392,14 @@ export namespace Prisma {
     email: string
     password: string
     phone?: string | null
-    token?: string | null
-    tokenExpirationDate?: Date | string | null
+    emailConfirmationToken?: string | null
+    emailConfirmationTokenExpirationDate?: Date | string | null
+    loginToken?: string | null
+    loginTokenExpirationDate?: Date | string | null
     resetPasswordToken?: string | null
     resetPasswordTokenExpirationDate?: Date | string | null
     status?: $Enums.UserStatus
+    rule?: $Enums.UserRule
     address?: AddressCreateNestedManyWithoutUserInput
     sale?: SaleCreateNestedManyWithoutUserInput
   }
@@ -15232,11 +15410,14 @@ export namespace Prisma {
     email: string
     password: string
     phone?: string | null
-    token?: string | null
-    tokenExpirationDate?: Date | string | null
+    emailConfirmationToken?: string | null
+    emailConfirmationTokenExpirationDate?: Date | string | null
+    loginToken?: string | null
+    loginTokenExpirationDate?: Date | string | null
     resetPasswordToken?: string | null
     resetPasswordTokenExpirationDate?: Date | string | null
     status?: $Enums.UserStatus
+    rule?: $Enums.UserRule
     address?: AddressUncheckedCreateNestedManyWithoutUserInput
     sale?: SaleUncheckedCreateNestedManyWithoutUserInput
   }
@@ -15330,11 +15511,14 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
-    token?: NullableStringFieldUpdateOperationsInput | string | null
-    tokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailConfirmationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    emailConfirmationTokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    loginToken?: NullableStringFieldUpdateOperationsInput | string | null
+    loginTokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
     resetPasswordTokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    rule?: EnumUserRuleFieldUpdateOperationsInput | $Enums.UserRule
     address?: AddressUpdateManyWithoutUserNestedInput
     sale?: SaleUpdateManyWithoutUserNestedInput
   }
@@ -15345,11 +15529,14 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
-    token?: NullableStringFieldUpdateOperationsInput | string | null
-    tokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailConfirmationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    emailConfirmationTokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    loginToken?: NullableStringFieldUpdateOperationsInput | string | null
+    loginTokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
     resetPasswordTokenExpirationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    rule?: EnumUserRuleFieldUpdateOperationsInput | $Enums.UserRule
     address?: AddressUncheckedUpdateManyWithoutUserNestedInput
     sale?: SaleUncheckedUpdateManyWithoutUserNestedInput
   }
