@@ -1,10 +1,21 @@
 import express from 'express';
+import { existsSync } from "fs";
+import { resolve } from 'path';
 
-import { router } from './router';
+import { router } from './routes/router';
+import { instalationRouter } from './routes/installation';
+import errorHandling from './middlewares/errorHandling';
 
 const app = express();
 
 app.use(express.json());
-app.use(router);
 
+if(existsSync(resolve(__dirname, '..', 'config.json')) === false){
+    app.use(instalationRouter);
+}
+else{
+    app.use(router);
+}
+
+app.use(errorHandling);
 app.listen(3000, ()=>console.log('rodando'))

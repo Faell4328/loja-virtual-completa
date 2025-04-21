@@ -1,4 +1,8 @@
+public/*
+prisma/migrations/
+src/generated/
 node_modules/
 dist/
 .env
 *.log
+*.json
