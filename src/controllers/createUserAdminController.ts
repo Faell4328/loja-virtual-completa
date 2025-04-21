@@ -4,7 +4,7 @@ import { resolve } from 'path';
 
 import createrUserAdminService from '../services/admin/createUserAdminService';
 
-export default async function createUserAdmin(req: Request, res: Response){
+export default async function createUserAdminController(req: Request, res: Response){
     if(!existsSync(resolve(__dirname, '..', '..', 'config.json'))){
         res.status(307).json({ 'redirect': '/instalacao/config' });
         return;

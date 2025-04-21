@@ -4,18 +4,18 @@ import { existsSync } from 'fs';
 import { resolve } from 'path';
 
 import uploadConfig from '../config/multer';
-import createUserAdmin from '../controllers/createUserAdminController';
-import configureSystem from '../controllers/configureSystemController';
+import createUserAdminController from '../controllers/createUserAdminController';
+import configureSystemController from '../controllers/configureSystemController';
 
 const instalationRouter = Router();
 const upload = multer(uploadConfig.upload());
 
 instalationRouter.post('/instalacao/admin', upload.none(), (req: Request, res: Response) => {
-    createUserAdmin(req, res);
+    createUserAdminController(req, res);
 })
 
 instalationRouter.post('/instalacao/config', upload.single('file') , (req: Request, res: Response) => {
-    configureSystem(req, res);
+    configureSystemController(req, res);
 })
 
 instalationRouter.use((req: Request, res: Response) => {

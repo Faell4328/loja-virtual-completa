@@ -4,7 +4,7 @@ import multer from 'multer';
 import uploadConfig from '../config/multer';
 import isAdmin from '../middlewares/isAdmin';
 
-import emailConfirmation from '../controllers/emailConfirmationController';
+import emailConfirmationController from '../controllers/emailConfirmationController';
 import registrerUserController from '../controllers/createUserController';
 import loginController from '../controllers/loginController';
 import isNotLogged from '../middlewares/isNotLogged';
@@ -25,7 +25,7 @@ router.get('/confirmacao', isNotLogged, (req: Request, res: Response) => {
 });
 
 router.get('/confirmacao/:hash', (req: Request, res: Response) => {
-    emailConfirmation(req, res);
+    emailConfirmationController(req, res);
     return;
 });
 
