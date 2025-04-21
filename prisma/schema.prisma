@@ -21,7 +21,7 @@ enum UserStatus {
   BLOCKED
 }
 
-enum UserRule {
+enum UserRole {
   USER
   ADMIN
 }
@@ -32,14 +32,14 @@ model User {
   email                                String     @unique
   password                             String
   phone                                String?
-  emailConfirmationToken               String?
+  emailConfirmationToken               String?    @unique
   emailConfirmationTokenExpirationDate DateTime?
-  loginToken                           String?
+  loginToken                           String?    @unique
   loginTokenExpirationDate             DateTime?
-  resetPasswordToken                   String?
+  resetPasswordToken                   String?    @unique
   resetPasswordTokenExpirationDate     DateTime?
   status                               UserStatus @default(PENDING_VALIDATION_EMAIL)
-  rule                                 UserRule   @default(USER)
+  role                                 UserRole   @default(USER)
 
   address   Address[]
   sale      Sale[]

@@ -1,22 +1,30 @@
 import { Router, Request, Response } from 'express';
 import multer from 'multer';
+import { existsSync } from 'fs';
+import { resolve } from 'path';
 
 import uploadConfig from '../config/multer';
-import InstallationSystem from '../controllers/installationSystem';
+import createUserAdmin from '../controllers/createUserAdminController';
+import configureSystem from '../controllers/configureSystemController';
 
 const instalationRouter = Router();
 const upload = multer(uploadConfig.upload());
 
 instalationRouter.post('/instalacao/admin', upload.none(), (req: Request, res: Response) => {
-    InstallationSystem.createUserAdmin(req, res);
+    createUserAdmin(req, res);
 })
 
 instalationRouter.post('/instalacao/config', upload.single('file') , (req: Request, res: Response) => {
-    InstallationSystem.configureSystem(req, res);
+    configureSystem(req, res);
 })
 
 instalationRouter.use((req: Request, res: Response) => {
-    InstallationSystem.routerDefault(req, res);
+    if(existsSync(resolve(__dirname, '..', '..', 'config.json'))){
+        res.status(307).json({ 'redirect': '/instalacao/admin' });
+    }
+    else{
+        res.status(307).json({ 'redirect': '/instalacao/config' });
+    }
 })
 
 export { instalationRouter };

@@ -4,14 +4,14 @@ import { resolve } from 'path';
 
 import { router } from './routes/router';
 import { instalationRouter } from './routes/installation';
+import errorHandling from './middlewares/errorHandling';
 
 const app = express();
 
 app.use(express.json());
+app.use(errorHandling);
 
-console.log(existsSync(resolve(__dirname, '..', '..', 'config.json')));
-
-if(existsSync(resolve(__dirname, '..', '..', 'config.json')) === false){
+if(existsSync(resolve(__dirname, '..', 'config.json')) === false){
     app.use(instalationRouter);
 }
 else{

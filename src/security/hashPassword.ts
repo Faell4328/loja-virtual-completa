@@ -1,4 +1,4 @@
-import { hash } from 'bcryptjs';
+import { hash, compare } from 'bcryptjs';
 
 export default class HashPassword{ 
     static async passwordHashGenerator(password: string){
@@ -6,9 +6,8 @@ export default class HashPassword{
         return passwordHash;
     }
 
-    static async checkHash(hashPassword: string){
-        let verificationStatus: boolean = true;
-        return verificationStatus;
+    static async checkHash(password: string, hashPassword: string){
+        return await compare(password, hashPassword);
     }
 
 }
