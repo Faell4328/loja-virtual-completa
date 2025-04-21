@@ -9,7 +9,6 @@ import errorHandling from './middlewares/errorHandling';
 const app = express();
 
 app.use(express.json());
-app.use(errorHandling);
 
 if(existsSync(resolve(__dirname, '..', 'config.json')) === false){
     app.use(instalationRouter);
@@ -18,4 +17,5 @@ else{
     app.use(router);
 }
 
+app.use(errorHandling);
 app.listen(3000, ()=>console.log('rodando'))

@@ -16,12 +16,12 @@ export default async function registrerUserController(req: Request, res: Respons
         res.status(400).json({ 'erro': 'Falta o password'});
     }
     else{
-        let retorno: boolean = await createUserService(name, email, password);
-        if(retorno){
+        let retorno: boolean|string = await createUserService(name, email, password);
+        if(retorno === true){
             res.status(200).json({ 'ok': 'Usuário cadastrado' });
         }
         else{
-            res.status(500).json({ 'erro': 'Erro ao cadastrar usuário' });
+            res.status(500).json({ 'erro': retorno});
         }
     }
 }

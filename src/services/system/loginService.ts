@@ -8,7 +8,11 @@ export default async function loginService(email: string, password: string){
         return false;
     }
 
-    const { password: hashPassword } = user[0];
+    const { emailConfirmationToken, password: hashPassword } = user[0];
+    if(emailConfirmationToken !== null){
+        return 'redirect';
+    }
+
     let retorno = await HashPassword.checkHash(password, hashPassword);
     if(!retorno){
         return false;

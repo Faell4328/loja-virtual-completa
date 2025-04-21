@@ -7,6 +7,8 @@ import isAdmin from '../middlewares/isAdmin';
 import emailConfirmation from '../controllers/emailConfirmationController';
 import registrerUserController from '../controllers/createUserController';
 import loginController from '../controllers/loginController';
+import isNotLogged from '../middlewares/isNotLogged';
+import isLogged from '../middlewares/isLogged';
 
 const router = Router();
 
@@ -17,22 +19,27 @@ router.get('/', (req: Request, res: Response) => {
     return;
 });
 
+router.get('/confirmacao', isNotLogged, (req: Request, res: Response) => {
+    res.send('Por favor, verifique o email que foi enviado para você com o link para ativação');
+    return;
+});
+
 router.get('/confirmacao/:hash', (req: Request, res: Response) => {
     emailConfirmation(req, res);
     return;
 });
 
-router.post('/login', upload.none(), (req: Request, res: Response) => {
+router.post('/login', isNotLogged, upload.none(), (req: Request, res: Response) => {
     loginController(req, res);
     return;
 });
 
-router.post('/admin', isAdmin, (req: Request, res: Response) => {
+router.post('/cadastrar', isNotLogged, upload.none(), (req: Request, res: Response) => {
+    registrerUserController(req, res);
     return;
 });
 
-router.post('/cadastrar', upload.none(),(req: Request, res: Response) => {
-    registrerUserController(req, res);
+router.post('/admin', isAdmin, (req: Request, res: Response) => {
     return;
 });
 

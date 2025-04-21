@@ -9,16 +9,23 @@ export default async function loginController(req: Request, res: Response){
         res.status(400).json({ 'erro': 'Falta o email'});
     }
     else if(!password){
-        res.status(400).json({ 'erro': 'Falta o password'});
+        res.status(400).json({ 'erro': 'Falta a senha'});
     }
     else{
-        const retorno: boolean = await loginService(email, password);
-        if(!retorno){
+        const retorno: boolean|string = await loginService(email, password);
+        if(retorno === false){
             res.status(400).json({ 'erro': 'Email ou senha incorreto' });
             return;
         }
+        else if(retorno === true){
+            res.status(200).json({ 'ok': 'Login realizado' })
+            return;
+        }
+        else{
+            res.status(307).json({ 'redirect': '/confirmacao' });
+            return;
+        }
         
-        res.send('Logado');
         return;
     }
 }

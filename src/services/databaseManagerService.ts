@@ -34,13 +34,18 @@ export default class DatabaseManager{
     }
 
     static async createUser(name: string, email: string, hashPassword: string){
-        const user = await prismaClient.user.create({
-            data: {name, email, password: hashPassword}
-        })
+        try{
+            const user = await prismaClient.user.create({
+                data: {name, email, password: hashPassword}
+            })
 
-        if(!user) console.log('erro ao salvar');
-        await this.createEmailToken({ email, hashPassword });
-        return;
+            if(!user) console.log('erro ao salvar');
+            await this.createEmailToken({ email, hashPassword });
+            return;
+        }
+        catch(error){
+            console.log(error);
+        }
     }
 
     static async createEmailToken({ email, hashPassword }: CreateEmailTokenProps){
@@ -95,5 +100,17 @@ export default class DatabaseManager{
             where: { email }
         });
         return user;
+    }
+
+    static async checkEmailExists(email: string){
+        let user = await prismaClient.user.findUnique({
+            where: { email },
+            select: { email: true }
+        });
+
+        if(user === null){
+            return true;
+        } 
+        return false;
     }
 }

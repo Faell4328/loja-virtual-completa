@@ -2,29 +2,27 @@ import { Request, Response, NextFunction } from 'express';
 
 import DatabaseManager from '../services/databaseManagerService';
 
-export default async function isAdmin(req: Request, res: Response, next: NextFunction){
+export default async function isNotLogged(req: Request, res: Response, next: NextFunction){
     if(req.headers['token'] === undefined){
-        res.send('Não autorizado');
+        next();
         return;
     }
 
     let user = await DatabaseManager.validateToken(req.headers['token'] as string);
 
-    if(user.length == 0){
-        res.send('Não autorizado');
-        return;
+    if(user.length === 0){
+        next();
+        return
     }
 
     const { loginToken, loginTokenExpirationDate, role } = user[0];
 
     if(loginTokenExpirationDate === null || loginTokenExpirationDate < new Date()){
-        res.send('Token vencido, faça login');
-    }
-    else if(role !== 'ADMIN'){
-        res.send('Você não tem permissão');
+        next();
+        return
     }
 
-    res.send('Liberado');
+    res.status(307).json({ 'redirect': '/' });
     console.log(user[0])
     return;
 }
