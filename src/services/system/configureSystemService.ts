@@ -1,11 +1,8 @@
-import { Request, Response } from 'express';
 import { unlink, existsSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
 import DatabaseManager from '../databaseManagerService';
 
-export default async function configureSystemService(req: Request, res: Response){
-    const name = req.body.name;
-    const file = req.file;
+export default async function configureSystemService(name: string, file: Express.Multer.File){
 
     if(existsSync(resolve(__dirname, '..', '..', '..', 'config.json'))){
         if(file !== undefined){
@@ -13,21 +10,9 @@ export default async function configureSystemService(req: Request, res: Response
                 if(err) console.log('erro')
             })
         }
-        res.status(307).json({ 'redirect': '/instalacao/admin' });
-        return;
+        return true;
     }
 
-    if(!file){
-        res.status(400).json({ 'erro': 'Falta o arquivo' });
-        return;
-    }
-    else if(!name){
-        unlink(resolve(file.path), (err) => {
-            if(err) console.log('erro')
-        })
-        res.status(400).json({ 'erro': 'Falta o nome' });
-        return;
-    }
 
     let data = new Date();
 
@@ -41,6 +26,5 @@ export default async function configureSystemService(req: Request, res: Response
 
     DatabaseManager.addSystemConfiguration(name, file.path);
 
-    res.status(307).json({ 'redirect' : '/instalacao/admin' });
-    return;
+    return true;
 }

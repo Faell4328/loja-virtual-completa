@@ -1,4 +1,3 @@
-import emailConfirmation from "../controllers/emailConfirmationController";
 import prismaClient from "../prisma";
 import crypto from 'crypto';
 
