@@ -33,6 +33,6 @@ export default async function createUserAdminController(req: Request, res: Respo
     await createrUserAdminService(name, email, password);
 
     res.status(307).json({ 'redirect': '/confirmacao' });
-    //setTimeout( () => process.exit(0), 5000);
+    setTimeout( () => process.exit(0), 5000);
     return;
 }

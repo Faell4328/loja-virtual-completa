@@ -61,7 +61,7 @@ export default class DatabaseManager{
     }
 
     static async checkEmailToken(hash :string){
-        let user = await prismaClient.user.findMany({
+        let user = await prismaClient.user.findUnique({
             where: { emailConfirmationToken: hash }
         });
         return user;
