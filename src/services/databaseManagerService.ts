@@ -1,4 +1,3 @@
-import emailConfirmation from "../controllers/emailConfirmationController";
 import prismaClient from "../prisma";
 import crypto from 'crypto';
 
@@ -29,7 +28,6 @@ export default class DatabaseManager{
         })
 
         if(!userAdmin) console.log('erro ao salvar');
-        await this.createEmailToken({ email, hashPassword });
         return;
     }
 
@@ -40,7 +38,6 @@ export default class DatabaseManager{
             })
 
             if(!user) console.log('erro ao salvar');
-            await this.createEmailToken({ email, hashPassword });
             return;
         }
         catch(error){
@@ -62,7 +59,7 @@ export default class DatabaseManager{
     }
 
     static async checkEmailToken(hash :string){
-        let user = await prismaClient.user.findMany({
+        let user = await prismaClient.user.findUnique({
             where: { emailConfirmationToken: hash }
         });
         return user;
@@ -90,13 +87,13 @@ export default class DatabaseManager{
     }
 
     static async validateToken(token: string){
-        return await prismaClient.user.findMany({
+        return await prismaClient.user.findUnique({
             where: { loginToken: token }
         });
     }
 
     static async consultByEmail(email: string){
-        let user = await prismaClient.user.findMany({
+        let user = await prismaClient.user.findUnique({
             where: { email }
         });
         return user;

@@ -4,12 +4,12 @@ import DatabaseManager from "../databaseManagerService";
 export default async function loginService(email: string, password: string){
     let user = await DatabaseManager.consultByEmail(email);
 
-    if(user.length === 0){
+    if(!user){
         return false;
     }
 
-    const { emailConfirmationToken, password: hashPassword } = user[0];
-    if(emailConfirmationToken !== null){
+    const { emailConfirmationToken, password: hashPassword } = user;
+    if(emailConfirmationToken){
         return 'redirect';
     }
 

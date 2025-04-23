@@ -10,21 +10,22 @@ export default async function isAdmin(req: Request, res: Response, next: NextFun
 
     let user = await DatabaseManager.validateToken(req.headers['token'] as string);
 
-    if(user.length == 0){
+    if(!user){
         res.send('Não autorizado');
         return;
     }
 
-    const { loginToken, loginTokenExpirationDate, role } = user[0];
+    const { loginTokenExpirationDate, role } = user;
 
     if(loginTokenExpirationDate === null || loginTokenExpirationDate < new Date()){
         res.send('Token vencido, faça login');
+        return;
     }
     else if(role !== 'ADMIN'){
         res.send('Você não tem permissão');
+        return;
     }
 
     res.send('Liberado');
-    console.log(user[0])
     return;
 }

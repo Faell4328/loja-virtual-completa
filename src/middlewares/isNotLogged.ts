@@ -3,26 +3,25 @@ import { Request, Response, NextFunction } from 'express';
 import DatabaseManager from '../services/databaseManagerService';
 
 export default async function isNotLogged(req: Request, res: Response, next: NextFunction){
-    if(req.headers['token'] === undefined){
+    if(!req.headers['token']){
         next();
         return;
     }
 
     let user = await DatabaseManager.validateToken(req.headers['token'] as string);
 
-    if(user.length === 0){
+    if(!user){
         next();
-        return
+        return;
     }
 
-    const { loginToken, loginTokenExpirationDate, role } = user[0];
+    const { loginTokenExpirationDate } = user;
 
     if(loginTokenExpirationDate === null || loginTokenExpirationDate < new Date()){
         next();
-        return
+        return;
     }
 
     res.status(307).json({ 'redirect': '/' });
-    console.log(user[0])
     return;
 }
