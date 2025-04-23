@@ -10,20 +10,20 @@ export default async function createUserAdminController(req: Request, res: Respo
         return;
     }
 
-    if(req.body == undefined){
+    if(req.body === undefined){
         res.status(400).json({ 'erro': 'Não foi enviado nada na requisição' });
         return;
     }
 
-    if(req.body.name === undefined){
+    if(!req.body.name){
         res.status(400).json({ 'erro': 'Falta o nome'});
         return
     }
-    else if(req.body.email === undefined){
+    else if(!req.body.email){
         res.status(400).json({ 'erro': 'Falta o email'});
         return;
     }
-    else if(req.body.password === undefined){
+    else if(!req.body.password){
         res.status(400).json({ 'erro': 'Falta a senha'});
         return;
     }
@@ -33,6 +33,6 @@ export default async function createUserAdminController(req: Request, res: Respo
     await createrUserAdminService(name, email, password);
 
     res.status(307).json({ 'redirect': '/confirmacao' });
-    setTimeout( () => process.exit(0), 5000);
+    //setTimeout( () => process.exit(0), 5000);
     return;
 }

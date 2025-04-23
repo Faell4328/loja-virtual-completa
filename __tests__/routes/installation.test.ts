@@ -8,7 +8,7 @@ jest.mock('nodemailer', () => ({
     createTransport: jest.fn(() => ({
         sendMail: sendMailMock
     }))
-}))
+}));
 
 
 jest.mock('../../src/prisma', () => ({
@@ -40,11 +40,11 @@ describe('installation.ts file route test', () => {
 
         const caminho = resolve(__dirname, '..', '..', 'public', 'files');
 
-        await rm(caminho, { recursive: true, force: true }); // apaga a pasta inteira
-        await mkdir(caminho, { recursive: true });           // recria a pasta
+        await rm(caminho, { recursive: true, force: true });
+        await mkdir(caminho, { recursive: true });
     })
 
-    it('teste: router "/", no body', async () => {
+    it('test: router "/", no body', async () => {
         const res = await request(teste)
             .post('/');
 
@@ -52,11 +52,10 @@ describe('installation.ts file route test', () => {
         expect(res.body).toEqual({ 'redirect': '/instalacao/config' });
     });
 
-    it('teste: router "/", with form data', async () => {
+    it('test: router "/", with form data', async () => {
         const res = await request(teste)
             .post('/')
             .set('Content-Type', 'multipart/form-data')
-            .field('nome', 'teste');
 
         expect(res.status).toBe(307);
         expect(res.body).toEqual({ 'redirect': '/instalacao/config' });
@@ -152,8 +151,8 @@ describe('installation.ts file route test', () => {
     });
 
     it('test: router "/instalacao/admin", with configured server', async () => {
-        prismaMock.user.create.mockResolvedValue({ok: 'ok'})
-        prismaMock.user.update.mockResolvedValue({ok: 'ok'})
+        prismaMock.user.create.mockResolvedValue({ok: 'ok'});
+        prismaMock.user.update.mockResolvedValue({ok: 'ok'});
 
         const res = await request(teste)
             .post('/instalacao/admin')

@@ -24,7 +24,7 @@ router.get('/confirmacao', isNotLogged, (req: Request, res: Response) => {
     return;
 });
 
-router.get('/confirmacao/:hash', (req: Request, res: Response) => {
+router.get('/confirmacao/:hash', isNotLogged, (req: Request, res: Response) => {
     emailConfirmationController(req, res);
     return;
 });

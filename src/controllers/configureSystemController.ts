@@ -15,7 +15,7 @@ export default async function configureSystemController(req: Request, res: Respo
         res.status(400).json({ 'erro': 'Falta o arquivo' });
         return;
     }
-    else if(req.body.name === undefined){
+    else if(!req.body.name){
         unlink(resolve(req.file.path), (err) => {
             if(err) console.log('erro')
         })
