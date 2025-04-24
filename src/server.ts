@@ -5,6 +5,7 @@ import { resolve } from 'path';
 import { router } from './routes/router';
 import { instalationRouter } from './routes/installation';
 import errorHandling from './middlewares/errorHandling';
+import sanitize from './security/sanitizeHTML';
 
 const app = express();
 

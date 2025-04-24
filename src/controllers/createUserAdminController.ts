@@ -3,6 +3,7 @@ import { existsSync } from 'fs';
 import { resolve } from 'path';
 
 import createrUserAdminService from '../services/admin/createUserAdminService';
+import sanitize from '../security/sanitizeHTML';
 
 export default async function createUserAdminController(req: Request, res: Response){
     if(!existsSync(resolve(__dirname, '..', '..', 'config.json'))){
@@ -28,7 +29,9 @@ export default async function createUserAdminController(req: Request, res: Respo
         return;
     }
     
-    const { name, email, password } = req.body;
+    const name = sanitize(req.body.name);
+    const email = sanitize(req.body.email);
+    const password = sanitize(req.body.password);
 
     await createrUserAdminService(name, email, password);
 

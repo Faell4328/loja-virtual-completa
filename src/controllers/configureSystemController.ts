@@ -3,6 +3,7 @@ import { unlink } from 'fs';
 import { resolve } from 'path';
 
 import configureSystemService from '../services/system/configureSystemService';
+import sanitize from '../security/sanitizeHTML';
 
 export default async function configureSystemController(req: Request, res: Response){
 
@@ -23,7 +24,7 @@ export default async function configureSystemController(req: Request, res: Respo
         return;
     }
 
-    const name = req.body.name;
+    const name = sanitize(req.body.name);
     const file = req.file;
 
     const status:boolean = await configureSystemService(name, file);

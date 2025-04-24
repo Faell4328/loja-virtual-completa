@@ -40,6 +40,8 @@ model User {
   resetPasswordTokenExpirationDate     DateTime?
   status                               UserStatus @default(PENDING_VALIDATION_EMAIL)
   role                                 UserRole   @default(USER)
+  creationDate DateTime @default(now())
+  updateDate DateTime?
 
   address   Address[]
   sale      Sale[]
@@ -56,6 +58,8 @@ model Address {
   state        String
   country      String
   complement   String?
+  creationDate DateTime @default(now())
+  updateDate DateTime?
 
   user User @relation(fields: [usersId], references: [id])
 }
@@ -63,6 +67,8 @@ model Address {
 model Category {
   id   String @id @default(uuid())
   name String
+  creationDate DateTime @default(now())
+  updateDate DateTime?
 
   product Product[]
 }
@@ -75,6 +81,8 @@ model Product {
   categoryId     String
   description    String?
   mainImage      String
+  creationDate DateTime @default(now())
+  updateDate DateTime?
 
   size          ProductSize[]
   imagesProduct ImagesProduct[]
@@ -88,6 +96,8 @@ model ProductSize {
   size      String
   quantity  Int
   productId String
+  creationDate DateTime @default(now())
+  updateDate DateTime?
 
   OrderItem OrderItem[]
 
@@ -98,6 +108,8 @@ model ImagesProduct {
   id        String @id @default(uuid())
   imageUrl  String
   productId String
+  creationDate DateTime @default(now())
+  updateDate DateTime?
 
   product Product @relation(fields: [productId], references: [id])
 }
@@ -106,7 +118,8 @@ model Sale {
   id            String   @id @default(uuid())
   userId        String
   paymentMethod String?
-  createAt      DateTime @default(now())
+  creationDate DateTime @default(now())
+  updateDate DateTime?
 
   orderItem OrderItem[]
 
@@ -128,6 +141,8 @@ model OrderItem {
   amount        Int
   saleId        String?
   status        StatusOrderItem @default(CART)
+  creationDate DateTime @default(now())
+  updateDate DateTime?
 
   user        User        @relation(fields: [userId], references: [id])
   product     Product     @relation(fields: [productId], references: [id])
@@ -139,5 +154,6 @@ model SystemConfig {
   id           Int      @id @default(1)
   nameStore    String
   fileSoon     String
-  CreationDate DateTime @default(now())
+  creationDate DateTime @default(now())
+  updateDate DateTime?
 }

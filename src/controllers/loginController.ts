@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 
 import loginService from '../services/system/loginService';
+import sanitize from '../security/sanitizeHTML';
 
 export default async function loginController(req: Request, res: Response){
 
@@ -17,7 +18,8 @@ export default async function loginController(req: Request, res: Response){
         return;
     }
     else{
-        const { email, password } = req.body;
+        const email = sanitize(req.body.email);
+        const password = sanitize(req.body.password);
         
         const retorno: boolean|string = await loginService(email, password);
         if(retorno === false){
