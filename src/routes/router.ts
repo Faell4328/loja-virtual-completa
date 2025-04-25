@@ -9,6 +9,8 @@ import registrerUserController from '../controllers/createUserController';
 import loginController from '../controllers/loginController';
 import isNotLogged from '../middlewares/isNotLogged';
 import isLogged from '../middlewares/isLogged';
+import { validateLogin, validateRegister } from '../middlewares/validatorInput';
+import { loginLimit, emailConfirmationLimit } from '../security/requestLimit';
 
 const router = Router();
 
@@ -24,17 +26,17 @@ router.get('/confirmacao', isNotLogged, (req: Request, res: Response) => {
     return;
 });
 
-router.get('/confirmacao/:hash', isNotLogged, (req: Request, res: Response) => {
+router.get('/confirmacao/:hash', emailConfirmationLimit, isNotLogged, (req: Request, res: Response) => {
     emailConfirmationController(req, res);
     return;
 });
 
-router.post('/login', isNotLogged, upload.none(), (req: Request, res: Response) => {
+router.post('/login', loginLimit, isNotLogged, upload.none(), validateLogin, (req: Request, res: Response) => {
     loginController(req, res);
     return;
 });
 
-router.post('/cadastrar', isNotLogged, upload.none(), (req: Request, res: Response) => {
+router.post('/cadastrar', isNotLogged, upload.none(), validateRegister, (req: Request, res: Response) => {
     registrerUserController(req, res);
     return;
 });

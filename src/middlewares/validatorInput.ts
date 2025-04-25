@@ -29,3 +29,13 @@ export const validateRegister = [
         .notEmpty().withMessage('Falta a senha')
         .isLength({ min: 8 }).withMessage('A senha deve ter no mínimo 8 caracteres')
 ]
+
+export const validateLogin = [
+    body('email')
+        .notEmpty().withMessage('Falta o email')
+        .normalizeEmail()
+        .isEmail().withMessage('Email invalido'),
+
+    body('password')
+        .notEmpty().withMessage('Falta a senha')
+]

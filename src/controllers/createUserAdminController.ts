@@ -12,7 +12,7 @@ export default async function createUserAdminController(req: Request, res: Respo
         return;
     }
 
-    const errors = validationResult(req);
+    const errors:any = validationResult(req);
 
     if(!errors.isEmpty()){
         return res.status(400).json({ 'erro': errors.errors[0].msg });
