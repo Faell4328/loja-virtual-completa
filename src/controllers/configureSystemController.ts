@@ -1,31 +1,29 @@
 import { Request, Response } from 'express';
 import { unlink } from 'fs';
 import { resolve } from 'path';
+import { validationResult } from 'express-validator';
 
 import configureSystemService from '../services/system/configureSystemService';
-import sanitize from '../security/sanitizeHTML';
 
 export default async function configureSystemController(req: Request, res: Response){
 
-    if(req.body === undefined){
-        res.status(400).json({ 'erro': 'Não foi enviado nada na requisição' });
-        return;
+    const errors:any = validationResult(req);
+
+    if(!errors.isEmpty()){
+        if(errors.errors[0].msg === 'Falta o nome' && req.file !== undefined){
+            unlink(resolve(req.file.path), (err) => {
+                if(err) console.log('erro')
+            })
+        }
+        return res.status(401).json({ 'erro': errors.errors[0].msg });
     }
 
-    if(req.file === undefined){
-        res.status(400).json({ 'erro': 'Falta o arquivo' });
-        return;
-    }
-    else if(!req.body.name){
-        unlink(resolve(req.file.path), (err) => {
-            if(err) console.log('erro')
-        })
-        res.status(400).json({ 'erro': 'Falta o nome' });
-        return;
-    }
-
-    const name = sanitize(req.body.name);
+    const name = req.body.name;
     const file = req.file;
+
+    if(file === undefined){
+        return res.status(401).json({ 'erro': 'Falta o arquivo' });
+    }
 
     const status:boolean = await configureSystemService(name, file);
 

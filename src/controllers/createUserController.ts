@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 
 import createUserService from '../services/user/createUserService';
-import sanitize from '../security/sanitizeHTML';
 
 export default async function registrerUserController(req: Request, res: Response){
 
@@ -22,9 +21,9 @@ export default async function registrerUserController(req: Request, res: Respons
         return;
     }
     else{
-        const name = sanitize(req.body.name);
-        const email = sanitize(req.body.email);
-        const password = sanitize(req.body.password);
+        const name = req.body.name;
+        const email = req.body.email;
+        const password = req.body.password;
 
         let retorno: boolean|string = await createUserService(name, email, password);
         if(retorno === true){
