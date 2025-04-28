@@ -19,7 +19,7 @@ interface LoginProps{
 export default class DatabaseManager{
 
     static async addSystemConfiguration(nameStore: string, fileSoon: string){
-        await prismaClient.systemConfig.create({ data: { nameStore, fileSoon, CreationDate: new Date() } })
+        await prismaClient.systemConfig.create({ data: { nameStore, fileSoon, creationDate: new Date() } })
     }
 
     static async createUserAdmin({ name, email, hashPassword }: AddingInformationSystemProps){

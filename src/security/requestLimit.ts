@@ -7,7 +7,7 @@ export const emailConfirmationLimit = rateLimit({
 })
 
 export const loginLimit = rateLimit({
-    windowMs: 5 * 60 * 1000,
+    windowMs: 10 * 60 * 1000,
     max: 10,
-    message: { erro: 'Você excedeu o limite de tentativas, tente novamente em 5 minutos' }
+    message: { erro: 'Você excedeu o limite de tentativas, tente novamente em 10 minutos' }
 });

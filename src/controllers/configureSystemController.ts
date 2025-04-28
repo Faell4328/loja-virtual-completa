@@ -15,14 +15,14 @@ export default async function configureSystemController(req: Request, res: Respo
                 if(err) console.log('erro')
             })
         }
-        return res.status(401).json({ 'erro': errors.errors[0].msg });
+        return res.status(400).json({ 'erro': errors.errors[0].msg });
     }
 
     const name = req.body.name;
     const file = req.file;
 
     if(file === undefined){
-        return res.status(401).json({ 'erro': 'Falta o arquivo' });
+        return res.status(400).json({ 'erro': 'Falta o arquivo' });
     }
 
     const status:boolean = await configureSystemService(name, file);
