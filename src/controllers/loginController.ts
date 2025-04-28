@@ -1,36 +1,29 @@
 import { Request, Response } from 'express';
 
 import loginService from '../services/system/loginService';
+import { validationResult } from 'express-validator';
 
 export default async function loginController(req: Request, res: Response){
 
-    if(req.body === undefined){
-        res.status(400).json({ 'erro': 'Não foi enviado formulário'});
+    const errors:any = validationResult(req);
+
+    if(!errors.isEmpty()){
+        return res.status(400).json({ 'erro': errors.errors[0].msg });
+    }
+
+    const { email, password } = req.body
+    
+    const retorno: boolean|string = await loginService(email, password);
+    if(retorno === false){
+        res.status(400).json({ 'erro': 'Email ou senha incorreto' });
         return;
     }
-    else if(!req.body.email){
-        res.status(400).json({ 'erro': 'Falta o email'});
-        return;
-    }
-    else if(!req.body.password){
-        res.status(400).json({ 'erro': 'Falta a senha'});
+    else if(retorno === true){
+        res.status(200).json({ 'ok': 'Login realizado' })
         return;
     }
     else{
-        const { email, password } = req.body;
-        
-        const retorno: boolean|string = await loginService(email, password);
-        if(retorno === false){
-            res.status(400).json({ 'erro': 'Email ou senha incorreto' });
-            return;
-        }
-        else if(retorno === true){
-            res.status(200).json({ 'ok': 'Login realizado' })
-            return;
-        }
-        else{
-            res.status(307).json({ 'redirect': '/confirmacao' });
-            return;
-        }
+        res.status(307).json({ 'redirect': '/confirmacao' });
+        return;
     }
 }

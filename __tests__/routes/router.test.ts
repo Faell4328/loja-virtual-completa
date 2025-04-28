@@ -29,7 +29,7 @@ import { teste } from '../../src/teste';
 
 const prismaMock = prismaClient as any;
 
-describe('installation.ts file route test', () => {
+describe('router.ts file route test', () => {
     afterAll(async () => {
         await unlink(resolve(__dirname, '..', '..', 'config.json'));
 
@@ -174,7 +174,7 @@ describe('installation.ts file route test', () => {
             .post('/cadastrar')
 
         expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'erro': 'Não foi enviado formulário'});
+        expect(res.body).toEqual({ 'erro': 'Falta o nome'});
     });
 
     it('test: route "/cadastrar", send only the name (empty value)', async () => {
@@ -216,7 +216,7 @@ describe('installation.ts file route test', () => {
             .set('Content-Type', 'multipart/form-data')
             .field('name', 'Faell')
             .field('email', 'teste@email.com')
-            .field('password', '123');
+            .field('password', '123456789');
 
         expect(res.status).toBe(400);
         expect(res.body).toEqual({ 'erro': 'Email já existe'});
@@ -233,7 +233,7 @@ describe('installation.ts file route test', () => {
             .set('Content-Type', 'multipart/form-data')
             .field('name', 'Faell')
             .field('email', 'teste@email.com')
-            .field('password', '123');
+            .field('password', '123456789');
 
         expect(res.status).toBe(200);
         expect(res.body).toEqual({ 'ok': 'Usuário cadastrado' });
@@ -244,7 +244,7 @@ describe('installation.ts file route test', () => {
             .post('/login')
 
         expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'erro': 'Não foi enviado formulário'});
+        expect(res.body).toEqual({ 'erro': 'Falta o email'});
     });
 
     it('test: route "/login", send only the email (empty value)', async () => {
@@ -274,7 +274,7 @@ describe('installation.ts file route test', () => {
             .post('/login')
             .set('Content-Type', 'multipart/form-data')
             .field('email', 'teste@email.com')
-            .field('password', '123');
+            .field('password', '123456789');
 
         expect(res.status).toBe(400);
         expect(res.body).toEqual({ 'erro': 'Email ou senha incorreto' });
@@ -287,7 +287,7 @@ describe('installation.ts file route test', () => {
             .post('/login')
             .set('Content-Type', 'multipart/form-data')
             .field('email', 'teste@email.com')
-            .field('password', '123');
+            .field('password', '123456789');
 
         expect(res.status).toBe(400);
         expect(res.body).toEqual({ 'erro': 'Email ou senha incorreto' });
@@ -300,7 +300,7 @@ describe('installation.ts file route test', () => {
             .post('/login')
             .set('Content-Type', 'multipart/form-data')
             .field('email', 'teste@email.com')
-            .field('password', '123');
+            .field('password', '123456789');
 
         expect(res.status).toBe(307);
         expect(res.body).toEqual({ 'redirect': '/confirmacao' });
@@ -315,10 +315,10 @@ describe('installation.ts file route test', () => {
             .post('/login')
             .set('Content-Type', 'multipart/form-data')
             .field('email', 'teste@email.com')
-            .field('password', '123');
+            .field('password', '123456789');
 
-        expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'erro': 'Email ou senha incorreto' });
+        expect(res.status).toBe(200);
+        expect(res.body).toEqual({ 'ok': 'Login realizado' });
     })
 
     it('test: route "/login", account with email confirmation (the account exists)', async () => {
@@ -346,7 +346,7 @@ describe('installation.ts file route test', () => {
             .set('token', '123')
 
         expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'erro': 'Não foi enviado formulário' });
+        expect(res.body).toEqual({ 'erro': 'Falta o nome' });
     });
 
     it('test: route "/cadastrar", accessing the route while logged in (with unexpired token)', async () => {
@@ -374,7 +374,7 @@ describe('installation.ts file route test', () => {
             .set('token', '123');
 
         expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'erro': 'Não foi enviado formulário' });
+        expect(res.body).toEqual({ 'erro': 'Falta o email' });
     });
 
     it('test: route "/login", accessing the route while logged in (with unexpired token)', async () => {
@@ -445,5 +445,62 @@ describe('installation.ts file route test', () => {
 
         expect(res.status).toBe(200);
         expect(res.text).toBe('Token vencido, faça login');
+    });
+
+
+    // Test input
+
+    it('test: route "/login", brute force', async () => {
+        const res = await request(teste)
+            .post('/login')
+            .set('Content-Type', 'multipart/form-data')
+            .field('name', 'a');
+
+        expect(res.status).toBe(429);
+        expect(res.body).toEqual({ 'erro': 'Você excedeu o limite de tentativas, tente novamente em 10 minutos'});
+    });
+
+    it('test: route "/cadastrar", with invalid name', async () => {
+        const res = await request(teste)
+            .post('/cadastrar')
+            .set('Content-Type', 'multipart/form-data')
+            .field('name', 'a');
+
+        expect(res.status).toBe(400);
+        expect(res.body).toEqual({ 'erro': 'Nome precisa ter mais que 2 caracteres'});
+    });
+
+    it('test: route "/cadastrar", with invalid email - part 1', async () => {
+        const res = await request(teste)
+            .post('/cadastrar')
+            .set('Content-Type', 'multipart/form-data')
+            .field('name', 'Faell')
+            .field('email', 'teste@email');
+
+        expect(res.status).toBe(400);
+        expect(res.body).toEqual({ 'erro': 'Email invalido'});
+    });
+
+    it('test: route "/cadastrar", with invalid email - part 2', async () => {
+        const res = await request(teste)
+            .post('/cadastrar')
+            .set('Content-Type', 'multipart/form-data')
+            .field('name', 'Faell')
+            .field('email', 'testeemail.com');
+
+        expect(res.status).toBe(400);
+        expect(res.body).toEqual({ 'erro': 'Email invalido'});
+    });
+
+    it('test: route "/cadastrar", with weak password', async () => {
+        const res = await request(teste)
+            .post('/cadastrar')
+            .set('Content-Type', 'multipart/form-data')
+            .field('name', 'Faell')
+            .field('email', 'teste@email.com')
+            .field('password', '123');
+
+        expect(res.status).toBe(400);
+        expect(res.body).toEqual({ 'erro': 'A senha deve ter no mínimo 8 caracteres'});
     });
 });

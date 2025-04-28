@@ -26,6 +26,6 @@ export default async function isAdmin(req: Request, res: Response, next: NextFun
         return;
     }
 
-    res.send('Liberado');
+    next();
     return;
 }
