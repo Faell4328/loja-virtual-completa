@@ -1,15 +1,20 @@
 import express from 'express';
 import { existsSync } from "fs";
 import { resolve } from 'path';
+import cors from 'cors';
 
 import { router } from './routes/router';
 import { instalationRouter } from './routes/installation';
 import errorHandling from './middlewares/errorHandling';
-import sanitize from './security/sanitizeHTML';
+import acceptedMethod from './security/acceptedMethods';
 
 const app = express();
 
 app.use(express.json());
+app.use(cors({
+    methods: ['GET', 'POST', 'PULL', 'DELETE']
+}));
+app.use(acceptedMethod);
 
 if(existsSync(resolve(__dirname, '..', 'config.json')) === false){
     app.use(instalationRouter);
