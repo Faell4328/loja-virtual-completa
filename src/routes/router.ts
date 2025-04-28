@@ -2,13 +2,10 @@ import { Router, Request, Response } from 'express';
 import multer from 'multer';
 
 import uploadConfig from '../config/multer';
-import isAdmin from '../middlewares/isAdmin';
-
 import emailConfirmationController from '../controllers/emailConfirmationController';
 import registrerUserController from '../controllers/createUserController';
 import loginController from '../controllers/loginController';
 import isNotLogged from '../middlewares/isNotLogged';
-import isLogged from '../middlewares/isLogged';
 import { validateLogin, validateRegister } from '../middlewares/validatorInput';
 import { loginLimit, emailConfirmationLimit } from '../security/requestLimit';
 
@@ -38,10 +35,6 @@ router.post('/login', loginLimit, isNotLogged, upload.none(), validateLogin, (re
 
 router.post('/cadastrar', isNotLogged, upload.none(), validateRegister, (req: Request, res: Response) => {
     registrerUserController(req, res);
-    return;
-});
-
-router.post('/admin', isAdmin, (req: Request, res: Response) => {
     return;
 });
 
