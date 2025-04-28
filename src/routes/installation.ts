@@ -9,7 +9,7 @@ import configureSystemController from '../controllers/configureSystemController'
 import { validateRegister, validateSystemConfig } from '../middlewares/validatorInput';
 
 const instalationRouter = Router();
-const upload = multer(uploadConfig.upload());
+const upload = multer(uploadConfig.upload(true));
 
 instalationRouter.post('/instalacao/admin', upload.none(), validateRegister, (req: Request, res: Response) => {
     createUserAdminController(req, res);
