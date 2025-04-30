@@ -7,11 +7,6 @@ interface AddingInformationSystemProps{
     hashPassword: string
 }
 
-interface CreateEmailTokenProps{
-    email: string,
-    hashPassword: string
-}
-
 interface LoginProps{
     email: string,
     hashPassword: string
@@ -45,13 +40,13 @@ export default class DatabaseManager{
         }
     }
 
-    static async createEmailToken({ email, hashPassword }: CreateEmailTokenProps){
+    static async createEmailToken(email: string){
         const date = new Date();
         date.setHours(date.getHours() + 1);
         let hash = crypto.randomBytes(64).toString('hex');
         const createEmailToken = await prismaClient.user.update({
-            where: { email, password: hashPassword },
-            data: { emailConfirmationToken: hash, emailConfirmationTokenExpirationDate: date }
+            where: { email },
+            data: { emailConfirmationToken: hash, emailConfirmationTokenExpirationDate: date },
         });
 
         if(!createEmailToken) console.log('erro ao criar o token de login');

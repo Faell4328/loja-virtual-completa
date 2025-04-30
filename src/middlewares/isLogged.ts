@@ -8,14 +8,14 @@ export default async function isLogged(req: Request, res: Response, next: NextFu
         return;
     }
 
-    let user = await DatabaseManager.validateToken(req.cookies['token'] as string);
+    let user = await DatabaseManager.validateToken(req.cookies['token']);
 
     if(!user){
         res.status(307).json({ 'redirect': '/' });
         return;
     }
 
-    const { loginToken, loginTokenExpirationDate, role } = user;
+    const { loginTokenExpirationDate } = user;
 
     if(loginTokenExpirationDate === null || loginTokenExpirationDate < new Date()){
         res.status(307).json({ 'redirect': '/' });

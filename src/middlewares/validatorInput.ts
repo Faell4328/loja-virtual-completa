@@ -43,3 +43,11 @@ export const validateLogin = [
     body('password')
         .notEmpty().withMessage('Falta a senha')
 ]
+
+export const validateEmail = [
+    body('email')
+        .notEmpty().withMessage('Falta o email')
+        .normalizeEmail()
+        .isEmail().withMessage('Email invalido')
+        .isLength({ max: 100 }).withMessage('O email deve ter no máximo 100 caracteres')
+]

@@ -6,8 +6,9 @@ import emailConfirmationController from '../controllers/emailConfirmationControl
 import registrerUserController from '../controllers/createUserController';
 import loginController from '../controllers/loginController';
 import isNotLogged from '../middlewares/isNotLogged';
-import { validateLogin, validateRegister } from '../middlewares/validatorInput';
-import { loginLimit, emailConfirmationLimit } from '../security/requestLimit';
+import { validateEmail, validateLogin, validateRegister } from '../middlewares/validatorInput';
+import { loginLimit, emailConfirmationLimit, emailForwardingLimit } from '../security/requestLimit';
+import resendEmailController from '../controllers/resendEmailController';
 
 const router = Router();
 
@@ -24,18 +25,17 @@ router.get('/confirmacao', isNotLogged, (req: Request, res: Response) => {
 });
 
 // A pessoa deve enviar o email que ela gostaria que fosse reenviado o link de ativação de email na conta
-router.post('/confirmacao', isNotLogged, (req: Request, res: Response) => {
-    //emailForwarding(req, res);
-    res.send('Rota em desenvolvimento')
+router.post('/confirmacao', isNotLogged, emailForwardingLimit, upload.none(), validateEmail, (req: Request, res: Response) => {
+    resendEmailController(req, res);
     return;
 });
 
-router.get('/confirmacao/:hash', emailConfirmationLimit, isNotLogged, (req: Request, res: Response) => {
+router.get('/confirmacao/:hash', isNotLogged, emailConfirmationLimit, (req: Request, res: Response) => {
     emailConfirmationController(req, res);
     return;
 });
 
-router.post('/login', loginLimit, isNotLogged, upload.none(), validateLogin, (req: Request, res: Response) => {
+router.post('/login', isNotLogged, loginLimit, upload.none(), validateLogin, (req: Request, res: Response) => {
     loginController(req, res);
     return;
 });
