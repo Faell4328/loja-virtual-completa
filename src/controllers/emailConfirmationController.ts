@@ -1,9 +1,16 @@
 import { Request, Response } from 'express';
 
 import checkEmailService from '../services/email/checkEmailService';
+import Cookie from '../services/cookie';
+
+interface serviceReturnProps{
+    status: string;
+    token: string | null;
+    expiration: Date | null
+}
 
 export default async function emailConfirmationController(req: Request, res: Response){
-    const serviceReturn = await checkEmailService(req.params.hash);
+    const serviceReturn:string | serviceReturnProps = await checkEmailService(req.params.hash);
 
     if(typeof(serviceReturn) === 'string'){
         res.send(serviceReturn);
@@ -16,13 +23,7 @@ export default async function emailConfirmationController(req: Request, res: Res
         return;
     }
 
-    res.cookie('token', serviceReturn.token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
-        expires: serviceReturn.expiration as Date
-    });
-
+    Cookie.setCookie(res, serviceReturn.token, serviceReturn.expiration);
     res.send(serviceReturn.status);
     return;
 }

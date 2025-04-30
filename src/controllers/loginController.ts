@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 
 import loginService from '../services/system/loginService';
 import { validationResult } from 'express-validator';
+import Cookie from '../services/cookie';
 
 interface serviceReturnProps{
     status: boolean;
@@ -33,13 +34,7 @@ export default async function loginController(req: Request, res: Response){
             return;
         }
 
-        res.cookie('token', serviceReturn.token, {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'strict',
-            expires: serviceReturn.expiration
-        })
-
+        Cookie.setCookie(res, serviceReturn.token, serviceReturn.expiration);
         res.status(200).json({ 'ok': 'Login realizado' });
         return;
     }
