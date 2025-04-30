@@ -2,6 +2,7 @@ import express from 'express';
 import { existsSync } from "fs";
 import { resolve } from 'path';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 import { router } from './routes/router';
 import { routerUser } from './routes/user';
@@ -17,6 +18,7 @@ app.use(cors({
     methods: ['GET', 'POST', 'PULL', 'DELETE']
 }));
 app.use(acceptedMethod);
+app.use(cookieParser());
 
 if(existsSync(resolve(__dirname, '..', 'config.json')) === false){
     app.use(instalationRouter);

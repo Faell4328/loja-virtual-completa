@@ -23,6 +23,13 @@ router.get('/confirmacao', isNotLogged, (req: Request, res: Response) => {
     return;
 });
 
+// A pessoa deve enviar o email que ela gostaria que fosse reenviado o link de ativação de email na conta
+router.post('/confirmacao', isNotLogged, (req: Request, res: Response) => {
+    //emailForwarding(req, res);
+    res.send('Rota em desenvolvimento')
+    return;
+});
+
 router.get('/confirmacao/:hash', emailConfirmationLimit, isNotLogged, (req: Request, res: Response) => {
     emailConfirmationController(req, res);
     return;

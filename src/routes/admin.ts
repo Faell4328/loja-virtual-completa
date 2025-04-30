@@ -8,8 +8,8 @@ const routerAdmin = Router();
 
 const upload = multer(uploadConfig.upload());
 
-routerAdmin.post('/admin', isAdmin, (req: Request, res: Response) => {
-    res.send('rota admin, deve estar logado e ter permissão de admin');
+routerAdmin.get('/admin', isAdmin, (req: Request, res: Response) => {
+    res.send('Você tem acesso a rota admin, é necessário estar logado como admin');
     return;
 });
 

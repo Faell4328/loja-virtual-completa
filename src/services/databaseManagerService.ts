@@ -79,11 +79,12 @@ export default class DatabaseManager{
         let hash = crypto.randomBytes(64).toString('hex');
         const createLoginToken = await prismaClient.user.update({
             where: { email, password: hashPassword },
-            data: { loginToken: hash, loginTokenExpirationDate: date }
+            data: { loginToken: hash, loginTokenExpirationDate: date },
+            select: { loginToken: true, loginTokenExpirationDate: true }
         });
 
         if(!createLoginToken) console.log('erro ao criar o token de login');
-        return hash;
+        return createLoginToken;
     }
 
     static async validateToken(token: string){
