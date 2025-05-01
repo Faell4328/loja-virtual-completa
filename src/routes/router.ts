@@ -7,7 +7,7 @@ import registrerUserController from '../controllers/createUserController';
 import loginController from '../controllers/loginController';
 import isNotLogged from '../middlewares/isNotLogged';
 import { validateEmail, validateLogin, validatePassword, validateRegister } from '../middlewares/validatorInput';
-import { loginLimit, emailConfirmationLimit, emailForwardingLimit } from '../security/requestLimit';
+import { loginLimit, emailConfirmationLimit, resendEmailLimit } from '../security/requestLimit';
 import resendEmailController from '../controllers/resendEmailController';
 import passwordRecoveryController from '../controllers/passwordRecoveryController';
 import passwordConfirmationController from '../controllers/passwordConfirmationController';
@@ -27,7 +27,7 @@ router.get('/confirmacao', isNotLogged, (req: Request, res: Response) => {
 });
 
 // A pessoa deve enviar o email que ela gostaria que fosse reenviado o link de ativação de email na conta
-router.post('/confirmacao', isNotLogged, emailForwardingLimit, upload.none(), validateEmail, (req: Request, res: Response) => {
+router.post('/confirmacao', isNotLogged, resendEmailLimit, upload.none(), validateEmail, (req: Request, res: Response) => {
     resendEmailController(req, res);
     return;
 });

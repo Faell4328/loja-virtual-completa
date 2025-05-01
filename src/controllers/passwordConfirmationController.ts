@@ -19,6 +19,6 @@ export default async function passwordConfirmationController(req: Request, res: 
 
     const serviceReturn = await passwordConfirmationService(req.params.hash, password1);
 
-    res.send(serviceReturn);
+    res.status(200).json({ 'ok': serviceReturn });
     return;
 }

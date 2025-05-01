@@ -30,7 +30,7 @@ export default async function loginController(req: Request, res: Response){
 
         // !!Add function for log record, this is error!!
         if(serviceReturn.token == null || serviceReturn.expiration == null){
-            res.status(200).json({ 'ok': 'Login realizado' });
+            res.status(500).json({ 'erro': 'Não foi possível fazer login, por favor, encontre em contato com o suporte' });
             return;
         }
 
