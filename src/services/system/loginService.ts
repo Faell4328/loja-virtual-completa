@@ -18,6 +18,7 @@ export default async function loginService(email: string, password: string){
         return false;
     }
 
-    DatabaseManager.login({ email, hashPassword });
-    return true;
+    const returnDB = await DatabaseManager.login({ email, hashPassword });
+
+    return {status: true, token: returnDB.loginToken, expiration: returnDB.loginTokenExpirationDate };
 }

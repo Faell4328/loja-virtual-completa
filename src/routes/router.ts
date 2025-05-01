@@ -6,8 +6,11 @@ import emailConfirmationController from '../controllers/emailConfirmationControl
 import registrerUserController from '../controllers/createUserController';
 import loginController from '../controllers/loginController';
 import isNotLogged from '../middlewares/isNotLogged';
-import { validateLogin, validateRegister } from '../middlewares/validatorInput';
-import { loginLimit, emailConfirmationLimit } from '../security/requestLimit';
+import { validateEmail, validateLogin, validatePassword, validateRegister } from '../middlewares/validatorInput';
+import { loginLimit, emailConfirmationLimit, resendEmailLimit } from '../security/requestLimit';
+import resendEmailController from '../controllers/resendEmailController';
+import passwordRecoveryController from '../controllers/passwordRecoveryController';
+import passwordConfirmationController from '../controllers/passwordConfirmationController';
 
 const router = Router();
 
@@ -23,12 +26,18 @@ router.get('/confirmacao', isNotLogged, (req: Request, res: Response) => {
     return;
 });
 
-router.get('/confirmacao/:hash', emailConfirmationLimit, isNotLogged, (req: Request, res: Response) => {
+// A pessoa deve enviar o email que ela gostaria que fosse reenviado o link de ativação de email na conta
+router.post('/confirmacao', isNotLogged, resendEmailLimit, upload.none(), validateEmail, (req: Request, res: Response) => {
+    resendEmailController(req, res);
+    return;
+});
+
+router.get('/confirmacao/:hash', isNotLogged, emailConfirmationLimit, (req: Request, res: Response) => {
     emailConfirmationController(req, res);
     return;
 });
 
-router.post('/login', loginLimit, isNotLogged, upload.none(), validateLogin, (req: Request, res: Response) => {
+router.post('/login', isNotLogged, loginLimit, upload.none(), validateLogin, (req: Request, res: Response) => {
     loginController(req, res);
     return;
 });
@@ -37,6 +46,16 @@ router.post('/cadastrar', isNotLogged, upload.none(), validateRegister, (req: Re
     registrerUserController(req, res);
     return;
 });
+
+router.post('/recuperacao/senha', isNotLogged, upload.none(), validateEmail, (req: Request, res: Response) => {
+    passwordRecoveryController(req, res);
+    return;
+});
+
+router.post('/recuperacao/senha/:hash', isNotLogged, upload.none(), validatePassword, (req: Request, res: Response) => {
+    passwordConfirmationController(req, res);
+    return;
+})
 
 router.use((req: Request, res: Response) => {
     res.status(404).json({"error": "not found"});

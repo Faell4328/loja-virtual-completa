@@ -6,6 +6,6 @@ export default async function createrUserAdminService(name: string, email: strin
     let hashPassword:string = await HashPassword.passwordHashGenerator(password);
     await DatabaseManager.createUserAdmin({ name, email, hashPassword });
 
-    let hashEmail = await DatabaseManager.createEmailToken({ email, hashPassword });
+    let hashEmail = await DatabaseManager.createEmailToken(email);
     sendEmail.sendEmailConfirmationService(email, hashEmail);
 }

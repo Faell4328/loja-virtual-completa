@@ -10,7 +10,7 @@ export default async function createUserService(name: string, email: string, pas
     let hashPassword:string = await HashPassword.passwordHashGenerator(password);
     await DatabaseManager.createUser(name, email, hashPassword);
 
-    let hashEmail = await DatabaseManager.createEmailToken({ email, hashPassword });
+    let hashEmail = await DatabaseManager.createEmailToken(email);
     sendEmail.sendEmailConfirmationService(email, hashEmail);
 
     return true;

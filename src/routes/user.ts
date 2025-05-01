@@ -8,8 +8,8 @@ const routerUser = Router();
 
 const upload = multer(uploadConfig.upload());
 
-routerUser.post('/usuario', isLogged, (req: Request, res: Response) => {
-    res.send('rota usuário, deve estar logado');
+routerUser.get('/usuario', isLogged, (req: Request, res: Response) => {
+    res.send('Você tem acesso a rota usuário, é necessário estar logado como usuário ou admin');
     return;
 });
 

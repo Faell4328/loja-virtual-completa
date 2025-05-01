@@ -9,7 +9,7 @@ export default async function checkEmailService(hash: string){
     const { email, password: hashPassword, emailConfirmationTokenExpirationDate, status } = user;
 
     if(emailConfirmationTokenExpirationDate === null || emailConfirmationTokenExpirationDate < new Date()){
-        let hashEmail = await DatabaseManager.createEmailToken({ email, hashPassword });
+        let hashEmail = await DatabaseManager.createEmailToken(email);
         sendEmail.sendEmailConfirmationService(email, hashEmail);
         return 'Token expirado, foi enviado para seu email um novo token';
     }
@@ -17,7 +17,7 @@ export default async function checkEmailService(hash: string){
     if(status === null || status !== 'PENDING_VALIDATION_EMAIL' ) return 'Email já validado';
 
     DatabaseManager.tokenEmailConfirmed(user.id);
-    DatabaseManager.login({ email, hashPassword })
+    const returnDB = await DatabaseManager.login({ email, hashPassword });
 
-    return 'Email válidado'
+    return { status: 'Email válidado', token: returnDB.loginToken, expiration: returnDB.loginTokenExpirationDate };
 }

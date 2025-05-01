@@ -2,6 +2,13 @@ import { Request, Response } from 'express';
 
 import loginService from '../services/system/loginService';
 import { validationResult } from 'express-validator';
+import Cookie from '../services/cookie';
+
+interface serviceReturnProps{
+    status: boolean;
+    token: string | null;
+    expiration: Date | null
+}
 
 export default async function loginController(req: Request, res: Response){
 
@@ -13,13 +20,22 @@ export default async function loginController(req: Request, res: Response){
 
     const { email, password } = req.body
     
-    const retorno: boolean|string = await loginService(email, password);
-    if(retorno === false){
+    const serviceReturn: boolean|string|serviceReturnProps = await loginService(email, password);
+
+    if(serviceReturn === false){
         res.status(400).json({ 'erro': 'Email ou senha incorreto' });
         return;
     }
-    else if(retorno === true){
-        res.status(200).json({ 'ok': 'Login realizado' })
+    else if(typeof(serviceReturn) == 'object'){
+
+        // !!Add function for log record, this is error!!
+        if(serviceReturn.token == null || serviceReturn.expiration == null){
+            res.status(500).json({ 'erro': 'Não foi possível fazer login, por favor, encontre em contato com o suporte' });
+            return;
+        }
+
+        Cookie.setCookie(res, serviceReturn.token, serviceReturn.expiration);
+        res.status(200).json({ 'ok': 'Login realizado' });
         return;
     }
     else{

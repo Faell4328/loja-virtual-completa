@@ -7,11 +7,6 @@ interface AddingInformationSystemProps{
     hashPassword: string
 }
 
-interface CreateEmailTokenProps{
-    email: string,
-    hashPassword: string
-}
-
 interface LoginProps{
     email: string,
     hashPassword: string
@@ -45,13 +40,13 @@ export default class DatabaseManager{
         }
     }
 
-    static async createEmailToken({ email, hashPassword }: CreateEmailTokenProps){
+    static async createEmailToken(email: string){
         const date = new Date();
         date.setHours(date.getHours() + 1);
         let hash = crypto.randomBytes(64).toString('hex');
         const createEmailToken = await prismaClient.user.update({
-            where: { email, password: hashPassword },
-            data: { emailConfirmationToken: hash, emailConfirmationTokenExpirationDate: date }
+            where: { email },
+            data: { emailConfirmationToken: hash, emailConfirmationTokenExpirationDate: date },
         });
 
         if(!createEmailToken) console.log('erro ao criar o token de login');
@@ -68,7 +63,23 @@ export default class DatabaseManager{
     static async tokenEmailConfirmed(userId: string){
         await prismaClient.user.update({
             where: { id: userId,},
-            data: {  emailConfirmationToken:null, emailConfirmationTokenExpirationDate: null, status: 'OK' }
+            data: { emailConfirmationToken:null, emailConfirmationTokenExpirationDate: null, status: 'OK' }
+        });
+        return true;
+    }
+
+    static async checkPasswordRecovery(hash: string){
+        let user = await prismaClient.user.findUnique({
+            where: { resetPasswordToken: hash }
+        });
+
+        return user;
+    }
+
+    static async passwordRecoveryConfirmed(userId: string, newHashPassword: string){
+        await prismaClient.user.update({
+            where: { id: userId,},
+            data: { password: newHashPassword, resetPasswordToken:null, resetPasswordTokenExpirationDate:null }
         });
         return true;
     }
@@ -79,11 +90,12 @@ export default class DatabaseManager{
         let hash = crypto.randomBytes(64).toString('hex');
         const createLoginToken = await prismaClient.user.update({
             where: { email, password: hashPassword },
-            data: { loginToken: hash, loginTokenExpirationDate: date }
+            data: { loginToken: hash, loginTokenExpirationDate: date },
+            select: { loginToken: true, loginTokenExpirationDate: true }
         });
 
         if(!createLoginToken) console.log('erro ao criar o token de login');
-        return hash;
+        return createLoginToken;
     }
 
     static async validateToken(token: string){
@@ -109,5 +121,20 @@ export default class DatabaseManager{
             return true;
         } 
         return false;
+    }
+
+    static async passwordRecovery(email: string){
+        const date = new Date();
+        date.setMinutes(date.getMinutes() + 30);
+        let hash = crypto.randomBytes(64).toString('hex');
+
+        let token = await prismaClient.user.update({
+            where: { email },
+            data: { resetPasswordToken: hash, resetPasswordTokenExpirationDate: date },
+            select: { resetPasswordToken: true }
+        })
+
+        if(!token) console.log('erro ao criar o token de login');
+        return hash;
     }
 }
