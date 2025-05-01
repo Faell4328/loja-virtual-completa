@@ -63,7 +63,23 @@ export default class DatabaseManager{
     static async tokenEmailConfirmed(userId: string){
         await prismaClient.user.update({
             where: { id: userId,},
-            data: {  emailConfirmationToken:null, emailConfirmationTokenExpirationDate: null, status: 'OK' }
+            data: { emailConfirmationToken:null, emailConfirmationTokenExpirationDate: null, status: 'OK' }
+        });
+        return true;
+    }
+
+    static async checkPasswordRecovery(hash: string){
+        let user = await prismaClient.user.findUnique({
+            where: { resetPasswordToken: hash }
+        });
+
+        return user;
+    }
+
+    static async passwordRecoveryConfirmed(userId: string, newHashPassword: string){
+        await prismaClient.user.update({
+            where: { id: userId,},
+            data: { password: newHashPassword, resetPasswordToken:null, resetPasswordTokenExpirationDate:null }
         });
         return true;
     }
@@ -105,5 +121,20 @@ export default class DatabaseManager{
             return true;
         } 
         return false;
+    }
+
+    static async passwordRecovery(email: string){
+        const date = new Date();
+        date.setMinutes(date.getMinutes() + 30);
+        let hash = crypto.randomBytes(64).toString('hex');
+
+        let token = await prismaClient.user.update({
+            where: { email },
+            data: { resetPasswordToken: hash, resetPasswordTokenExpirationDate: date },
+            select: { resetPasswordToken: true }
+        })
+
+        if(!token) console.log('erro ao criar o token de login');
+        return hash;
     }
 }

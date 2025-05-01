@@ -9,7 +9,7 @@ export default async function checkEmailService(hash: string){
     const { email, password: hashPassword, emailConfirmationTokenExpirationDate, status } = user;
 
     if(emailConfirmationTokenExpirationDate === null || emailConfirmationTokenExpirationDate < new Date()){
-        let hashEmail = await DatabaseManager.createEmailToken({ email, hashPassword });
+        let hashEmail = await DatabaseManager.createEmailToken(email);
         sendEmail.sendEmailConfirmationService(email, hashEmail);
         return 'Token expirado, foi enviado para seu email um novo token';
     }

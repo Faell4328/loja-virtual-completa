@@ -6,9 +6,11 @@ import emailConfirmationController from '../controllers/emailConfirmationControl
 import registrerUserController from '../controllers/createUserController';
 import loginController from '../controllers/loginController';
 import isNotLogged from '../middlewares/isNotLogged';
-import { validateEmail, validateLogin, validateRegister } from '../middlewares/validatorInput';
+import { validateEmail, validateLogin, validatePassword, validateRegister } from '../middlewares/validatorInput';
 import { loginLimit, emailConfirmationLimit, emailForwardingLimit } from '../security/requestLimit';
 import resendEmailController from '../controllers/resendEmailController';
+import passwordRecoveryController from '../controllers/passwordRecoveryController';
+import passwordConfirmationController from '../controllers/passwordConfirmationController';
 
 const router = Router();
 
@@ -44,6 +46,16 @@ router.post('/cadastrar', isNotLogged, upload.none(), validateRegister, (req: Re
     registrerUserController(req, res);
     return;
 });
+
+router.post('/recuperacao/senha', isNotLogged, upload.none(), validateEmail, (req: Request, res: Response) => {
+    passwordRecoveryController(req, res);
+    return;
+});
+
+router.post('/recuperacao/senha/:hash', isNotLogged, upload.none(), validatePassword, (req: Request, res: Response) => {
+    passwordConfirmationController(req, res);
+    return;
+})
 
 router.use((req: Request, res: Response) => {
     res.status(404).json({"error": "not found"});

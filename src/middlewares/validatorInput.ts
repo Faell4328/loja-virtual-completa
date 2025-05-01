@@ -51,3 +51,15 @@ export const validateEmail = [
         .isEmail().withMessage('Email invalido')
         .isLength({ max: 100 }).withMessage('O email deve ter no máximo 100 caracteres')
 ]
+
+export const validatePassword = [
+    body('password1')
+        .notEmpty().withMessage('Falta a senha 1')
+        .isLength({ min: 8 }).withMessage('A senha 1 deve ter no mínimo 8 caracteres')
+        .isLength({ max: 30 }).withMessage('A senha 1 deve ter no máximo 30 caracteres'),
+
+    body('password2')
+        .notEmpty().withMessage('Falta a senha 2')
+        .isLength({ min: 8 }).withMessage('A senha 2 deve ter no mínimo 8 caracteres')
+        .isLength({ max: 30 }).withMessage('A senha 2 deve ter no máximo 30 caracteres')
+]
