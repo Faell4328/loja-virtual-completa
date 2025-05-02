@@ -2,15 +2,15 @@ import { Router, Request, Response } from 'express';
 import multer from 'multer';
 
 import uploadConfig from '../config/multer';
-import emailConfirmationController from '../controllers/emailConfirmationController';
-import registrerUserController from '../controllers/createUserController';
-import loginController from '../controllers/loginController';
+import emailConfirmationController from '../controllers/email/emailConfirmationController';
+import registrerUserController from '../controllers/user/createUserController';
+import loginController from '../controllers/system/loginController';
 import isNotLogged from '../middlewares/isNotLogged';
 import { validateEmail, validateLogin, validatePassword, validateRegister } from '../middlewares/validatorInput';
 import { loginLimit, emailConfirmationLimit, resendEmailLimit } from '../security/requestLimit';
-import resendEmailController from '../controllers/resendEmailController';
-import passwordRecoveryController from '../controllers/passwordRecoveryController';
-import passwordConfirmationController from '../controllers/passwordConfirmationController';
+import resendEmailController from '../controllers/email/resendEmailController';
+import passwordRecoveryController from '../controllers/email/passwordRecoveryController';
+import passwordConfirmationController from '../controllers/email/passwordConfirmationController';
 
 const router = Router();
 

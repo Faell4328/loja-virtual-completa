@@ -3,11 +3,11 @@ import { existsSync } from 'fs';
 import { resolve } from 'path';
 import { validationResult } from 'express-validator';
 
-import createrUserAdminService from '../services/admin/createUserAdminService';
+import createrUserAdminService from '../../services/admin/createUserAdminService';
 
 export default async function createUserAdminController(req: Request, res: Response){
 
-    if(!existsSync(resolve(__dirname, '..', '..', 'config.json'))){
+    if(!existsSync(resolve(__dirname, '..', '..', '..', 'config.json'))){
         res.status(307).json({ 'redirect': '/instalacao/config' });
         return;
     }

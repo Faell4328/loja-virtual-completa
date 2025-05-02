@@ -3,7 +3,7 @@ import { unlink } from 'fs';
 import { resolve } from 'path';
 import { validationResult } from 'express-validator';
 
-import configureSystemService from '../services/system/configureSystemService';
+import configureSystemService from '../../services/system/configureSystemService';
 
 export default async function configureSystemController(req: Request, res: Response){
 

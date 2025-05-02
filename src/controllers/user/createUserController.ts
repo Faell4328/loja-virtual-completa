@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import createUserService from '../services/user/createUserService';
+import createUserService from '../../services/user/createUserService';
 import { validationResult } from 'express-validator';
 
 export default async function registrerUserController(req: Request, res: Response){

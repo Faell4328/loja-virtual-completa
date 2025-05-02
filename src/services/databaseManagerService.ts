@@ -137,4 +137,29 @@ export default class DatabaseManager{
         if(!token) console.log('erro ao criar o token de login');
         return hash;
     }
+
+    static async listInformationUser(loginToken: string){
+
+        const userInformation = await prismaClient.user.findUnique({
+            where: { loginToken },
+            select: { id: true, name: true, phone: true}
+        });
+
+        if(userInformation == null) return null;
+
+        const count = await prismaClient.address.count({
+            where: { usersId: userInformation.id }
+        });
+
+        if(count == 0) return {userInformation};
+
+        const userAddress = await prismaClient.user.findUnique({
+            where: { loginToken },
+            include: { address: {
+                select: { street: true, number: true, neighborhood: true, zipCode: true, country: true, complement: true }
+            }}
+        });
+
+        return { userInformation, userAddress };
+    }
 }

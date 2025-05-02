@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 
-import passwordRecoveryService from '../services/email/passwordRecoveryService';
+import passwordRecoveryService from '../../services/email/passwordRecoveryService';
 
 export default async function passwordRecoveryController(req: Request, res: Response){
     const errors:any = validationResult(req);
