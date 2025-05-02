@@ -8,7 +8,7 @@ export default async function isAdmin(req: Request, res: Response, next: NextFun
         return;
     }
 
-    let user = await DatabaseManager.validateToken(req.cookies['token'] as string);
+    let user = await DatabaseManager.validateLoginToken(req.cookies['token'] as string);
 
     if(!user){
         res.status(307).json({ 'redirect': '/' });

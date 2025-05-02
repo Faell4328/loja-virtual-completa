@@ -8,7 +8,7 @@ export default async function isLogged(req: Request, res: Response, next: NextFu
         return;
     }
 
-    let user = await DatabaseManager.validateToken(req.cookies['token']);
+    let user = await DatabaseManager.validateLoginToken(req.cookies['token']);
 
     if(!user){
         res.status(307).json({ 'redirect': '/login' });
@@ -21,6 +21,8 @@ export default async function isLogged(req: Request, res: Response, next: NextFu
         res.status(307).json({ 'redirect': '/login' });
         return;
     }
+
+    req.userId = user.id;
 
     next();
     return;

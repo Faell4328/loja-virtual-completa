@@ -7,7 +7,7 @@ export default async function listUserInformationService(loginToken: string){
 
     if(Object.keys(information).length > 1){
         const { name, phone } = information.userInformation;
-        const address = information.userAddress?.address;
+        const address = information.userAddress?.address[0];
         return { name, phone, address };
     }
     else if(Object.keys(information).length == 1){

@@ -63,3 +63,37 @@ export const validatePassword = [
         .isLength({ min: 8 }).withMessage('A senha 2 deve ter no mínimo 8 caracteres')
         .isLength({ max: 30 }).withMessage('A senha 2 deve ter no máximo 30 caracteres')
 ]
+
+export const validateUpdateInformationUser = [
+    body('phone')
+        .optional()
+        .isLength({ min: 15, max: 15 }).withMessage('Seu número deve ter 15 caracteres'),
+
+    body('description')
+        .optional()
+        .isLength({ max: 100 }).withMessage('A descrição não pode passar de 100 caracteres'),
+
+    body('street')
+        .optional()
+        .isLength({ max: 100 }).withMessage('Nome da rua não pode passar de 100 caracteres'),
+
+    body('number')
+        .optional()
+        .isLength({ max: 20 }).withMessage('O número não pode passar de 20 caracteres'),
+
+    body('neighborhood')
+        .optional()
+        .isLength({ max: 100 }).withMessage('O bairro não pode passar de 100 caracteres'),
+    
+    body('zipCode')
+        .optional()
+        .isLength({ max: 9 }).withMessage('O CEP não pode passar de 9 caracteres'),
+    
+    body('state')
+        .optional()
+        .isLength({ max: 2 }).withMessage('O Estado deve ter 2 caracteres'),
+    
+    body('complement')
+        .optional()
+        .isLength({ max: 100 }).withMessage('O complemento não pode passade de 100 caracteres'),
+];

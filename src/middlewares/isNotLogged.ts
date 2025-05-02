@@ -9,7 +9,7 @@ export default async function isNotLogged(req: Request, res: Response, next: Nex
         return;
     }
 
-    let user = await DatabaseManager.validateToken(req.cookies['token']);
+    let user = await DatabaseManager.validateLoginToken(req.cookies['token']);
 
     if(!user){
         next();

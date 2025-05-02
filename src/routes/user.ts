@@ -4,6 +4,8 @@ import multer from 'multer';
 import uploadConfig from '../config/multer';
 import isLogged from '../middlewares/isLogged';
 import listUserInformationController from '../controllers/user/listUserInformationController';
+import { validateUpdateInformationUser } from '../middlewares/validatorInput';
+import uploadUserInformationController from '../controllers/user/uploadUserInformationController';
 
 const routerUser = Router();
 
@@ -16,6 +18,11 @@ routerUser.get('/usuario', isLogged, (req: Request, res: Response) => {
 
 routerUser.get('/user/me', isLogged, (req: Request, res: Response) => {
     listUserInformationController(req, res);
+    return;
+});
+
+routerUser.post('/user/me', isLogged, upload.none(), validateUpdateInformationUser, (req: Request, res: Response) => {
+    uploadUserInformationController(req, res);
     return;
 });
 

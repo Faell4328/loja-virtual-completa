@@ -68,6 +68,22 @@ export default class DatabaseManager{
         return true;
     }
 
+
+    static async passwordRecovery(email: string){
+        const date = new Date();
+        date.setMinutes(date.getMinutes() + 30);
+        let hash = crypto.randomBytes(64).toString('hex');
+
+        let token = await prismaClient.user.update({
+            where: { email },
+            data: { resetPasswordToken: hash, resetPasswordTokenExpirationDate: date },
+            select: { resetPasswordToken: true }
+        })
+
+        if(!token) console.log('erro ao criar o token de login');
+        return hash;
+    }
+
     static async checkPasswordRecovery(hash: string){
         let user = await prismaClient.user.findUnique({
             where: { resetPasswordToken: hash }
@@ -98,7 +114,7 @@ export default class DatabaseManager{
         return createLoginToken;
     }
 
-    static async validateToken(token: string){
+    static async validateLoginToken(token: string){
         return await prismaClient.user.findUnique({
             where: { loginToken: token }
         });
@@ -123,21 +139,6 @@ export default class DatabaseManager{
         return false;
     }
 
-    static async passwordRecovery(email: string){
-        const date = new Date();
-        date.setMinutes(date.getMinutes() + 30);
-        let hash = crypto.randomBytes(64).toString('hex');
-
-        let token = await prismaClient.user.update({
-            where: { email },
-            data: { resetPasswordToken: hash, resetPasswordTokenExpirationDate: date },
-            select: { resetPasswordToken: true }
-        })
-
-        if(!token) console.log('erro ao criar o token de login');
-        return hash;
-    }
-
     static async listInformationUser(loginToken: string){
 
         const userInformation = await prismaClient.user.findUnique({
@@ -156,10 +157,40 @@ export default class DatabaseManager{
         const userAddress = await prismaClient.user.findUnique({
             where: { loginToken },
             include: { address: {
-                select: { street: true, number: true, neighborhood: true, zipCode: true, country: true, complement: true }
+                select: { description: true, street: true, number: true, neighborhood: true, zipCode: true, complement: true }
             }}
         });
 
         return { userInformation, userAddress };
+    }
+
+    static async updateInformationUser(userId: string, description: string, phone: string, street: string, number: string, neighborhood: string, zipCode: string, state: string, complement: string){
+        await prismaClient.user.update({
+            where: { id: userId },
+            data: { phone }
+        })
+
+        const countAddress = await prismaClient.address.count({
+            where: { usersId: userId }
+        });
+
+        if(countAddress == 0){
+            await prismaClient.address.create({
+                data: { usersId: userId, description, street, number, neighborhood, zipCode, state, complement },
+                select: { description: true, street: true, number: true, neighborhood: true, zipCode: true, state: true, complement: true }
+            });
+            return true;
+        }
+        else if(countAddress > 0){
+            await prismaClient.address.update({
+                where: { usersId: userId },
+                data: { description, street, number, neighborhood, zipCode, state, complement },
+                select: { description: true, street: true, number: true, neighborhood: true, zipCode: true, state: true, complement: true }
+            });
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }
