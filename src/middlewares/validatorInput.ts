@@ -65,6 +65,9 @@ export const validatePassword = [
 ]
 
 export const validateUpdateInformationUser = [
+    body('name')
+        .isLength({ min: 2 }).withMessage('Seu nome deve ter no mínimo 2 caracteres')
+        .isLength({ max: 100 }).withMessage('Seu nome deve ter no máximo 100 caracteres'),
     body('phone')
         .optional()
         .isLength({ min: 15, max: 15 }).withMessage('Seu número deve ter 15 caracteres'),

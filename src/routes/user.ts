@@ -6,6 +6,7 @@ import isLogged from '../middlewares/isLogged';
 import listUserInformationController from '../controllers/user/listUserInformationController';
 import { validateUpdateInformationUser } from '../middlewares/validatorInput';
 import uploadUserInformationController from '../controllers/user/uploadUserInformationController';
+import deleteUserAddressInformationController from '../controllers/user/deleteUserAddressInformationController';
 
 const routerUser = Router();
 
@@ -23,6 +24,11 @@ routerUser.get('/user/me', isLogged, (req: Request, res: Response) => {
 
 routerUser.post('/user/me', isLogged, upload.none(), validateUpdateInformationUser, (req: Request, res: Response) => {
     uploadUserInformationController(req, res);
+    return;
+});
+
+routerUser.delete('/user/me/endereco', isLogged, (req: Request, res: Response) => {
+    deleteUserAddressInformationController(req, res);
     return;
 });
 

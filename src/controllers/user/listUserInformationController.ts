@@ -6,7 +6,7 @@ export default async function listUserInformationController(req: Request, res: R
     const userInformation = await listUserInformationService(req.cookies['token']);
 
     if(userInformation == null){
-        res.status(200).json({ 'error': 'Problema' });
+        res.status(400).json({ 'error': 'Problema ao listar' });
         return;
     }
 

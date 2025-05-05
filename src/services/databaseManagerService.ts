@@ -139,6 +139,14 @@ export default class DatabaseManager{
         return false;
     }
 
+    static async checkExistingAddress(userId: string){
+        const count = await prismaClient.address.count({
+            where: { usersId: userId }
+        });
+
+        return (count == 0) ? false : true;
+    }
+
     static async listInformationUser(loginToken: string){
 
         const userInformation = await prismaClient.user.findUnique({
@@ -148,11 +156,15 @@ export default class DatabaseManager{
 
         if(userInformation == null) return null;
 
-        const count = await prismaClient.address.count({
-            where: { usersId: userInformation.id }
-        });
+        const addressQuantity = await this.checkExistingAddress(userInformation.id);
+        if(addressQuantity== false) return {userInformation};
 
-        if(count == 0) return {userInformation};
+        const userAddress = await this.listInformationAddress(userInformation.id, loginToken);
+
+        return { userInformation, userAddress };
+    }
+
+    static async listInformationAddress(userId: string, loginToken: string){
 
         const userAddress = await prismaClient.user.findUnique({
             where: { loginToken },
@@ -161,14 +173,20 @@ export default class DatabaseManager{
             }}
         });
 
-        return { userInformation, userAddress };
+        return userAddress;
     }
 
-    static async updateInformationUser(userId: string, description: string, phone: string, street: string, number: string, neighborhood: string, zipCode: string, state: string, complement: string){
+    static async updateUserInformation(userId: string, name: string, phone: string){
         await prismaClient.user.update({
             where: { id: userId },
-            data: { phone }
-        })
+            data: { name, phone }
+        });
+
+        return true;
+    }
+
+    static async updateUserAddressInformation(userId: string, description: string, street: string, number: string, neighborhood: string, zipCode: string, state: string, complement: string){
+        
 
         const countAddress = await prismaClient.address.count({
             where: { usersId: userId }
@@ -192,5 +210,13 @@ export default class DatabaseManager{
         else{
             return false;
         }
+    }
+
+    static async deleteUserAddress(userId: string){
+        const status = await prismaClient.address.delete({
+            where: { usersId: userId }
+        });
+
+        return status;
     }
 }
