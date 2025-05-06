@@ -219,4 +219,11 @@ export default class DatabaseManager{
 
         return status;
     }
+
+    static async listUsers(){
+        const users = await prismaClient.user.findMany({
+            select: { name: true, phone: true, email: true, role: true, status: true }
+        });
+        return users == null ? false : users;
+    }
 }

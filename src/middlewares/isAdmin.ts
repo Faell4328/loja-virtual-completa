@@ -4,14 +4,14 @@ import DatabaseManager from '../services/databaseManagerService';
 
 export default async function isAdmin(req: Request, res: Response, next: NextFunction){
     if(req.cookies['token'] === undefined){
-        res.status(307).json({ 'redirect': '/' });
+        res.status(307).json({ 'redirect': '/login' });
         return;
     }
 
     let user = await DatabaseManager.validateLoginToken(req.cookies['token'] as string);
 
     if(!user){
-        res.status(307).json({ 'redirect': '/' });
+        res.status(307).json({ 'redirect': '/login' });
         return;
     }
 
@@ -25,6 +25,8 @@ export default async function isAdmin(req: Request, res: Response, next: NextFun
         res.status(307).json({ 'redirect': '/' });
         return;
     }
+
+    req.userId = user.id;
 
     next();
     return;
