@@ -5,6 +5,7 @@ import uploadConfig from '../config/multer';
 import isAdmin from '../middlewares/isAdmin';
 
 import listUsersController from '../controllers/admin/listUsersController';
+import listSpecificUserController from '../controllers/admin/listSpecificUserController';
 
 const routerAdmin = Router();
 
@@ -19,5 +20,10 @@ routerAdmin.get('/admin/users', isAdmin, (req: Request, res: Response) => {
     listUsersController(req, res);
     return;
 });
+
+routerAdmin.get('/admin/user/:id', isAdmin, (req: Request, res: Response) => {
+    listSpecificUserController(req, res);
+    return
+})
 
 export { routerAdmin }

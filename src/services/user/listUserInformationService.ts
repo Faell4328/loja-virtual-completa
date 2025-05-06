@@ -1,7 +1,7 @@
 import DatabaseManager from "../databaseManagerService";
 
-export default async function listUserInformationService(loginToken: string){
-    const information = await DatabaseManager.listInformationUser(loginToken);
+export default async function listUserInformationService(userId: string){
+    const information = await DatabaseManager.listInformationUser(userId);
 
     if(information == null) return null;
 

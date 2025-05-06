@@ -127,18 +127,6 @@ export default class DatabaseManager{
         return user;
     }
 
-    static async checkEmailExists(email: string){
-        let user = await prismaClient.user.findUnique({
-            where: { email },
-            select: { email: true }
-        });
-
-        if(user === null){
-            return true;
-        } 
-        return false;
-    }
-
     static async checkExistingAddress(userId: string){
         const count = await prismaClient.address.count({
             where: { usersId: userId }
@@ -147,27 +135,27 @@ export default class DatabaseManager{
         return (count == 0) ? false : true;
     }
 
-    static async listInformationUser(loginToken: string){
+    static async listInformationUser(userId: string){
 
         const userInformation = await prismaClient.user.findUnique({
-            where: { loginToken },
-            select: { id: true, name: true, phone: true}
+            where: { id: userId },
+            select: { id: true, name: true, email: true, phone: true}
         });
 
         if(userInformation == null) return null;
 
-        const addressQuantity = await this.checkExistingAddress(userInformation.id);
+        const addressQuantity = await this.checkExistingAddress(userId);
         if(addressQuantity== false) return {userInformation};
 
-        const userAddress = await this.listInformationAddress(userInformation.id, loginToken);
+        const userAddress = await this.listInformationAddress(userId);
 
         return { userInformation, userAddress };
     }
 
-    static async listInformationAddress(userId: string, loginToken: string){
+    static async listInformationAddress(userId: string){
 
         const userAddress = await prismaClient.user.findUnique({
-            where: { loginToken },
+            where: { id: userId },
             include: { address: {
                 select: { description: true, street: true, number: true, neighborhood: true, zipCode: true, complement: true }
             }}
@@ -222,7 +210,7 @@ export default class DatabaseManager{
 
     static async listUsers(){
         const users = await prismaClient.user.findMany({
-            select: { name: true, phone: true, email: true, role: true, status: true }
+            select: { id: true, name: true, phone: true, email: true, role: true, status: true }
         });
         return users == null ? false : users;
     }
