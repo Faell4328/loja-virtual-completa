@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 
-import loginService from '../services/system/loginService';
+import loginService from '../../services/system/loginService';
 import { validationResult } from 'express-validator';
-import Cookie from '../services/cookie';
+import Cookie from '../../services/cookie';
 
 interface serviceReturnProps{
     status: boolean;

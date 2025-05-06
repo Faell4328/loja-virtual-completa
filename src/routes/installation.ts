@@ -4,8 +4,8 @@ import { existsSync } from 'fs';
 import { resolve } from 'path';
 
 import uploadConfig from '../config/multer';
-import createUserAdminController from '../controllers/createUserAdminController';
-import configureSystemController from '../controllers/configureSystemController';
+import createUserAdminController from '../controllers/admin/createUserAdminController';
+import configureSystemController from '../controllers/system/configureSystemController';
 import { validateRegister, validateSystemConfig } from '../middlewares/validatorInput';
 
 const instalationRouter = Router();

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 
-import resendEmailService from '../services/email/resendEmailService';
+import resendEmailService from '../../services/email/resendEmailService';
 
 export default async function resendEmailController(req: Request, res: Response){
     const errors:any = validationResult(req);

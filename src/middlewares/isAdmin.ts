@@ -4,27 +4,29 @@ import DatabaseManager from '../services/databaseManagerService';
 
 export default async function isAdmin(req: Request, res: Response, next: NextFunction){
     if(req.cookies['token'] === undefined){
-        res.send('Não autorizado');
+        res.status(307).json({ 'redirect': '/login' });
         return;
     }
 
-    let user = await DatabaseManager.validateToken(req.cookies['token'] as string);
+    let user = await DatabaseManager.validateLoginToken(req.cookies['token'] as string);
 
     if(!user){
-        res.send('Não autorizado');
+        res.status(307).json({ 'redirect': '/login' });
         return;
     }
 
     const { loginTokenExpirationDate, role } = user;
 
     if(loginTokenExpirationDate === null || loginTokenExpirationDate < new Date()){
-        res.send('Token vencido, faça login');
+        res.status(307).json({ 'redirect': '/login' });
         return;
     }
     else if(role !== 'ADMIN'){
-        res.send('Você não tem permissão');
+        res.status(307).json({ 'redirect': '/' });
         return;
     }
+
+    req.userId = user.id;
 
     next();
     return;

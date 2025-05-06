@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
-import checkEmailService from '../services/email/checkEmailService';
-import Cookie from '../services/cookie';
+import checkEmailService from '../../services/email/checkEmailService';
+import Cookie from '../../services/cookie';
 
 interface serviceReturnProps{
     status: string;
