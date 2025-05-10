@@ -11,6 +11,7 @@ import { loginLimit, emailConfirmationLimit, resendEmailLimit } from '../securit
 import resendEmailController from '../controllers/email/resendEmailController';
 import passwordRecoveryController from '../controllers/email/passwordRecoveryController';
 import passwordConfirmationController from '../controllers/email/passwordConfirmationController';
+import { sse } from '../server';
 
 const router = Router();
 
@@ -56,6 +57,17 @@ router.post('/recuperacao/senha/:hash', isNotLogged, upload.none(), validatePass
     passwordConfirmationController(req, res);
     return;
 })
+
+router.post('/whatsapp/qrcode',upload.none(), (req: Request, res: Response) => {
+    if(req.host.startsWith('localhost')){
+        sse.send({ 'data': req.body.dataUrl });
+        console.log('qr code enviado')
+        res.end();
+        return;
+    }
+    res.end();
+    return;
+});
 
 router.use((req: Request, res: Response) => {
     res.status(404).json({"error": "not found"});

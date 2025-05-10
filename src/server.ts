@@ -3,6 +3,7 @@ import { existsSync } from "fs";
 import { resolve } from 'path';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import SSE from 'express-sse';
 
 import { router } from './routes/router';
 import { routerUser } from './routes/user';
