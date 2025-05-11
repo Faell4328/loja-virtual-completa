@@ -36,12 +36,12 @@ routerAdmin.get('/admin/user/:id', isAdmin, (req: Request, res: Response) => {
     return
 });
 
-routerAdmin.get('/admin/whatsapp', (req: Request, res: Response) => {
+routerAdmin.get('/admin/whatsapp', isAdmin, (req: Request, res: Response) => {
     whatsappController(req, res);
     return
 });
 
-routerAdmin.get('/admin/whatsapp/qr', (req: Request, res: Response) => {
+routerAdmin.get('/admin/whatsapp/qr', isAdmin, (req: Request, res: Response) => {
     let sse = new SSE();
     sse.init(req, res);
     generationWhatsappQrcodeService(sse, res, qrcode);
