@@ -16,7 +16,7 @@ ADD ./whatsapp /src
 
 WORKDIR /src
 
-# RUN npm install
+RUN npm install
 
 RUN npx tsc --build
 

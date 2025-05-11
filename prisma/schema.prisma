@@ -151,9 +151,10 @@ model OrderItem {
 }
 
 model SystemConfig {
-  id           Int       @id @default(1)
-  nameStore    String    @db.VarChar(100)
-  fileSoon     String
-  creationDate DateTime  @default(now())
-  updateDate   DateTime?
+  id             Int       @id @default(1)
+  nameStore      String    @db.VarChar(100)
+  fileSoon       String
+  statusWhatsapp String
+  creationDate   DateTime  @default(now())
+  updateDate     DateTime?
 }
