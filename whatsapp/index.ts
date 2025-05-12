@@ -29,7 +29,7 @@ client.on('qr', async (qr: string) => {
     try{
         axiosClient.post('/webhook/whatsapp', {
             data: dataUrl,
-            token: '123'
+            token: process.env.TOKEN_WEB_HOOK
         })
         .catch(error => {
             console.log('Erro ao enviar o QRCode - 1');
@@ -47,7 +47,7 @@ client.on('ready', () => {
     try{
         axiosClient.post('/webhook/whatsapp', {
             data: 'Pronto',
-            token: '123'
+            token: process.env.TOKEN_WEB_HOOK
         })
         .catch(error => {
             console.log('Erro ao enviar a solicitação de finalização');
@@ -66,7 +66,7 @@ client.on('disconnected', async () => {
     try{
         axiosClient.post('/webhook/whatsapp', {
             data: 'Pronto',
-            token: '123'
+            token: process.env.TOKEN_WEB_HOOK
         })
         .catch(error => {
             console.log('Erro ao enviar a solicitação para desconectar');
@@ -97,7 +97,7 @@ async function timeout(){
             try{
                 axiosClient.post('/webhook/whatsapp', {
                 data: '',
-                token: '123'
+                token: process.env.TOKEN_WEB_HOOK
                 })
                 .catch(error => {
                     console.log('Erro ao enviar o timeout');
@@ -122,7 +122,7 @@ app.get('/start', async (req: Request, res: Response) => {
         try{
             axiosClient.post('/webhook/whatsapp', {
                 data: qrcode,
-                token: '123'
+                token: process.env.TOKEN_WEB_HOOK
             })
             .catch(error => {
                 console.log('Erro ao enviar o QRCode - 1');
