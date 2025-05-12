@@ -15,6 +15,7 @@ routerSystem.post('/webhook/whatsapp', regularlCondicionalRoutes, upload.none(),
         if(req.body.data == 'Pronto'){
             setWhatsappReady(true);
             setQrcode('')
+            eventBus.emit('qrcode_update', req.body.data);
             return;
         }
         setQrcode(req.body.data);
