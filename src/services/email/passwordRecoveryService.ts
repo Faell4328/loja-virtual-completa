@@ -1,4 +1,6 @@
+import { qrcode } from "../../routes/admin";
 import DatabaseManager from "../databaseManagerService";
+import sendMessageWhatappService from "../whatsapp/sendMessageWhatsappService";
 import sendEmail from "./sendEmailService";
 
 export default async function passwordRecoveryService(email: string){
@@ -6,6 +8,10 @@ export default async function passwordRecoveryService(email: string){
 
     if(returnDB === null){
         return 'Esse email não está cadastrado';
+    }
+
+    if(returnDB.phone && qrcode == 'Pronto'){
+        sendMessageWhatappService('55'+returnDB.phone, `Olá ${returnDB.name.split(' ')[0]}, foi solicitado a redefinição de senha. Caso não sejá você solicite ajuda ao suporte`);
     }
 
     const recoveryHash:string = await DatabaseManager.passwordRecovery(email);

@@ -11,9 +11,9 @@ export default async function registrerUserController(req: Request, res: Respons
         return res.status(400).json({ 'erro': errors.errors[0].msg });
     }
 
-    const { name, email, password } = req.body;
+    const { name, email, phone, password } = req.body;
 
-    let retorno: boolean|string = await createUserService(name, email, password);
+    let retorno: boolean|string = await createUserService(name, email, phone, password);
     if(retorno === true){
         res.status(200).json({ 'ok': 'Usuário cadastrado' });
         return;

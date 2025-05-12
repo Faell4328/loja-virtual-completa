@@ -14,7 +14,7 @@ interface LoginProps{
 export default class DatabaseManager{
 
     static async addSystemConfiguration(nameStore: string, fileSoon: string){
-        await prismaClient.systemConfig.create({ data: { nameStore, fileSoon, creationDate: new Date() } })
+        await prismaClient.systemConfig.create({ data: { nameStore, fileSoon, statusWhatsapp: 'off', creationDate: new Date() } })
     }
 
     static async createUserAdmin({ name, email, hashPassword }: AddingInformationSystemProps){
@@ -26,10 +26,10 @@ export default class DatabaseManager{
         return;
     }
 
-    static async createUser(name: string, email: string, hashPassword: string){
+    static async createUser(name: string, email: string, phone: string, hashPassword: string){
         try{
             const user = await prismaClient.user.create({
-                data: {name, email, password: hashPassword}
+                data: {name, email, phone, password: hashPassword}
             })
 
             if(!user) console.log('erro ao salvar');
@@ -214,4 +214,5 @@ export default class DatabaseManager{
         });
         return users == null ? false : users;
     }
+
 }

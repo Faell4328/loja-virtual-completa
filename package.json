@@ -5,7 +5,8 @@
   "main": "server.ts",
   "scripts": {
     "dev": "ts-node-dev --transpile-only src/server.ts",
-    "test": "jest --runInBand"
+    "test": "jest --runInBand",
+    "zerar": "docker rm -f $(docker ps -aq); docker rmi loja-virtual-completa_zap; docker volume rm loja-virtual-completa_zap"
   },
   "repository": {
     "type": "git",
@@ -20,12 +21,15 @@
   "homepage": "https://github.com/Faell4328/Loja-Virtual-Completa#readme",
   "dependencies": {
     "@prisma/client": "^6.6.0",
+    "axios": "^1.9.0",
     "bcryptjs": "^3.0.2",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
+    "eventsource": "^3.0.7",
     "express": "^5.1.0",
     "express-rate-limit": "^7.5.0",
+    "express-sse": "^1.0.0",
     "express-validator": "^7.2.1",
     "multer": "^1.4.5-lts.2",
     "nodemailer": "^6.10.1",

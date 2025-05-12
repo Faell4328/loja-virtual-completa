@@ -3,15 +3,18 @@ import { existsSync } from "fs";
 import { resolve } from 'path';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import { EventEmitter } from 'events';
 
 import { router } from './routes/router';
 import { routerUser } from './routes/user';
 import { routerAdmin } from './routes/admin';
 import { instalationRouter } from './routes/installation';
+import { routerSystem } from './routes/system';
 import errorHandling from './middlewares/errorHandling';
 import acceptedMethod from './security/acceptedMethods';
 
 const app = express();
+const eventBus = new EventEmitter();
 
 app.use(express.json());
 app.use(cors({
@@ -26,8 +29,11 @@ if(existsSync(resolve(__dirname, '..', 'config.json')) === false){
 else{
     app.use(routerUser);
     app.use(routerAdmin);
+    app.use(routerSystem);
     app.use(router);
 }
 
 app.use(errorHandling);
-app.listen(3000, ()=>console.log('rodando'))
+app.listen(3000, '0.0.0.0', ()=>console.log('rodando'))
+
+export default eventBus;
