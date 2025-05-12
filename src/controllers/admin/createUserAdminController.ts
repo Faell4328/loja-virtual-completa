@@ -1,13 +1,12 @@
 import { Request, Response } from 'express';
-import { existsSync } from 'fs';
-import { resolve } from 'path';
 import { validationResult } from 'express-validator';
 
 import createrUserAdminService from '../../services/admin/createUserAdminService';
+import { setStatus, statusSystem } from '../../server';
 
 export default async function createUserAdminController(req: Request, res: Response){
 
-    if(!existsSync(resolve(__dirname, '..', '..', '..', 'config.json'))){
+    if(statusSystem < 1){
         res.status(307).json({ 'redirect': '/instalacao/config' });
         return;
     }
@@ -20,9 +19,9 @@ export default async function createUserAdminController(req: Request, res: Respo
 
     const { name, email, password } = req.body;
     
+    setStatus(2);
     await createrUserAdminService(name, email, password);
 
     res.status(307).json({ 'redirect': '/confirmacao' });
-    //setTimeout( () => process.exit(0), 5000);
     return;
 }

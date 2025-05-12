@@ -1,6 +1,4 @@
 import express from 'express';
-import { existsSync } from "fs";
-import { resolve } from 'path';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { EventEmitter } from 'events';
@@ -12,9 +10,13 @@ import { instalationRouter } from './routes/installation';
 import { routerSystem } from './routes/system';
 import errorHandling from './middlewares/errorHandling';
 import acceptedMethod from './security/acceptedMethods';
+import DatabaseManager from './services/databaseManagerService';
 
 const app = express();
 const eventBus = new EventEmitter();
+let statusSystem = 0;
+let setStatus = (value: number) => statusSystem = value
+DatabaseManager.checkStatusSystem();
 
 app.use(express.json());
 app.use(cors({
@@ -23,17 +25,14 @@ app.use(cors({
 app.use(acceptedMethod);
 app.use(cookieParser());
 
-if(existsSync(resolve(__dirname, '..', 'config.json')) === false){
-    app.use(instalationRouter);
-}
-else{
-    app.use(routerUser);
-    app.use(routerAdmin);
-    app.use(routerSystem);
-    app.use(router);
-}
+app.use(instalationRouter);
+app.use(routerUser);
+app.use(routerAdmin);
+app.use(routerSystem);
+app.use(router);
 
 app.use(errorHandling);
-app.listen(3000, '0.0.0.0', ()=>console.log('rodando'))
+app.listen(3000, '0.0.0.0', () => console.log('rodando'))
 
+export { statusSystem, setStatus };
 export default eventBus;

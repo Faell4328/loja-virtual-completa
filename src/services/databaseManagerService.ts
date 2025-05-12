@@ -1,5 +1,6 @@
 import prismaClient from "../prisma";
 import crypto from 'crypto';
+import { statusSystem, setStatus } from "../server";
 
 interface AddingInformationSystemProps{
     name: string,
@@ -13,14 +14,35 @@ interface LoginProps{
 }
 export default class DatabaseManager{
 
+    static async checkStatusSystem(){
+        const quantidade = await prismaClient.systemConfig.count({ where: { id: 1 } })
+        if(quantidade == 0){
+            return;
+        }
+
+        const status = await prismaClient.systemConfig.findMany({
+            where: { id: 1 },
+            select: { statusSystem: true }
+        })
+        if(status == null){
+            throw new Error('status connot be checked')
+        }
+        setStatus(status[0].statusSystem)
+        return;
+    }
+
     static async addSystemConfiguration(nameStore: string, fileSoon: string){
-        await prismaClient.systemConfig.create({ data: { nameStore, fileSoon, statusWhatsapp: 'off', creationDate: new Date() } })
+        await prismaClient.systemConfig.create({ data: { nameStore, fileSoon, statusSystem, creationDate: new Date() } })
     }
 
     static async createUserAdmin({ name, email, hashPassword }: AddingInformationSystemProps){
         const userAdmin = await prismaClient.user.create({
             data: {name, email, password: hashPassword, role: 'ADMIN'}
         })
+        await prismaClient.systemConfig.update({
+            where: {id: 1},
+            data: { statusSystem }
+        });
 
         if(!userAdmin) console.log('erro ao salvar');
         return;

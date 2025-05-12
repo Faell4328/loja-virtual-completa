@@ -4,8 +4,14 @@ import { resolve } from 'path';
 import { validationResult } from 'express-validator';
 
 import configureSystemService from '../../services/system/configureSystemService';
+import { setStatus, statusSystem } from '../../server';
 
 export default async function configureSystemController(req: Request, res: Response){
+
+    if(statusSystem >= 1){
+        res.status(307).json({ 'redirect': '/instalacao/admin' });
+        return;
+    }
 
     const errors:any = validationResult(req);
 
@@ -25,10 +31,9 @@ export default async function configureSystemController(req: Request, res: Respo
         return res.status(400).json({ 'erro': 'Falta o arquivo' });
     }
 
-    const status:boolean = await configureSystemService(name, file);
+    setStatus(1);
+    configureSystemService(name, file);
 
-    if(status){
-        res.status(307).json({ 'redirect': '/instalacao/admin' });
-        return;
-    }
+    res.status(307).json({ 'redirect': '/instalacao/admin' });
+    return;
 }
