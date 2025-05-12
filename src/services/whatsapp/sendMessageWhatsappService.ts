@@ -1,7 +1,5 @@
 import axios from "axios";
 
-import { qrcode } from "../../routes/admin";
-
 export default async function sendMessageWhatappService(number: string, message: string){
     const clientAxios = axios.create({ baseURL: 'http://localhost:4000' })
 

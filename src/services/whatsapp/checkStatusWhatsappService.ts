@@ -3,7 +3,7 @@ import axios from 'axios';
 
 import generationWhatsappQrcodeService from './generationWhatsappQrcodeService';
 import DatabaseManager from '../databaseManagerService';
-import { setQrcode } from '../../routes/admin';
+import { setQrcode, setWhatsappReady } from '../../routes/admin';
 
 export default async function checkStatusWhatsappService(res: Response){
 
@@ -66,11 +66,13 @@ export default async function checkStatusWhatsappService(res: Response){
 </html>`
 
     if(retorno == 'Não iniciado'){
+        setWhatsappReady(false)
         setQrcode('')
         res.send(html);
     }
     else{
-        setQrcode('Pronto')
+        setWhatsappReady(true)
+        setQrcode('')
         res.send('Já enviado');
     }
     return;

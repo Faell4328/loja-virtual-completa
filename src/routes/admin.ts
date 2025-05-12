@@ -15,10 +15,15 @@ const routerAdmin = Router();
 
 const upload = multer(uploadConfig.upload());
 
+let whatsappReady = false;
 let qrcode = '';
 
 export function setQrcode(data: string){
     qrcode = data;
+}
+
+export function setWhatsappReady(data: boolean){
+    whatsappReady = data;
 }
 
 routerAdmin.get('/admin', regularlCondicionalRoutes, isAdmin, (req: Request, res: Response) => {
@@ -47,4 +52,4 @@ routerAdmin.get('/admin/whatsapp/qr', regularlCondicionalRoutes, isAdmin, (req: 
     generationWhatsappQrcodeService(sse, res, qrcode);
 });
 
-export { routerAdmin, qrcode }
+export { routerAdmin, qrcode, whatsappReady }
