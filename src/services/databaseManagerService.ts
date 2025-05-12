@@ -26,10 +26,10 @@ export default class DatabaseManager{
         return;
     }
 
-    static async createUser(name: string, email: string, hashPassword: string){
+    static async createUser(name: string, email: string, phone: string, hashPassword: string){
         try{
             const user = await prismaClient.user.create({
-                data: {name, email, password: hashPassword}
+                data: {name, email, phone, password: hashPassword}
             })
 
             if(!user) console.log('erro ao salvar');

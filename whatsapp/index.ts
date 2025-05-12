@@ -10,6 +10,11 @@ const axiosClient = axios.create({
 const app = express();
 app.use(express.json())
 
+let timeoutWhatsapp: NodeJS.Timeout;
+let qrcode = '';
+let alreadyRequested = false;
+let isReady = false;
+
 const client = new Client({
     authStrategy: new LocalAuth({ clientId: 'zap-service' }),
     puppeteer: {
@@ -17,7 +22,6 @@ const client = new Client({
     }
 });
 
-let qrcode = '';
 client.on('qr', async (qr: string) => {
     const dataUrl = await QRCode.toDataURL(qr);
     qrcode = dataUrl;
@@ -28,29 +32,29 @@ client.on('qr', async (qr: string) => {
             token: '123'
         })
         .catch(error => {
-            console.log('Erro eo enviar o QRCode');
+            console.log('Erro ao enviar o QRCode - 1');
         })
     }
     catch(erro){
-        console.log('Erro eo enviar o QRCode')
+        console.log('Erro ao enviar o QRCode - 2')
     }
 });
 
-let isReady = false;
 client.on('ready', () => {
     isReady = true;
     console.log('WhatsApp pronto');
+    clearTimeout(timeoutWhatsapp);
     try{
         axiosClient.post('/webhook/whatsapp', {
             data: 'Pronto',
             token: '123'
         })
         .catch(error => {
-            console.log('Erro eo enviar o QRCode');
+            console.log('Erro ao enviar a solicitação de finalização');
         })
     }
     catch(error){
-        console.log('Erro ao enviar o QRCode');
+        console.log('Erro ao enviar a solicitação de finalização');
     }
 });
 
@@ -65,7 +69,7 @@ client.on('disconnected', async () => {
             token: '123'
         })
         .catch(error => {
-            console.log('Erro eo enviar a solicitação para desconectar');
+            console.log('Erro ao enviar a solicitação para desconectar');
         })
     }
     catch(error){
@@ -85,7 +89,7 @@ app.get('/status', (req: Request, res: Response) => {
 });
 
 async function timeout(){
-    setTimeout( () => {
+    timeoutWhatsapp = setTimeout( () => {
         if(isReady == false){
             client.destroy();
             console.log('Instância finalizada');
@@ -96,7 +100,7 @@ async function timeout(){
                 token: '123'
                 })
                 .catch(error => {
-                    console.log('Erro eo enviar o timeout');
+                    console.log('Erro ao enviar o timeout');
                 })
             }
             catch(error){
@@ -106,7 +110,6 @@ async function timeout(){
     }, 200000);
 }
 
-let alreadyRequested = false;
 app.get('/start', async (req: Request, res: Response) => {
     console.log('solicitado o start')
     if(isReady){
@@ -116,6 +119,18 @@ app.get('/start', async (req: Request, res: Response) => {
     }
     else if(alreadyRequested){
         console.log('já startado')
+        try{
+            axiosClient.post('/webhook/whatsapp', {
+                data: qrcode,
+                token: '123'
+            })
+            .catch(error => {
+                console.log('Erro ao enviar o QRCode - 1');
+            })
+        }
+        catch(erro){
+            console.log('Erro ao enviar o QRCode - 2')
+        }
         res.send('Já solicitado');
         return;
     }
@@ -130,11 +145,22 @@ app.post('/send', (req: Request, res: Response) => {
     const { to, text } = req.body;
     const jid = to.endsWith('@c.us') ? to : `${to}@c.us`;
     console.log(jid);
-    client.sendMessage(jid, text)
-    .catch(err => console.error('Erro ao enviar a mensagem:', err));
+    try{
+        client.sendMessage(jid, text)
+        .catch(err => console.error('Erro ao enviar a mensagem:', err));
+    }
+    catch(error){
+        console.error('Erro ao enviar a mensagem:', error);
+    }
     res.sendStatus(200);
     return;
 });
+
+
+alreadyRequested = true;
+console.log('iniciado')
+client.initialize();
+timeout();
 
 
 app.listen(4000, () => {

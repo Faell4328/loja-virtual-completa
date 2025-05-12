@@ -3,7 +3,6 @@ import { Request, Response, NextFunction } from 'express';
 import DatabaseManager from '../services/databaseManagerService';
 
 export default async function isAdmin(req: Request, res: Response, next: NextFunction){
-    console.log(req.cookies['token'])
     if(req.cookies['token'] === undefined){
         res.status(307).json({ 'redirect': '/login' });
         return;
