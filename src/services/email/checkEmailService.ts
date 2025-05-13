@@ -11,7 +11,7 @@ export default async function checkEmailService(hash: string){
     if(emailConfirmationTokenExpirationDate === null || emailConfirmationTokenExpirationDate < new Date()){
         let hashEmail = await DatabaseManager.createEmailToken(email);
         sendEmail.sendEmailConfirmationService(email, hashEmail);
-        return 'Token expirado, foi enviado para seu email um novo token';
+        return 'Token expirado';
     }
 
     if(status === null || status !== 'PENDING_VALIDATION_EMAIL' ) return 'Email já validado';

@@ -1,0 +1,275 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Documentação das Rotas",
+        "version": "0.0.1"
+    },
+    "servers": {
+        "url": "http:/;localhost:3000"
+    },
+    "paths": {
+        "/instalacao/config":{
+            "post": {
+                "summary": "Rota para configurar o nome da loja e enviar a loga da marca. É a primeira etapa da instalação",
+                "tags": ["Instalação"],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Loja X",
+                                        "description": "Deve ter no mínimo 2 caracteres e no máximo 100 caracteres"
+                                    },
+                                    "file": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "example": "logo.jpeg",
+                                        "description": "Pode ser um PNG, JPEG e JPG, de no máximo 10 MB"
+                                    }
+                                },
+                                "required": ["name", "file"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "307": {
+                        "description": "Quando deu certo ou quando essa etapa já foi feita, redicionar para a rota: \"/instalacao/admin\"",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "redirect": "/instalacao/admin"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Mensagem de erro, ex: faltando algum campo obrigatório",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "redirect": "/instalacao/admin"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Caso a etapa de instalação já tenha sido feita, tanto para o \"/instalacao/config\" e \"/instalacao/admin\"",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "error": "not found"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/instalacao/admin":{
+            "post": {
+                "summary": "Rota para criar o usuário admin. É a segunda etapa de instalação",
+                "tags": ["Instalação"],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Lorenzete",
+                                        "description": "Deve ter no mínimo 2 caracteres e no máximo 100 caracteres"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "40028922",
+                                        "description": "Tem que ser um número valido e seguir o seguinte formato: \"3185473015\", não precisa do \"+55\" e nem do \"9\" (obs: digitei aleatoriamente). Deve ter exatos 10 caracteres."
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "description": "Deve ser um email válido e ter no mínimo 2 caracteres e no máximo 100 caracteres"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "deusefiel",
+                                        "description": "Deve ter no mínimo 8 caracteres e no máximo 30 caracteres, não tendo nenhuma outra exigência"
+                                    }
+                                },
+                                "required": ["name", "phone", "email", "password"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "307": {
+                        "description": "Quando deu certo redicionar para \"/confirmacao\",  e quando você pula etapa redicionar para a rota: \"/instalacao/config\"",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "Sucesso":{
+                                        "value": {
+                                            "redirect": "/confirmacao"
+                                        }
+                                    },
+                                    "Pulou etapa":{
+                                        "value": {
+                                            "redirect": "/instalacao/config"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Mensagem de erro, ex: faltando algum campo obrigatório",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "Falta o nome":{
+                                        "value": {
+                                            "error": "Falta o nome"
+                                        }
+                                    },
+                                    "Nome com menos de 2 caracteres":{
+                                        "value": {
+                                            "error": "Nome precisa ter no mínimo 2 caracteres"
+                                        }
+                                    },
+                                    "Nome com mais de 100 caracteres":{
+                                        "value": {
+                                            "error": "O nome deve ter no máximo 100 caracteres"
+                                        }
+                                    },
+                                    "Falta o telefone":{
+                                        "value": {
+                                            "error": "Falta o telefone"
+                                        }
+                                    },
+                                    "Telefone com o tamanho diferente de 10":{
+                                        "value": {
+                                            "error": "Seu número de telefone deve ter 10 caracteres"
+                                        }
+                                    },
+                                    "Falta o email":{
+                                        "value": {
+                                            "error": "Falta o email"
+                                        }
+                                    },
+                                    "Email inválido":{
+                                        "value": {
+                                            "error": "Email inválido"
+                                        }
+                                    },
+                                    "Email com menos de 2 caracteres":{
+                                        "value": {
+                                            "error": "Email precisa ter no mínimo 2 caracteres"
+                                        }
+                                    },
+                                    "Email com mais de 100 caracteres":{
+                                        "value": {
+                                            "error": "O email deve ter no máximo 100 caracteres"
+                                        }
+                                    },
+                                    "Falta a senha":{
+                                        "value": {
+                                            "error": "Falta a senha"
+                                        }
+                                    },
+                                    "Senha com menos de 8 caracteres":{
+                                        "value": {
+                                            "error": "A senha deve ter no mínimo 8 caracteres"
+                                        }
+                                    },
+                                    "Senha com mais de 30 caracteres":{
+                                        "value": {
+                                            "error": "A senha deve ter no máximo 30 caracteres"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/confirmacao": {
+            "get": {
+                "summary": "Apenas uma rota para mostrar uma mensagem. Futuramente será removida",
+                "tags": ["Ativação de Conta"],
+                "responses": {
+                    "200": {
+                        "description": "Vai dar uma mensagem na tela avisando para verificar o email. É uma rota que futuramente será removida"
+                    },
+                    "307": {
+                        "description": "Quando você estiver logado vai redicionar para \"/\", e quando você pula etapa de configuração redicionar para a rota: \"/instalacao/config\" ou \"/instalacao/admin\""
+                    },
+                    "404": {
+                        "description": "Caso a etapa de instalação não tenha sido feita, redicionando para \"/instalacao/config\" ou \"/instalacao/admin\""
+                    }
+                }
+            },
+            "post": {
+                "summary": "Rota para solicitar o reenvio via email, do link de ativação de conta",
+                "tags": ["Ativação de Conta"],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "description": "Deve ser um email válido, ter no mínimo 2 caracteres e no máximo 100 caracteres, já ter sido cadastrado e não ativado ainda"
+                                    }
+                                },
+                                "required": ["email"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Mensagem de sucesso"
+                    },
+                    "400": {
+                        "description": "Mensagem de erro, ex: faltando algum campo obrigatório"
+                    },
+                    "404": {
+                        "description": "Caso a etapa de instalação não tenha sido feita, redicionando para \"/instalacao/config\" ou \"/instalacao/admin\""
+                    }
+                }
+            }
+        },
+        "/confirmacao/{hash}":{
+            "get": {
+                "summary": "Rota para ativar a conta",
+                "details": "O {hash} é o token para ativar uma conta especifica",
+                "tags": ["Ativação de Conta"],
+                "parameters": [
+                    {
+                        "name": "hash",
+                        "in": "path",
+                        "description": "É o token enviado no email do usário, para ativação da conta"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retorna \"Email válidado\""
+                    },
+                    "400": {
+                        "description": "Pode retorna as seguintes mensagems: \"Token inválido\" ,\"Token já expirado\" (expira em 1 hora) e \"Email já validado\""
+                    },
+                    "404": {
+                        "description": "Caso a etapa de instalação não tenha sido feita, redicionando para \"/instalacao/config\" ou \"/instalacao/admin\""
+                    }
+                }
+            }
+        }
+    }
+}

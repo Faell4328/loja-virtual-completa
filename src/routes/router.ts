@@ -1,5 +1,7 @@
 import { Router, Request, Response } from 'express';
 import multer from 'multer';
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from '../docs/openapi.json';
 
 import uploadConfig from '../config/multer';
 import emailConfirmationController from '../controllers/email/emailConfirmationController';
@@ -11,7 +13,6 @@ import { loginLimit, emailConfirmationLimit, resendEmailLimit } from '../securit
 import resendEmailController from '../controllers/email/resendEmailController';
 import passwordRecoveryController from '../controllers/email/passwordRecoveryController';
 import passwordConfirmationController from '../controllers/email/passwordConfirmationController';
-import { statusSystem } from '../server';
 import { regularlCondicionalRoutes } from '../middlewares/condicionalRoutes';
 
 const router = Router();
@@ -58,6 +59,8 @@ router.post('/recuperacao/senha/:hash', regularlCondicionalRoutes, isNotLogged, 
     passwordConfirmationController(req, res);
     return;
 })
+
+router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, { swaggerOptions: { requestInterceptor: (req: any) => {req.credentials = 'include'} } }))
 
 router.use((req: Request, res: Response) => {
     res.status(404).json({"error": "not found"});

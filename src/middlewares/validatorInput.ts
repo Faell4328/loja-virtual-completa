@@ -4,7 +4,9 @@ export const validateSystemConfig = [
     body('name')
         .notEmpty().withMessage('Falta o nome')
         .trim()
-        .escape(),
+        .escape()
+        .isLength({ min: 2 }).withMessage('Nome precisa ter mais que 2 caracteres')
+        .isLength({ max: 100 }).withMessage('O nome deve ter no máximo 100 caracteres'),
     body('file').custom((value, {req}) => {
         if(!req.file){
             throw new Error('Falta o arquivo')
@@ -18,18 +20,19 @@ export const validateRegister = [
         .notEmpty().withMessage('Falta o nome')
         .trim()
         .escape()
-        .isLength({ min: 2 }).withMessage('Nome precisa ter mais que 2 caracteres')
+        .isLength({ min: 2 }).withMessage('Nome precisa ter no mínimo 2 caracteres')
         .isLength({ max: 100 }).withMessage('O nome deve ter no máximo 100 caracteres'),
+
+    body('phone')
+        .notEmpty().withMessage('Falta o telefone')
+        .isLength({ min: 10, max: 10 }).withMessage('Seu número de telefone deve ter 10 caracteres'),
 
     body('email')
         .notEmpty().withMessage('Falta o email')
         .normalizeEmail()
-        .isEmail().withMessage('Email invalido')
+        .isEmail().withMessage('Email inválido')
+        .isLength({ min: 2 }).withMessage('Email precisa ter no mínimo 2 caracteres')
         .isLength({ max: 100 }).withMessage('O email deve ter no máximo 100 caracteres'),
-
-    body('phone')
-        .notEmpty().withMessage('Falta o telefone')
-        .isLength({ min: 10, max: 10 }).withMessage('Seu número deve ter 10 caracteres'),
 
     body('password')
         .notEmpty().withMessage('Falta a senha')
@@ -53,6 +56,7 @@ export const validateEmail = [
         .notEmpty().withMessage('Falta o email')
         .normalizeEmail()
         .isEmail().withMessage('Email invalido')
+        .isLength({ min: 2 }).withMessage('Email precisa ter no mínimo 2 caracteres')
         .isLength({ max: 100 }).withMessage('O email deve ter no máximo 100 caracteres')
 ]
 
