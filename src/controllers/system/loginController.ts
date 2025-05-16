@@ -15,7 +15,7 @@ export default async function loginController(req: Request, res: Response){
     const errors:any = validationResult(req);
 
     if(!errors.isEmpty()){
-        return res.status(400).json({ 'erro': errors.errors[0].msg });
+        return res.status(400).json({ 'error': errors.errors[0].msg });
     }
 
     const { email, password } = req.body
@@ -23,14 +23,14 @@ export default async function loginController(req: Request, res: Response){
     const serviceReturn: boolean|string|serviceReturnProps = await loginService(email, password);
 
     if(serviceReturn === false){
-        res.status(400).json({ 'erro': 'Email ou senha incorreto' });
+        res.status(400).json({ 'error': 'Email ou senha incorreto' });
         return;
     }
     else if(typeof(serviceReturn) == 'object'){
 
         // !!Add function for log record, this is error!!
         if(serviceReturn.token == null || serviceReturn.expiration == null){
-            res.status(500).json({ 'erro': 'Não foi possível fazer login, por favor, encontre em contato com o suporte' });
+            res.status(500).json({ 'error': 'Não foi possível fazer login, por favor, encontre em contato com o suporte' });
             return;
         }
 

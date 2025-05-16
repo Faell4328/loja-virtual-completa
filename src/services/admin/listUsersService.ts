@@ -15,23 +15,23 @@ export default async function listUsersService(){
 
     users.map((user, index) => {
         if(user.role == 'ADMIN'){
-            users[index].role = 'administrador'
+            users[index].role = 'Administrador'
         }
         else{
-            users[index].role = 'usuário'
+            users[index].role = 'Usuário'
         }
 
         if(user.status == 'PENDING_VALIDATION_EMAIL'){
-            users[index].status = 'pendente validação email'
+            users[index].status = 'Pendente validação email'
         }
         else if(user.status == 'OK'){
-            users[index].status = 'ok'
+            users[index].status = 'Ok'
         }
         else if(user.status == 'DEVENDO'){
-            users[index].status = 'devedor'
+            users[index].status = 'Devedor'
         }
         else{
-            users[index].status = 'bloqueado'
+            users[index].status = 'Bloqueado'
         }
     })
 

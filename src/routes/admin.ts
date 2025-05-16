@@ -26,11 +26,6 @@ export function setWhatsappReady(data: boolean){
     whatsappReady = data;
 }
 
-routerAdmin.get('/admin', regularlCondicionalRoutes, isAdmin, (req: Request, res: Response) => {
-    res.send('Você tem acesso a rota admin, é necessário estar logado como admin');
-    return;
-});
-
 routerAdmin.get('/admin/users', regularlCondicionalRoutes, isAdmin, (req: Request, res: Response) => {
     listUsersController(req, res);
     return;

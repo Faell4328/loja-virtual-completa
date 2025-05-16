@@ -21,7 +21,7 @@ export default async function checkStatusWhatsappService(res: Response){
     catch(error){
         retorno = null;
         console.log('Deu erro - '+error);
-        res.send('Erro, favor solicitar ajuda do suporte');
+        res.status(400).json({ 'error': 'Erro, favor solicitar ajuda do suporte' });
         return;
     }
 
@@ -73,7 +73,7 @@ export default async function checkStatusWhatsappService(res: Response){
     else{
         setWhatsappReady(true)
         setQrcode('')
-        res.send('Já enviado');
+        res.status(200).json({ 'ok': 'Whatsapp conectado' });
     }
     return;
 }

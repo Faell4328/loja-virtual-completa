@@ -7,13 +7,13 @@ export default async function passwordRecoveryController(req: Request, res: Resp
     const errors:any = validationResult(req);
 
     if(!errors.isEmpty()){
-        return res.status(400).json({ 'erro': errors.errors[0].msg });
+        return res.status(400).json({ 'error': errors.errors[0].msg });
     }
 
     const serviceReturn: string = await passwordRecoveryService(req.body.email);
 
     if(serviceReturn === 'Esse email não está cadastrado'){
-        res.status(400).json({ 'erro': serviceReturn });
+        res.status(400).json({ 'error': serviceReturn });
         return;
     }
 

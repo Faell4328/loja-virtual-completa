@@ -8,7 +8,7 @@ export default async function registrerUserController(req: Request, res: Respons
     const errors:any = validationResult(req);
 
     if(!errors.isEmpty()){
-        return res.status(400).json({ 'erro': errors.errors[0].msg });
+        return res.status(400).json({ 'error': errors.errors[0].msg });
     }
 
     const { name, email, phone, password } = req.body;
@@ -19,7 +19,7 @@ export default async function registrerUserController(req: Request, res: Respons
         return;
     }
     else{
-        res.status(400).json({ 'erro': retorno});
+        res.status(400).json({ 'error': retorno});
         return;
     }
 }

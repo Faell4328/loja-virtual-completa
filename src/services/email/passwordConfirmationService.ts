@@ -23,5 +23,5 @@ export default async function passwordConfirmationService(hash: string, newPassw
     if(user.phone && qrcode == 'Pronto'){
         sendMessageWhatappService('55'+user.phone, `Olá ${user.name.split(' ')[0]}, sua senha foi alterada. Caso não sejá você solicite ajuda ao suporte`);
     }
-    return 'Senha alterada, vá para login e realizar seu login';
+    return 'Senha alterada';
 }

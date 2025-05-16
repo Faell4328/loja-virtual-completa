@@ -35,9 +35,9 @@ export default class DatabaseManager{
         await prismaClient.systemConfig.create({ data: { nameStore, fileSoon, statusSystem, creationDate: new Date() } })
     }
 
-    static async createUserAdmin({ name, email, hashPassword }: AddingInformationSystemProps){
+    static async createUserAdmin(name: string, email: string, phone: string, hashPassword: string){
         const userAdmin = await prismaClient.user.create({
-            data: {name, email, password: hashPassword, role: 'ADMIN'}
+            data: {name, email, phone, password: hashPassword, role: 'ADMIN'}
         })
         await prismaClient.systemConfig.update({
             where: {id: 1},
@@ -64,7 +64,7 @@ export default class DatabaseManager{
 
     static async createEmailToken(email: string){
         const date = new Date();
-        date.setHours(date.getHours() + 1);
+        date.setMinutes(date.getMinutes() + 5);
         let hash = crypto.randomBytes(64).toString('hex');
         const createEmailToken = await prismaClient.user.update({
             where: { email },
@@ -93,7 +93,7 @@ export default class DatabaseManager{
 
     static async passwordRecovery(email: string){
         const date = new Date();
-        date.setMinutes(date.getMinutes() + 30);
+        date.setMinutes(date.getMinutes() + 5);
         let hash = crypto.randomBytes(64).toString('hex');
 
         let token = await prismaClient.user.update({
@@ -161,7 +161,7 @@ export default class DatabaseManager{
 
         const userInformation = await prismaClient.user.findUnique({
             where: { id: userId },
-            select: { id: true, name: true, email: true, phone: true}
+            select: { id: true, name: true, email: true, phone: true, role: true, status: true }
         });
 
         if(userInformation == null) return null;
@@ -232,7 +232,7 @@ export default class DatabaseManager{
 
     static async listUsers(){
         const users = await prismaClient.user.findMany({
-            select: { id: true, name: true, phone: true, email: true, role: true, status: true }
+            select: { id: true, name: true, email: true, phone: true, role: true, status: true }
         });
         return users == null ? false : users;
     }

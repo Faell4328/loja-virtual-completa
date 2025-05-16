@@ -12,10 +12,12 @@ const upload = multer(uploadConfig.upload(true));
 
 instalationRouter.post('/instalacao/admin', conditionalInstalationRoutes, upload.none(), validateRegister, (req: Request, res: Response) => {
     createUserAdminController(req, res);
+    return
 })
 
 instalationRouter.post('/instalacao/config', conditionalInstalationRoutes, upload.single('file'), validateSystemConfig, (req: Request, res: Response) => {
     configureSystemController(req, res);
+    return;
 })
 
 export { instalationRouter };

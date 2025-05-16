@@ -9,7 +9,7 @@ export default async function listSpecificUserController(req: Request, res: Resp
         user = await listSpecificUserService(req.params.id);
     }
 
-    if(!user) return res.status(400).json({ 'erro': 'Usuário não encontrado' });
+    if(!user) return res.status(400).json({ 'error': 'Usuário não encontrado' });
     
     res.status(200).json({ 'ok': user });
     return;

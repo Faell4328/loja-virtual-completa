@@ -13,21 +13,16 @@ const routerUser = Router();
 const upload = multer(uploadConfig.upload());
 
 routerUser.get('/usuario', isLogged, (req: Request, res: Response) => {
-    res.send('Você tem acesso a rota usuário, é necessário estar logado como usuário ou admin');
-    return;
-});
-
-routerUser.get('/user/me', isLogged, (req: Request, res: Response) => {
     listUserInformationController(req, res);
     return;
 });
 
-routerUser.post('/user/me', isLogged, upload.none(), validateUpdateInformationUser, (req: Request, res: Response) => {
+routerUser.put('/usuario', isLogged, upload.none(), validateUpdateInformationUser, (req: Request, res: Response) => {
     uploadUserInformationController(req, res);
     return;
 });
 
-routerUser.delete('/user/me/endereco', isLogged, (req: Request, res: Response) => {
+routerUser.delete('/usuario/endereco', isLogged, (req: Request, res: Response) => {
     deleteUserAddressInformationController(req, res);
     return;
 });

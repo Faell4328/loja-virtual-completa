@@ -66,7 +66,7 @@ describe('installation.ts file route test', () => {
             .post('/instalacao/config');
 
             expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'erro': 'Falta o nome' });
+        expect(res.body).toEqual({ 'error': 'Falta o nome' });
     });
 
     it('test: route "/instalacao/config", with form data (name only)', async () => {
@@ -76,7 +76,7 @@ describe('installation.ts file route test', () => {
             .field('name', 'teste');
 
         expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'erro': 'Falta o arquivo' });
+        expect(res.body).toEqual({ 'error': 'Falta o arquivo' });
     });
 
     it('test: route "/instalacao/config", with form data (file only)', async () => {
@@ -88,7 +88,7 @@ describe('installation.ts file route test', () => {
             .attach('file', file);
 
         expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'erro': 'Falta o nome' });
+        expect(res.body).toEqual({ 'error': 'Falta o nome' });
     });
 
     it('test: route "/instalacao/admin", without configuring the server', async () => {
@@ -127,7 +127,7 @@ describe('installation.ts file route test', () => {
             .post('/instalacao/admin');
 
         expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'erro': 'Falta o nome' });
+        expect(res.body).toEqual({ 'error': 'Falta o nome' });
     });
 
     it('test: route "/instalacao/admin", with configured server (email only)', async () => {
@@ -137,7 +137,7 @@ describe('installation.ts file route test', () => {
             .field('email', 'teste@hotmail.com');
 
         expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'erro': 'Falta o nome'});
+        expect(res.body).toEqual({ 'error': 'Falta o nome'});
     });
 
     it('test: route "/instalacao/admin", with configured server (name only)', async () => {
@@ -147,7 +147,7 @@ describe('installation.ts file route test', () => {
             .field('name', 'Faell');
 
         expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'erro': 'Falta o email'});
+        expect(res.body).toEqual({ 'error': 'Falta o email'});
     });
 
     it('test: router "/instalacao/admin", with configured server', async () => {
@@ -181,7 +181,7 @@ describe('installation.ts file route test', () => {
             .field('password', '123');
 
         expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'erro': 'Nome precisa ter mais que 2 caracteres'});
+        expect(res.body).toEqual({ 'error': 'Nome precisa ter mais que 2 caracteres'});
     });
 
     it('test: route "/instalacao/admin", with configured server (with error email 1)', async () => {
@@ -196,7 +196,7 @@ describe('installation.ts file route test', () => {
             .field('password', '123');
 
         expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'erro': 'Email invalido'});
+        expect(res.body).toEqual({ 'error': 'Email invalido'});
     });
 
     it('test: route "/instalacao/admin", with configured server (with error email 2)', async () => {
@@ -211,7 +211,7 @@ describe('installation.ts file route test', () => {
             .field('password', '123');
 
         expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'erro': 'Email invalido'});
+        expect(res.body).toEqual({ 'error': 'Email invalido'});
     });
 
     it('test: route "/instalacao/admin", with configured server (with error password)', async () => {
@@ -226,6 +226,6 @@ describe('installation.ts file route test', () => {
             .field('password', '123');
 
         expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'erro': 'A senha deve ter no mínimo 8 caracteres'});
+        expect(res.body).toEqual({ 'error': 'A senha deve ter no mínimo 8 caracteres'});
     });
 })

@@ -174,7 +174,7 @@ describe('router.ts file route test', () => {
             .post('/cadastrar')
 
         expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'erro': 'Falta o nome'});
+        expect(res.body).toEqual({ 'error': 'Falta o nome'});
     });
 
     it('test: route "/cadastrar", send only the name (empty value)', async () => {
@@ -184,7 +184,7 @@ describe('router.ts file route test', () => {
             .field('name', '');
 
         expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'erro': 'Falta o nome'});
+        expect(res.body).toEqual({ 'error': 'Falta o nome'});
     });
 
     it('test: route "/cadastrar", send only the name', async () => {
@@ -194,7 +194,7 @@ describe('router.ts file route test', () => {
             .field('name', 'Faell');
 
         expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'erro': 'Falta o email'});
+        expect(res.body).toEqual({ 'error': 'Falta o email'});
     });
 
     it('test: route "/cadastrar", send the name and email', async () => {
@@ -205,7 +205,7 @@ describe('router.ts file route test', () => {
             .field('email', 'teste@email.com');
 
         expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'erro': 'Falta a senha'});
+        expect(res.body).toEqual({ 'error': 'Falta a senha'});
     });
 
     it('test: route "/cadastrar", send the email exists', async () => {
@@ -219,7 +219,7 @@ describe('router.ts file route test', () => {
             .field('password', '123456789');
 
         expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'erro': 'Email já existe'});
+        expect(res.body).toEqual({ 'error': 'Email já existe'});
     });
 
 
@@ -244,7 +244,7 @@ describe('router.ts file route test', () => {
             .post('/login')
 
         expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'erro': 'Falta o email'});
+        expect(res.body).toEqual({ 'error': 'Falta o email'});
     });
 
     it('test: route "/login", send only the email (empty value)', async () => {
@@ -254,7 +254,7 @@ describe('router.ts file route test', () => {
             .field('email', '');
 
         expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'erro': 'Falta o email' });
+        expect(res.body).toEqual({ 'error': 'Falta o email' });
     });
 
     it('test: route "/login", send only the email', async () => {
@@ -264,7 +264,7 @@ describe('router.ts file route test', () => {
             .field('email', 'teste@email.com');
 
         expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'erro': 'Falta a senha' });
+        expect(res.body).toEqual({ 'error': 'Falta a senha' });
     });
 
     it('test: route "/login", send email and password (not existing)', async () => {
@@ -277,7 +277,7 @@ describe('router.ts file route test', () => {
             .field('password', '123456789');
 
         expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'erro': 'Email ou senha incorreto' });
+        expect(res.body).toEqual({ 'error': 'Email ou senha incorreto' });
     });
 
     it('test: route "/login", send email and password (not existing)', async () => {
@@ -290,7 +290,7 @@ describe('router.ts file route test', () => {
             .field('password', '123456789');
 
         expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'erro': 'Email ou senha incorreto' });
+        expect(res.body).toEqual({ 'error': 'Email ou senha incorreto' });
     });
 
     it('test: route "/login", with account without email confirmation (the account exists)', async () => {
@@ -346,7 +346,7 @@ describe('router.ts file route test', () => {
             .set('token', '123')
 
         expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'erro': 'Falta o nome' });
+        expect(res.body).toEqual({ 'error': 'Falta o nome' });
     });
 
     it('test: route "/cadastrar", accessing the route while logged in (with unexpired token)', async () => {
@@ -374,7 +374,7 @@ describe('router.ts file route test', () => {
             .set('token', '123');
 
         expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'erro': 'Falta o email' });
+        expect(res.body).toEqual({ 'error': 'Falta o email' });
     });
 
     it('test: route "/login", accessing the route while logged in (with unexpired token)', async () => {
@@ -457,7 +457,7 @@ describe('router.ts file route test', () => {
             .field('name', 'a');
 
         expect(res.status).toBe(429);
-        expect(res.body).toEqual({ 'erro': 'Você excedeu o limite de tentativas, tente novamente em 10 minutos'});
+        expect(res.body).toEqual({ 'error': 'Você excedeu o limite de tentativas, tente novamente em 10 minutos'});
     });
 
     it('test: route "/cadastrar", with invalid name', async () => {
@@ -467,7 +467,7 @@ describe('router.ts file route test', () => {
             .field('name', 'a');
 
         expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'erro': 'Nome precisa ter mais que 2 caracteres'});
+        expect(res.body).toEqual({ 'error': 'Nome precisa ter mais que 2 caracteres'});
     });
 
     it('test: route "/cadastrar", with invalid email - part 1', async () => {
@@ -478,7 +478,7 @@ describe('router.ts file route test', () => {
             .field('email', 'teste@email');
 
         expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'erro': 'Email invalido'});
+        expect(res.body).toEqual({ 'error': 'Email invalido'});
     });
 
     it('test: route "/cadastrar", with invalid email - part 2', async () => {
@@ -489,7 +489,7 @@ describe('router.ts file route test', () => {
             .field('email', 'testeemail.com');
 
         expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'erro': 'Email invalido'});
+        expect(res.body).toEqual({ 'error': 'Email invalido'});
     });
 
     it('test: route "/cadastrar", with weak password', async () => {
@@ -501,6 +501,6 @@ describe('router.ts file route test', () => {
             .field('password', '123');
 
         expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'erro': 'A senha deve ter no mínimo 8 caracteres'});
+        expect(res.body).toEqual({ 'error': 'A senha deve ter no mínimo 8 caracteres'});
     });
 });

@@ -68,8 +68,6 @@ export const validatePassword = [
 
     body('password2')
         .notEmpty().withMessage('Falta a senha 2')
-        .isLength({ min: 8 }).withMessage('A senha 2 deve ter no mínimo 8 caracteres')
-        .isLength({ max: 30 }).withMessage('A senha 2 deve ter no máximo 30 caracteres')
 ]
 
 export const validateUpdateInformationUser = [
@@ -102,9 +100,9 @@ export const validateUpdateInformationUser = [
     
     body('state')
         .optional()
-        .isLength({ max: 2 }).withMessage('O Estado deve ter 2 caracteres'),
+        .isLength({ min: 2, max: 2 }).withMessage('O estado deve ter 2 caracteres'),
     
     body('complement')
         .optional()
-        .isLength({ max: 100 }).withMessage('O complemento não pode passade de 100 caracteres'),
+        .isLength({ max: 100 }).withMessage('O complemento não pode passar de de 100 caracteres'),
 ];

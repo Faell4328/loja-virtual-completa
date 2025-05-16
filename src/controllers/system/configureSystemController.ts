@@ -18,17 +18,17 @@ export default async function configureSystemController(req: Request, res: Respo
     if(!errors.isEmpty()){
         if(errors.errors[0].msg === 'Falta o nome' && req.file !== undefined){
             unlink(resolve(req.file.path), (err) => {
-                if(err) console.log('erro')
+                if(err) console.log('error')
             })
         }
-        return res.status(400).json({ 'erro': errors.errors[0].msg });
+        return res.status(400).json({ 'error': errors.errors[0].msg });
     }
 
     const name = req.body.name;
     const file = req.file;
 
     if(file === undefined){
-        return res.status(400).json({ 'erro': 'Falta o arquivo' });
+        return res.status(400).json({ 'error': 'Falta o arquivo' });
     }
 
     setStatus(1);
