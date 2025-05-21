@@ -20,7 +20,7 @@ export default async function loginService(email: string, password: string){
         return false;
     }
 
-    const returnDB = await DatabaseManager.login({ email, hashPassword });
+    const returnDB = await DatabaseManager.login(email, hashPassword);
 
 
     if(user.phone && qrcode == 'Pronto'){

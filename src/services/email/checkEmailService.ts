@@ -17,7 +17,7 @@ export default async function checkEmailService(hash: string){
     if(status === null || status !== 'PENDING_VALIDATION_EMAIL' ) return 'Email já validado';
 
     DatabaseManager.tokenEmailConfirmed(user.id);
-    const returnDB = await DatabaseManager.login({ email, hashPassword });
+    const returnDB = await DatabaseManager.login(email, hashPassword);
 
     return { status: 'Email válidado', token: returnDB.loginToken, expiration: returnDB.loginTokenExpirationDate };
 }

@@ -6,6 +6,12 @@ jest.mock('nodemailer', () => ({
     }))
 }));
 
+jest.mock('express-rate-limit', () => {
+    return () => {
+        return (req: any, res: any, next: any) => next();
+    }
+})
+
 let token = 'fklaejdroiuq23iopu2iPU@IOÇ$jlçkgjklfklaejdroiuq23iopu2iPU@IOÇ$jlçkgjklfklaejdroiuq23iopu2iPU@IOÇ$jlçkgjklfklaejdroiuq23iopu2iPU@';
 let adminToken = 'fklçadjsfklçajsdfklu1o2ipu2iop3!@#14o1i2u4p1u289@&#*!(ifklçadjsfklçajsdfklu1o2ipu2iop3!@#14o1i2u4p1u289@&#*!fadsfjil2çj34l1142af';
 
@@ -20,10 +26,15 @@ describe('router.ts file route test', () => {
             prismaClient.address.deleteMany(),
             prismaClient.user.deleteMany(),
             prismaClient.systemConfig.deleteMany()
-        ])
+        ]);
     });
 
     beforeAll(async () => {
+        await Promise.all([
+            prismaClient.address.deleteMany(),
+            prismaClient.user.deleteMany(),
+            prismaClient.systemConfig.deleteMany()
+        ]);
 
         let date = new Date();
         date.setDate(date.getDate()+30)
@@ -34,11 +45,11 @@ describe('router.ts file route test', () => {
 
         await prismaClient.user.create({
             data: { name: 'Teste', email: 'teste@exemplo.com', password: '123123123', phone: '3184135471', loginToken: token, loginTokenExpirationDate: date, status: 'OK' }
-        })
+        });
         
         await prismaClient.user.create({
             data: { name: 'admin', email: 'admin@email.com', password: 'deusefiel', phone: '3185642175', loginToken: adminToken, loginTokenExpirationDate: date, status: 'OK', role: 'ADMIN' } 
-        })
+        });
 
         setStatus(2);
     });

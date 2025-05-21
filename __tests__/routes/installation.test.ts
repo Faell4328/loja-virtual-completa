@@ -7,6 +7,12 @@ jest.mock('nodemailer', () => ({
     }))
 }));
 
+jest.mock('express-rate-limit', () => {
+    return () => {
+        return (req: any, res: any, next: any) => next();
+    }
+})
+
 import { teste } from '../../src/teste';
 import request from 'supertest';
 import { resolve } from 'path';

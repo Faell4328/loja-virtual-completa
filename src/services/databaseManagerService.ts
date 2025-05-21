@@ -1,17 +1,6 @@
 import prismaClient from "../prisma";
 import crypto from 'crypto';
 import { statusSystem, setStatus } from "../tools/status";
-
-interface AddingInformationSystemProps{
-    name: string,
-    email: string,
-    hashPassword: string
-}
-
-interface LoginProps{
-    email: string,
-    hashPassword: string
-}
 export default class DatabaseManager{
 
     static async checkStatusSystem(){
@@ -122,7 +111,7 @@ export default class DatabaseManager{
         return true;
     }
 
-    static async login ({ email, hashPassword }: LoginProps){
+    static async login (email: string, hashPassword: string){
         const date = new Date();
         date.setDate(date.getDate() + 20);
         let hash = crypto.randomBytes(64).toString('hex');

@@ -6,6 +6,12 @@ jest.mock('nodemailer', () => ({
     }))
 }));
 
+jest.mock('express-rate-limit', () => {
+    return () => {
+        return (req: any, res: any, next: any) => next();
+    }
+})
+
 import { teste } from '../../src/teste';
 import request from 'supertest';
 import prismaClient from '../../src/prisma';
@@ -17,10 +23,16 @@ describe('router.ts file route test', () => {
             prismaClient.address.deleteMany(),
             prismaClient.user.deleteMany(),
             prismaClient.systemConfig.deleteMany()
-        ])
+        ]);
     });
 
     beforeAll(async () => {
+        await Promise.all([
+            prismaClient.address.deleteMany(),
+            prismaClient.user.deleteMany(),
+            prismaClient.systemConfig.deleteMany()
+        ]);
+
         await prismaClient.systemConfig.create({
             data: { id: 1, nameStore: 'Loja X', fileSoon: 'teste', statusSystem: 2, creationDate: new Date() }
         });
@@ -31,7 +43,7 @@ describe('router.ts file route test', () => {
         
         await prismaClient.user.create({
             data: { email: 'admin@email.com', password: 'deusefiel', name: 'admin', phone: '3185642175', status: 'OK', role: 'ADMIN' } 
-        })
+        });
 
         setStatus(2);
     });
