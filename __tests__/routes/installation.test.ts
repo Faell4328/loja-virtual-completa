@@ -1,6 +1,3 @@
-import request from 'supertest';
-import { unlink, rm, mkdir } from 'fs/promises';
-import { resolve } from 'path';
 
 const sendMailMock = jest.fn().mockResolvedValue('ok');
 
@@ -10,24 +7,10 @@ jest.mock('nodemailer', () => ({
     }))
 }));
 
-
-jest.mock('../../src/prisma', () => ({
-    __esModule: true,
-    default: {
-        systemConfig: {
-            create: jest.fn()
-        },
-        user: {
-            create: jest.fn(),
-            update: jest.fn()
-        }
-    }
-}));
-
-import prismaClient from '../../src/prisma/index';
 import { teste } from '../../src/teste';
-
-const prismaMock = prismaClient as any;
+import request from 'supertest';
+import { resolve } from 'path';
+import prismaClient from '../../src/prisma';
 
 describe('installation.ts file route test', () => {
 
@@ -35,18 +18,25 @@ describe('installation.ts file route test', () => {
         jest.clearAllMocks();
     })
 
+    beforeAll(async () => {
+        await Promise.all([
+            prismaClient.address.deleteMany(),
+            prismaClient.user.deleteMany(),
+            prismaClient.systemConfig.deleteMany()
+        ])
+    });
+
     afterAll(async () => {
-        await unlink(resolve(__dirname, '..', '..', 'config.json'));
-
-        const caminho = resolve(__dirname, '..', '..', 'public', 'files');
-
-        await rm(caminho, { recursive: true, force: true });
-        await mkdir(caminho, { recursive: true });
-    })
+        await Promise.all([
+            prismaClient.address.deleteMany(),
+            prismaClient.user.deleteMany(),
+            prismaClient.systemConfig.deleteMany()
+        ])
+    });
 
     it('test: route "/", no body', async () => {
         const res = await request(teste)
-            .post('/');
+            .get('/');
 
         expect(res.status).toBe(307);
         expect(res.body).toEqual({ 'redirect': '/instalacao/config' });
@@ -100,8 +90,6 @@ describe('installation.ts file route test', () => {
     });
 
     it('test: route /instalacao/config", with form data (full)', async () => {
-        prismaMock.systemConfig.create.mockResolvedValue({ok: 'ok'});
-
         const file = resolve(__dirname, '..', 'files', 'routerTestFile.jpeg');
 
         const res = await request(teste)
@@ -150,82 +138,66 @@ describe('installation.ts file route test', () => {
         expect(res.body).toEqual({ 'error': 'Falta o email'});
     });
 
-    it('test: router "/instalacao/admin", with configured server', async () => {
-        prismaMock.user.create.mockResolvedValue({ok: 'ok'});
-        prismaMock.user.update.mockResolvedValue({ok: 'ok'});
-
-        const res = await request(teste)
-            .post('/instalacao/admin')
-            .set('Content-Type', 'multipart/form-data')
-            .field('name', 'Faell')
-            .field('email', 'teste@exemplo.com')
-            .field('password', '123456789');
-
-        expect(res.status).toBe(307);
-        expect(res.body).toEqual({ 'redirect': '/confirmacao'});
-    });
-
-
-    // Test input
-
+    
     it('test: route "/instalacao/admin", with configured server (with error name)', async () => {
-        prismaMock.user.create.mockResolvedValue({ok: 'ok'});
-        prismaMock.user.update.mockResolvedValue({ok: 'ok'});
-
-
         const res = await request(teste)
-            .post('/instalacao/admin')
+        .post('/instalacao/admin')
             .set('Content-Type', 'multipart/form-data')
             .field('name', 'a')
             .field('email', 'teste@exemplo.com')
             .field('password', '123');
 
-        expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'error': 'Nome precisa ter mais que 2 caracteres'});
+            expect(res.status).toBe(400);
+            expect(res.body).toEqual({ 'error': 'Nome precisa ter no mínimo 2 caracteres'});
     });
 
     it('test: route "/instalacao/admin", with configured server (with error email 1)', async () => {
-        prismaMock.user.create.mockResolvedValue({ok: 'ok'});
-        prismaMock.user.update.mockResolvedValue({ok: 'ok'});
-
         const res = await request(teste)
-            .post('/instalacao/admin')
+        .post('/instalacao/admin')
             .set('Content-Type', 'multipart/form-data')
             .field('name', 'Faell')
             .field('email', 'teste@exemplo')
             .field('password', '123');
 
-        expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'error': 'Email invalido'});
+            expect(res.status).toBe(400);
+        expect(res.body).toEqual({ 'error': 'Email inválido'});
     });
 
     it('test: route "/instalacao/admin", with configured server (with error email 2)', async () => {
-        prismaMock.user.create.mockResolvedValue({ok: 'ok'});
-        prismaMock.user.update.mockResolvedValue({ok: 'ok'});
-
         const res = await request(teste)
-            .post('/instalacao/admin')
+        .post('/instalacao/admin')
             .set('Content-Type', 'multipart/form-data')
             .field('name', 'Faell')
             .field('email', 'testeexemplo.com')
             .field('password', '123');
 
-        expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'error': 'Email invalido'});
-    });
-
-    it('test: route "/instalacao/admin", with configured server (with error password)', async () => {
-        prismaMock.user.create.mockResolvedValue({ok: 'ok'});
-        prismaMock.user.update.mockResolvedValue({ok: 'ok'});
-
-        const res = await request(teste)
+            expect(res.status).toBe(400);
+            expect(res.body).toEqual({ 'error': 'Email inválido'});
+        });
+        
+        it('test: route "/instalacao/admin", with configured server (with error password)', async () => {
+            const res = await request(teste)
             .post('/instalacao/admin')
             .set('Content-Type', 'multipart/form-data')
             .field('name', 'Faell')
             .field('email', 'teste@exemplo.com')
+            .field('phone', '1187453201')
             .field('password', '123');
+            
+            expect(res.status).toBe(400);
+            expect(res.body).toEqual({ 'error': 'A senha deve ter no mínimo 8 caracteres'});
+        });
 
-        expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'error': 'A senha deve ter no mínimo 8 caracteres'});
-    });
+        it('test: router "/instalacao/admin", with configured server', async () => {
+            const res = await request(teste)
+                .post('/instalacao/admin')
+                .set('Content-Type', 'multipart/form-data')
+                .field('name', 'Faell')
+                .field('email', 'teste@exemplo.com')
+                .field('phone', '3184756410')
+                .field('password', '123456789');
+    
+            expect(res.status).toBe(307);
+            expect(res.body).toEqual({ 'redirect': '/confirmacao'});
+        });
 })

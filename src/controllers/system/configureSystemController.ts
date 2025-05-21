@@ -4,7 +4,7 @@ import { resolve } from 'path';
 import { validationResult } from 'express-validator';
 
 import configureSystemService from '../../services/system/configureSystemService';
-import { setStatus, statusSystem } from '../../server';
+import { setStatus, statusSystem } from '../../tools/status';
 
 export default async function configureSystemController(req: Request, res: Response){
 

@@ -58,7 +58,7 @@ router.post('/recuperacao/senha/:hash', regularlCondicionalRoutes, isNotLogged, 
     return;
 })
 
-router.use((req: Request, res: Response) => {
+router.use(regularlCondicionalRoutes, (req: Request, res: Response) => {
     res.status(404).json({"error": "not found"});
     return;
 });

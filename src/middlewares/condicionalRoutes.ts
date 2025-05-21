@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { statusSystem } from '../server';
+import { statusSystem } from '../tools/status';
 
 export function regularlCondicionalRoutes(req: Request, res: Response, next: NextFunction){
     if(statusSystem < 2){

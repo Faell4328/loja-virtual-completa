@@ -1,6 +1,6 @@
 import { Request, Response, Router } from 'express';
 import multer from 'multer';
-import eventBus from '../server';
+import eventBus from '../tools/event';
 
 import uploadConfig from '../config/multer';
 import { setQrcode, setWhatsappReady } from './admin';

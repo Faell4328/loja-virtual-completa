@@ -1,10 +1,3 @@
-import request from 'supertest';
-import { writeFileSync } from 'fs';
-import { unlink, rm, mkdir } from 'fs/promises';
-import { resolve } from 'path';
-
-writeFileSync(resolve(__dirname, '..', '..', 'config.json'), JSON.stringify({ 'teste': 'teste' }));
-
 const sendMailMock = jest.fn().mockResolvedValue('ok');
 
 jest.mock('nodemailer', () => ({
@@ -13,30 +6,37 @@ jest.mock('nodemailer', () => ({
     }))
 }));
 
-jest.mock('../../src/prisma', () => ({
-    __esModule: true,
-    default: {
-        user: {
-            findUnique: jest.fn(),
-            update: jest.fn(),
-            create: jest.fn()
-        }
-    }
-}));
+let token = 'fklaejdroiuq23iopu2iPU@IOÇ$jlçkgjklfklaejdroiuq23iopu2iPU@IOÇ$jlçkgjklfklaejdroiuq23iopu2iPU@IOÇ$jlçkgjklfklaejdroiuq23iopu2iPU@';
+let adminToken = 'fklçadjsfklçajsdfklu1o2ipu2iop3!@#14o1i2u4p1u289@&#*!(ifklçadjsfklçajsdfklu1o2ipu2iop3!@#14o1i2u4p1u289@&#*!fadsfjil2çj34l1142af';
 
-import prismaClient from '../../src/prisma/index';
 import { teste } from '../../src/teste';
-
-const prismaMock = prismaClient as any;
+import request from 'supertest';
+import prismaClient from '../../src/prisma';
+import { setStatus } from '../../src/tools/status';
 
 describe('router.ts file route test', () => {
     afterAll(async () => {
-        await unlink(resolve(__dirname, '..', '..', 'config.json'));
+        await Promise.all([
+            prismaClient.address.deleteMany(),
+            prismaClient.user.deleteMany(),
+            prismaClient.systemConfig.deleteMany()
+        ])
+    });
 
-        const caminho = resolve(__dirname, '..', '..', 'public', 'files');
+    beforeAll(async () => {
+        await prismaClient.systemConfig.create({
+            data: { id: 1, nameStore: 'Loja X', fileSoon: 'teste', statusSystem: 2, creationDate: new Date() }
+        });
 
-        await rm(caminho, { recursive: true, force: true });
-        await mkdir(caminho, { recursive: true });
+        await prismaClient.user.create({
+            data: { name: 'Teste', email: 'teste@exemplo.com', password: '123', phone: '3184135471', emailConfirmationToken: '456', emailConfirmationTokenExpirationDate: new Date() }
+        })
+        
+        await prismaClient.user.create({
+            data: { email: 'admin@email.com', password: 'deusefiel', name: 'admin', phone: '3185642175', status: 'OK', role: 'ADMIN' } 
+        })
+
+        setStatus(2);
     });
 
     it('test: route "/instalacao/config"', async () => {
@@ -62,114 +62,64 @@ describe('router.ts file route test', () => {
         expect(res.status).toBe(200);
     });
 
-
-    it('test: route "/confirmacao", accessing the route while logged in (with expired token expiration date)', async () => {
-        let data = new Date();
-        data.setDate(data.getDate()-30);
-
-        prismaMock.user.findUnique.mockResolvedValue({ loginTokenExpirationDate: data });
-
-        const res = await request(teste)
-            .get('/confirmacao')
-            .set('token', '123')
-
-        expect(res.status).toBe(200);
-        expect(res.text).toBe('Por favor, verifique o email que foi enviado para você com o link para ativação');
-    });
-
-    it('test: route "/confirmacao", accessing the route while logged in (with unexpired token)', async () => {
-        let data = new Date();
-        data.setDate(data.getDate()+30);
-
-        prismaMock.user.findUnique.mockResolvedValue({ loginTokenExpirationDate: data });
-
-        const res = await request(teste)
-            .get('/confirmacao')
-            .set('token', '123')
-
-        expect(res.status).toBe(307);
-        expect(res.body).toEqual({ 'redirect': '/' });
-    });
-
     it('test: route "/confirmacao/:hash", with invalid hash', async () => {
-        prismaMock.user.findUnique.mockResolvedValue(null);
-
         const res = await request(teste)
             .get('/confirmacao/123');
         
-        expect(res.status).toBe(200);
-        expect(res.body).toEqual({});
+        expect(res.status).toBe(400);
+        expect(res.body).toEqual({'error': 'Token inválido'});
     });
 
     it('test: route "/confirmacao/:hash", with valid hash (expired)', async () => {
         let data = new Date();
         data.setDate(data.getDate()-30)
-
-        prismaMock.user.findUnique.mockResolvedValue({ email: 'teste@email.com', password: '123', emailConfirmationTokenExpirationDate: data , status: 'PENDING_VALIDATION_EMAIL' });
-        prismaMock.user.update.mockResolvedValue({ ok: 'ok' });
-
-        const res = await request(teste)
-            .get('/confirmacao/456');
-
-        expect(res.status).toBe(200);
-        expect(res.text).toBe('Token expirado, foi enviado para seu email um novo token');
-    });
-
-    it('test: route "/confirmacao/:hash", with valid hash (already used and not expired)', async () => {
-        let data = new Date();
-        data.setDate(data.getDate()+30)
-
-        prismaMock.user.findUnique.mockResolvedValue({ email: 'teste@email.com', password: '123', emailConfirmationTokenExpirationDate: data , status: 'OK' });
+        
+        await prismaClient.user.update({
+            where: { email: 'teste@exemplo.com' },
+            data: { emailConfirmationTokenExpirationDate: data }
+        }) 
 
         const res = await request(teste)
             .get('/confirmacao/456');
 
-        expect(res.status).toBe(200);
-        expect(res.text).toBe('Email já validado');
+        expect(res.status).toBe(400);
+        expect(res.body).toEqual({ 'error': 'Token expirado' });
     });
-
+    
     it('test: route "/confirmacao/:hash", with valid hash (all good)', async () => {
         let data = new Date();
         data.setDate(data.getDate()+30)
 
-        prismaMock.user.findUnique.mockResolvedValue({ email: 'teste@email.com', password: '123', emailConfirmationTokenExpirationDate: data , status: 'PENDING_VALIDATION_EMAIL' });
-
+        await prismaClient.user.update({
+            where: { email: 'teste@exemplo.com' },
+            data: { emailConfirmationToken: '456', emailConfirmationTokenExpirationDate: data }
+        }) 
+        
         const res = await request(teste)
             .get('/confirmacao/456');
 
         expect(res.status).toBe(200);
-        expect(res.text).toBe('Email válidado');
+        expect(res.body).toEqual({ 'ok': 'Email válidado'} );
     });
-
-    it('test: route "/confirmacao/:hash", accessing the route while logged in (with expired token expiration date)', async () => {
+    
+    it('test: route "/confirmacao/:hash", with a valid hash in the email already valid', async () => {
         let data = new Date();
-        data.setDate(data.getDate()-30);
+        data.setDate(data.getDate()+30)
 
-        prismaMock.user.findUnique.mockResolvedValue({ loginTokenExpirationDate: data });
+        await prismaClient.user.update({
+            where: { email: 'teste@exemplo.com' },
+            data: { emailConfirmationToken: '456', emailConfirmationTokenExpirationDate: data }
+        }) 
 
         const res = await request(teste)
-            .get('/confirmacao/456')
-            .set('token', '123')
+            .get('/confirmacao/456');
 
-        expect(res.status).toBe(200);
-        expect(res.text).toBe('Email já validado');
+        expect(res.status).toBe(400);
+        expect(res.body).toEqual({ 'error': 'Email já validado' });
     });
-
-    it('test: route "/confirmacao/:hash", accessing the route while logged in (with unexpired token)', async () => {
-        let data = new Date();
-        data.setDate(data.getDate()+30);
-
-        prismaMock.user.findUnique.mockResolvedValue({ loginTokenExpirationDate: data });
-
-        const res = await request(teste)
-            .get('/confirmacao/456')
-            .set('token', '123')
-
-        expect(res.status).toBe(307);
-        expect(res.body).toEqual({ 'redirect': '/' });
-    });
-
+    
     it('test: route "/cadastrar", no body', async () => {
+
         const res = await request(teste)
             .post('/cadastrar')
 
@@ -196,7 +146,7 @@ describe('router.ts file route test', () => {
         expect(res.status).toBe(400);
         expect(res.body).toEqual({ 'error': 'Falta o email'});
     });
-
+    
     it('test: route "/cadastrar", send the name and email', async () => {
         const res = await request(teste)
             .post('/cadastrar')
@@ -205,17 +155,29 @@ describe('router.ts file route test', () => {
             .field('email', 'teste@email.com');
 
         expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'error': 'Falta a senha'});
+        expect(res.body).toEqual({ 'error': 'Falta o telefone'});
     });
-
-    it('test: route "/cadastrar", send the email exists', async () => {
-        prismaMock.user.findUnique.mockResolvedValue({ 'email exists': true });
-
+    it('test: route "/cadastrar", send the name, email and phone', async () => {
         const res = await request(teste)
             .post('/cadastrar')
             .set('Content-Type', 'multipart/form-data')
             .field('name', 'Faell')
             .field('email', 'teste@email.com')
+            .field('phone', '3154786410');
+
+        expect(res.status).toBe(400);
+        expect(res.body).toEqual({ 'error': 'Falta a senha'});
+    });
+
+
+    it('test: route "/cadastrar", send the email exists', async () => {
+
+        const res = await request(teste)
+            .post('/cadastrar')
+            .set('Content-Type', 'multipart/form-data')
+            .field('name', 'Faell')
+            .field('email', 'teste@exemplo.com')
+            .field('phone', '3154786410')
             .field('password', '123456789');
 
         expect(res.status).toBe(400);
@@ -224,15 +186,12 @@ describe('router.ts file route test', () => {
 
 
     it('test: route "/cadastrar", all good', async () => {
-        prismaMock.user.findUnique.mockResolvedValue(null);
-        prismaMock.user.create.mockResolvedValue({ 'create': 'ok' });
-        prismaMock.user.update.mockResolvedValue({ 'create': 'ok' });
-
         const res = await request(teste)
             .post('/cadastrar')
             .set('Content-Type', 'multipart/form-data')
             .field('name', 'Faell')
             .field('email', 'teste@email.com')
+            .field('phone', '3154786410')
             .field('password', '123456789');
 
         expect(res.status).toBe(200);
@@ -240,6 +199,11 @@ describe('router.ts file route test', () => {
     });
 
     it('test: route "/login", no body', async () => {
+        await prismaClient.user.update({
+            where: { email: 'teste@email.com' },
+            data: { loginToken: null, loginTokenExpirationDate: null }
+        }) 
+
         const res = await request(teste)
             .post('/login')
 
@@ -268,12 +232,10 @@ describe('router.ts file route test', () => {
     });
 
     it('test: route "/login", send email and password (not existing)', async () => {
-        prismaMock.user.findUnique.mockResolvedValue(null);
-
         const res = await request(teste)
             .post('/login')
             .set('Content-Type', 'multipart/form-data')
-            .field('email', 'teste@email.com')
+            .field('email', 'testeteste@email.com')
             .field('password', '123456789');
 
         expect(res.status).toBe(400);
@@ -281,21 +243,20 @@ describe('router.ts file route test', () => {
     });
 
     it('test: route "/login", send email and password (not existing)', async () => {
-        prismaMock.user.findUnique.mockResolvedValue(null);
+
+        const user = await prismaClient.user.findMany();
 
         const res = await request(teste)
             .post('/login')
             .set('Content-Type', 'multipart/form-data')
-            .field('email', 'teste@email.com')
-            .field('password', '123456789');
+            .field('email', 'testeteste@email.com')
+            .field('password', '0000000000000');
 
         expect(res.status).toBe(400);
         expect(res.body).toEqual({ 'error': 'Email ou senha incorreto' });
     });
 
     it('test: route "/login", with account without email confirmation (the account exists)', async () => {
-        prismaMock.user.findUnique.mockResolvedValue({ emailConfirmationToken: '456', password: '123' });
-
         const res = await request(teste)
             .post('/login')
             .set('Content-Type', 'multipart/form-data')
@@ -308,8 +269,10 @@ describe('router.ts file route test', () => {
 
     it('test: route "/login", with corret email and wrong password', async () => {
 
-        prismaMock.user.findUnique.mockResolvedValue({ emailConfirmationToken: null, password: '$2b$10$SjZQigUR.vjktzPwk86l6OYd3Wf/YRKS73LBZjfZu6Vldl.rNcyxS' });
-        prismaMock.user.update.mockResolvedValue({ logado: 'true' });
+        await prismaClient.user.update({
+            where: { email: 'teste@email.com' },
+            data: { emailConfirmationToken: null, emailConfirmationTokenExpirationDate: null, status: 'OK' }
+        }) 
 
         const res = await request(teste)
             .post('/login')
@@ -321,144 +284,118 @@ describe('router.ts file route test', () => {
         expect(res.body).toEqual({ 'ok': 'Login realizado' });
     })
 
-    it('test: route "/login", account with email confirmation (the account exists)', async () => {
-        prismaMock.user.findUnique.mockResolvedValue({ emailConfirmationToken: null, password: '$2b$10$SjZQigUR.vjktzPwk86l6OYd3Wf/YRKS73LBZjfZu6Vldl.rNcyxS' });
-        prismaMock.user.update.mockResolvedValue({ logado: 'true' });
-
-        const res = await request(teste)
-            .post('/login')
-            .set('Content-Type', 'multipart/form-data')
-            .field('email', 'teste@email.com')
-            .field('password', '123456789');
-
-        expect(res.status).toBe(200);
-        expect(res.body).toEqual({ 'ok': 'Login realizado' });
-    });
-
     it('test: route "/cadastrar", accessing the route while logged in (with expired token expiration date)', async () => {
         let data = new Date();
         data.setDate(data.getDate()-30);
 
-        prismaMock.user.findUnique.mockResolvedValue({ loginTokenExpirationDate: data });
+        await prismaClient.user.update({
+            where: { email: 'teste@email.com' },
+            data: { loginToken: token, loginTokenExpirationDate: data}
+        }) 
 
         const res = await request(teste)
             .post('/cadastrar')
-            .set('token', '123')
+            .set('Cookie', `token=${token}`)
 
         expect(res.status).toBe(400);
         expect(res.body).toEqual({ 'error': 'Falta o nome' });
+    });
+    
+    it('test: route "/login", accessing the route while logged in (with expired token expiration date)', async () => {
+        const res = await request(teste)
+            .post('/login')
+            .set('Cookie', `token=${token}`)
+
+        expect(res.status).toBe(400);
+        expect(res.body).toEqual({ 'error': 'Falta o email' });
     });
 
     it('test: route "/cadastrar", accessing the route while logged in (with unexpired token)', async () => {
         let data = new Date();
         data.setDate(data.getDate()+30);
 
-        prismaMock.user.findUnique.mockResolvedValue({ loginTokenExpirationDate: data });
+        await prismaClient.user.update({
+            where: { email: 'teste@email.com' },
+            data: { loginToken: token, loginTokenExpirationDate: data}
+        }) 
 
         const res = await request(teste)
             .post('/cadastrar')
-            .set('token', '123')
+            .set('Cookie', `token=${token}`)
 
         expect(res.status).toBe(307);
         expect(res.body).toEqual({ 'redirect': '/' });
     });
 
-    it('test: route "/login", accessing the route while logged in (with expired token expiration date)', async () => {
-        let data = new Date();
-        data.setDate(data.getDate()-30);
-
-        prismaMock.user.findUnique.mockResolvedValue({ loginTokenExpirationDate: data });
-
-        const res = await request(teste)
-            .post('/login')
-            .set('token', '123');
-
-        expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'error': 'Falta o email' });
-    });
 
     it('test: route "/login", accessing the route while logged in (with unexpired token)', async () => {
-        let data = new Date();
-        data.setDate(data.getDate()+30);
-
-        prismaMock.user.findUnique.mockResolvedValue({ loginTokenExpirationDate: data });
-
         const res = await request(teste)
-            .post('/login')
-            .set('token', '123');
+            .post('/cadastrar')
+            .set('Cookie', `token=${token}`)
 
         expect(res.status).toBe(307);
         expect(res.body).toEqual({ 'redirect': '/' });
     });
 
     it('test: route "/admin", accessing the route while logged in normal user', async() => {
-        let data = new Date();
-        data.setDate(data.getDate()+30);
-
-        prismaMock.user.findUnique.mockResolvedValue({ loginTokenExpirationDate: data, role: 'USER' });
-
         const res = await request(teste)
-            .post('/admin')
-            .set('token', 'normal user');
+            .get('/admin/users')
+            .set('Cookie', `token=${token}`)
 
-        expect(res.status).toBe(200);
-        expect(res.text).toBe('Você não tem permissão');
+        expect(res.status).toBe(307);
+        expect(res.body).toEqual({ 'redirect': '/' });
     });
     
     it('test: route "/admin", accessing the route while logged in admin user', async() => {
         let data = new Date();
         data.setDate(data.getDate()+30);
 
-        prismaMock.user.findUnique.mockResolvedValue({ loginTokenExpirationDate: data, role: 'ADMIN' });
+        await prismaClient.user.update({
+            data: { loginToken: adminToken, loginTokenExpirationDate: data },
+            where: { email: 'admin@email.com' }
+        })
 
         const res = await request(teste)
-            .post('/admin')
-            .set('token', 'admin user');
+            .get('/admin/users')
+            .set('Cookie', `token=${adminToken}`);
 
         expect(res.status).toBe(200);
-        expect(res.text).toBe('Liberado');
     });
     
     it('test: route "/admin", accessing with expired token (normal user)', async () => {
         let data = new Date();
         data.setDate(data.getDate()-30);
 
-        prismaMock.user.findUnique.mockResolvedValue({ loginTokenExpirationDate: data, role: 'USER' });
+        await prismaClient.user.update({
+            data: { loginTokenExpirationDate: data },
+            where: { email: 'teste@email.com' }
+        })
 
         const res = await request(teste)
-            .post('/admin')
-            .set('token', 'normal user');
+            .get('/admin/users')
+            .set('Cookie', `token=${token}`);
 
-        expect(res.status).toBe(200);
-        expect(res.text).toBe('Token vencido, faça login');
+        expect(res.status).toBe(307);
+        expect(res.body).toEqual({ 'redirect': '/login' });
     });
 
     it('test: route "/admin", accessing with expired token (admin user)', async () => {
         let data = new Date();
         data.setDate(data.getDate()-30);
 
-        prismaMock.user.findUnique.mockResolvedValue({ loginTokenExpirationDate: data, role: 'ADMIN' });
+        await prismaClient.user.update({
+            data: { loginTokenExpirationDate: data },
+            where: { email: 'admin@email.com' }
+        })
 
         const res = await request(teste)
-            .post('/admin')
-            .set('token', 'admin user');
+            .get('/admin/users')
+            .set('Cookie', `token=${adminToken}`);
 
-        expect(res.status).toBe(200);
-        expect(res.text).toBe('Token vencido, faça login');
+        expect(res.status).toBe(307);
+        expect(res.body).toEqual({ 'redirect': '/login' });
     });
 
-
-    // Test input
-
-    it('test: route "/login", brute force', async () => {
-        const res = await request(teste)
-            .post('/login')
-            .set('Content-Type', 'multipart/form-data')
-            .field('name', 'a');
-
-        expect(res.status).toBe(429);
-        expect(res.body).toEqual({ 'error': 'Você excedeu o limite de tentativas, tente novamente em 10 minutos'});
-    });
 
     it('test: route "/cadastrar", with invalid name', async () => {
         const res = await request(teste)
@@ -467,7 +404,7 @@ describe('router.ts file route test', () => {
             .field('name', 'a');
 
         expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'error': 'Nome precisa ter mais que 2 caracteres'});
+        expect(res.body).toEqual({ 'error': 'Nome precisa ter no mínimo 2 caracteres'});
     });
 
     it('test: route "/cadastrar", with invalid email - part 1', async () => {
@@ -475,10 +412,10 @@ describe('router.ts file route test', () => {
             .post('/cadastrar')
             .set('Content-Type', 'multipart/form-data')
             .field('name', 'Faell')
-            .field('email', 'teste@email');
+            .field('email', 'testeafd@email');
 
         expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'error': 'Email invalido'});
+        expect(res.body).toEqual({ 'error': 'Email inválido'});
     });
 
     it('test: route "/cadastrar", with invalid email - part 2', async () => {
@@ -489,8 +426,20 @@ describe('router.ts file route test', () => {
             .field('email', 'testeemail.com');
 
         expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'error': 'Email invalido'});
+        expect(res.body).toEqual({ 'error': 'Email inválido'});
     });
+
+    it('test: route "/cadastrar", with invalid phone', async () => {
+        const res = await request(teste)
+            .post('/cadastrar')
+            .set('Content-Type', 'multipart/form-data')
+            .field('name', 'Faell')
+            .field('email', 'teste@email.com')
+            .field('phone', '31874523')
+
+        expect(res.status).toBe(400);
+        expect(res.body).toEqual({ 'error': 'Seu número de telefone deve ter 10 caracteres'});
+    })
 
     it('test: route "/cadastrar", with weak password', async () => {
         const res = await request(teste)
@@ -498,7 +447,8 @@ describe('router.ts file route test', () => {
             .set('Content-Type', 'multipart/form-data')
             .field('name', 'Faell')
             .field('email', 'teste@email.com')
-            .field('password', '123');
+            .field('phone', '3187454123')
+            .field('password', '13');
 
         expect(res.status).toBe(400);
         expect(res.body).toEqual({ 'error': 'A senha deve ter no mínimo 8 caracteres'});

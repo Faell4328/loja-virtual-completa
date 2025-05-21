@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 
 import createrUserAdminService from '../../services/admin/createUserAdminService';
-import { setStatus, statusSystem } from '../../server';
+import { setStatus, statusSystem } from '../../tools/status';
 
 export default async function createUserAdminController(req: Request, res: Response){
 

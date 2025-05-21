@@ -1,6 +1,6 @@
 import prismaClient from "../prisma";
 import crypto from 'crypto';
-import { statusSystem, setStatus } from "../server";
+import { statusSystem, setStatus } from "../tools/status";
 
 interface AddingInformationSystemProps{
     name: string,

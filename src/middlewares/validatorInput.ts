@@ -23,16 +23,16 @@ export const validateRegister = [
         .isLength({ min: 2 }).withMessage('Nome precisa ter no mínimo 2 caracteres')
         .isLength({ max: 100 }).withMessage('O nome deve ter no máximo 100 caracteres'),
 
-    body('phone')
-        .notEmpty().withMessage('Falta o telefone')
-        .isLength({ min: 10, max: 10 }).withMessage('Seu número de telefone deve ter 10 caracteres'),
-
     body('email')
         .notEmpty().withMessage('Falta o email')
         .normalizeEmail()
         .isEmail().withMessage('Email inválido')
         .isLength({ min: 2 }).withMessage('Email precisa ter no mínimo 2 caracteres')
         .isLength({ max: 100 }).withMessage('O email deve ter no máximo 100 caracteres'),
+
+    body('phone')
+        .notEmpty().withMessage('Falta o telefone')
+        .isLength({ min: 10, max: 10 }).withMessage('Seu número de telefone deve ter 10 caracteres'),
 
     body('password')
         .notEmpty().withMessage('Falta a senha')
