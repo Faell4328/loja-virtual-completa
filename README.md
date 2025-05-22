@@ -28,7 +28,7 @@ O sistema busca ser o mais simples, intuitivo e direto possível, oferecendo:
 - express-rate-limit — proteção contra brute force
 - express-validator — validação de dados
 - whatsapp-web.js — envio de mensagens via WhatsApp
-- qrcode-terminal — geração de QR Code para conexão ao WhatsApp
+- qrcode — geração de QR Code para conexão ao WhatsApp
 
 ### Desenvolvimento e testes:
 - TypeScript
