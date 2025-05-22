@@ -97,6 +97,10 @@ export const validateUpdateInformationUser = [
     body('zipCode')
         .optional()
         .isLength({ max: 9 }).withMessage('O CEP não pode passar de 9 caracteres'),
+
+    body('city')
+        .optional()
+        .isLength({ max: 100 }).withMessage('A cidade não pode passar de 100 caracteres'),
     
     body('state')
         .optional()

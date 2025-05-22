@@ -3,11 +3,12 @@ import { validationResult } from 'express-validator';
 
 import createrUserAdminService from '../../services/admin/createUserAdminService';
 import { setStatus, statusSystem } from '../../tools/status';
+import sendResponse from '../controllerSendPattern';
 
 export default async function createUserAdminController(req: Request, res: Response){
 
     if(statusSystem < 1){
-        res.status(307).json({ 'redirect': '/instalacao/config' });
+        sendResponse(res, '/instalacao/config', 'Faça a configuração do sistema primeiro', null, null);
         return;
     }
 
@@ -22,6 +23,6 @@ export default async function createUserAdminController(req: Request, res: Respo
     setStatus(2);
     await createrUserAdminService(name, email, phone, password);
 
-    res.status(307).json({ 'redirect': '/confirmacao' });
+    sendResponse(res, '/confirmacao', null, 'Usuário administrador criado', null)
     return;
 }

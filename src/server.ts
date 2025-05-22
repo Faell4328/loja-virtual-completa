@@ -19,7 +19,10 @@ DatabaseManager.checkStatusSystem();
 
 app.use(express.json());
 app.use(cors({
-    methods: ['GET', 'POST', 'PUT', 'DELETE']
+    origin: 'http://localhost:5173',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
 }));
 app.use(acceptedMethod);
 app.use(cookieParser());

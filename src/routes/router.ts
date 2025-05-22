@@ -12,13 +12,26 @@ import resendEmailController from '../controllers/email/resendEmailController';
 import passwordRecoveryController from '../controllers/email/passwordRecoveryController';
 import passwordConfirmationController from '../controllers/email/passwordConfirmationController';
 import { regularlCondicionalRoutes } from '../middlewares/condicionalRoutes';
+import DatabaseManager from '../services/databaseManagerService';
+import sendResponse from '../controllers/controllerSendPattern';
 
 const router = Router();
 
 const upload = multer(uploadConfig.upload());
 
-router.get('/', regularlCondicionalRoutes, (req: Request, res: Response) => {
-    res.send('opa, tá rodando. Página home');
+router.get('/', regularlCondicionalRoutes, async (req: Request, res: Response) => {
+    if(req.cookies['token'] !== undefined && req.cookies['token'].length == 128){
+        const user = await DatabaseManager.consultByLoginToken(req.cookies['token']);
+        if(user){
+            sendResponse(res, null, null, null, user.role)
+        }
+        else{
+            res.end();
+        }
+    }
+    else{
+        res.end();
+    }
     return;
 });
 
@@ -33,7 +46,7 @@ router.post('/confirmacao', regularlCondicionalRoutes, isNotLogged, resendEmailL
     return;
 });
 
-router.get('/confirmacao/:hash', regularlCondicionalRoutes, isNotLogged, emailConfirmationLimit, (req: Request, res: Response) => {
+router.put('/confirmacao/:hash', regularlCondicionalRoutes, isNotLogged, emailConfirmationLimit, (req: Request, res: Response) => {
     emailConfirmationController(req, res);
     return;
 });

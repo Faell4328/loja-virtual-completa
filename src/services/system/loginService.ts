@@ -1,4 +1,4 @@
-import { qrcode } from "../../routes/admin";
+import { whatsappReady } from "../../routes/admin";
 import HashPassword from "../../security/hashPassword";
 import DatabaseManager from "../databaseManagerService";
 import sendMessageWhatappService from "../whatsapp/sendMessageWhatsappService";
@@ -23,7 +23,7 @@ export default async function loginService(email: string, password: string){
     const returnDB = await DatabaseManager.login(email, hashPassword);
 
 
-    if(user.phone && qrcode == 'Pronto'){
+    if(user.phone && whatsappReady){
         sendMessageWhatappService('55'+user.phone, `Ola ${user.name.split(' ')[0]}, alguém realizou login em sua conta, caso não seja você, entre em contato com o suporte`);
     }
 

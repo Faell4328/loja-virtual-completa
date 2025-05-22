@@ -2,22 +2,24 @@ import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 
 import resendEmailService from '../../services/email/resendEmailService';
+import sendResponse from '../controllerSendPattern';
 
 export default async function resendEmailController(req: Request, res: Response){
     const errors:any = validationResult(req);
 
     if(!errors.isEmpty()){
-        return res.status(400).json({ 'error': errors.errors[0].msg });
+        sendResponse(res, null, errors.errors[0].msg, null, null);
+        return
     }
 
     const serviceReturn: string = await resendEmailService(req.body.email);
 
     if(serviceReturn === 'Esse email não está cadastrado' || serviceReturn == 'Email já validado'){
-        res.status(400).json({ 'error': serviceReturn });
-        return;
+        sendResponse(res, null, serviceReturn, null, null);
+        return
     }
 
 
-    res.status(200).json({ 'ok': serviceReturn });
+    sendResponse(res, null, null, serviceReturn, null);
     return;
 }

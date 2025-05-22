@@ -137,6 +137,13 @@ export default class DatabaseManager{
         });
         return user;
     }
+    
+    static async consultByLoginToken(token: string){
+        let user = await prismaClient.user.findUnique({
+            where: { loginToken: token }
+        });
+        return user;
+    }
 
     static async checkExistingAddress(userId: string){
         const count = await prismaClient.address.count({
@@ -168,7 +175,7 @@ export default class DatabaseManager{
         const userAddress = await prismaClient.user.findUnique({
             where: { id: userId },
             include: { address: {
-                select: { description: true, street: true, number: true, neighborhood: true, zipCode: true, complement: true }
+                select: { description: true, street: true, number: true, neighborhood: true, zipCode: true, city: true, state: true, complement: true }
             }}
         });
 
@@ -184,7 +191,7 @@ export default class DatabaseManager{
         return true;
     }
 
-    static async updateUserAddressInformation(userId: string, description: string, street: string, number: string, neighborhood: string, zipCode: string, state: string, complement: string){
+    static async updateUserAddressInformation(userId: string, description: string, street: string, number: string, neighborhood: string, zipCode: string, city: string, state: string, complement: string){
         
 
         const countAddress = await prismaClient.address.count({
@@ -193,16 +200,16 @@ export default class DatabaseManager{
 
         if(countAddress == 0){
             await prismaClient.address.create({
-                data: { usersId: userId, description, street, number, neighborhood, zipCode, state, complement },
-                select: { description: true, street: true, number: true, neighborhood: true, zipCode: true, state: true, complement: true }
+                data: { usersId: userId, description, street, number, neighborhood, zipCode, city, state, complement },
+                select: { description: true, street: true, number: true, neighborhood: true, zipCode: true, city: true, state: true, complement: true }
             });
             return true;
         }
         else if(countAddress > 0){
             await prismaClient.address.update({
                 where: { usersId: userId },
-                data: { description, street, number, neighborhood, zipCode, state, complement },
-                select: { description: true, street: true, number: true, neighborhood: true, zipCode: true, state: true, complement: true }
+                data: { description, street, number, neighborhood, zipCode, city, state, complement },
+                select: { description: true, street: true, number: true, neighborhood: true, zipCode: true, city: true, state: true, complement: true }
             });
             return true;
         }

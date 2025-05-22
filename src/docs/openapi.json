@@ -355,7 +355,7 @@
             }
         },
         "/confirmacao/{hash}":{
-            "get": {
+            "put": {
                 "summary": "Rota para validar email e ativar a conta",
                 "tags": ["Ativação de Conta"],
                 "parameters": [

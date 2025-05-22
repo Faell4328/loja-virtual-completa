@@ -29,7 +29,6 @@
     "eventsource": "^3.0.7",
     "express": "^5.1.0",
     "express-rate-limit": "^7.5.0",
-    "express-sse": "^1.0.0",
     "express-validator": "^7.2.1",
     "multer": "^1.4.5-lts.2",
     "nodemailer": "^6.10.1",

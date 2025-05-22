@@ -1,6 +1,5 @@
 import { Router, Request, Response } from 'express';
 import multer from 'multer';
-import SSE from 'express-sse';
 
 import uploadConfig from '../config/multer';
 import isAdmin from '../middlewares/isAdmin';
@@ -41,10 +40,13 @@ routerAdmin.get('/admin/whatsapp', regularlCondicionalRoutes, isAdmin, (req: Req
     return
 });
 
-routerAdmin.get('/admin/whatsapp/qr', regularlCondicionalRoutes, isAdmin, (req: Request, res: Response) => {
-    let sse = new SSE();
-    sse.init(req, res);
-    generationWhatsappQrcodeService(sse, res, qrcode);
+routerAdmin.get('/admin/whatsapp/qr', (req: Request, res: Response) => {
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    res.flushHeaders();
+
+    generationWhatsappQrcodeService(res, qrcode);
 });
 
 export { routerAdmin, qrcode, whatsappReady }

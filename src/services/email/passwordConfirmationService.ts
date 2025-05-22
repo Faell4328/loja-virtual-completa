@@ -1,4 +1,4 @@
-import { qrcode } from "../../routes/admin";
+import { whatsappReady } from "../../routes/admin";
 import HashPassword from "../../security/hashPassword";
 import DatabaseManager from "../databaseManagerService";
 import sendMessageWhatappService from "../whatsapp/sendMessageWhatsappService";
@@ -20,7 +20,7 @@ export default async function passwordConfirmationService(hash: string, newPassw
     const hashNewPassword: string = await HashPassword.passwordHashGenerator(newPassword);
     await DatabaseManager.passwordRecoveryConfirmed(id, hashNewPassword);
 
-    if(user.phone && qrcode == 'Pronto'){
+    if(user.phone && whatsappReady){
         sendMessageWhatappService('55'+user.phone, `Olá ${user.name.split(' ')[0]}, sua senha foi alterada. Caso não sejá você solicite ajuda ao suporte`);
     }
     return 'Senha alterada';

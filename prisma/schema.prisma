@@ -56,6 +56,7 @@ model Address {
   number       String    @db.VarChar(20)
   neighborhood String    @db.VarChar(100)
   zipCode      String    @db.VarChar(9)
+  city         String    @db.VarChar(100)
   state        String    @db.VarChar(2)
   complement   String?   @db.VarChar(100)
   creationDate DateTime  @default(now())

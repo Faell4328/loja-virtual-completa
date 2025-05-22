@@ -1,19 +1,21 @@
 import { Request, Response } from 'express';
 
-import uploadUserInformationService from '../../services/user/uploadUserInformationService';
 import { validationResult } from 'express-validator';
+import sendResponse from '../controllerSendPattern';
+import uploadUserInformationService from '../../services/user/uploadUserInformationService';
 
 export default async function uploadUserInformationController(req: Request, res: Response){
 
     const errors:any = validationResult(req);
 
     if(!errors.isEmpty()){
-        return res.status(400).json({ 'error': errors.errors[0].msg });
+        sendResponse(res, null, errors.errors[0].msg, null, null);
+        return;
     }
 
-    const { name, phone, description, street, number, neighborhood, zipCode, state, complement } = req.body;
+    const { name, phone, description, street, number, neighborhood, zipCode, state, city, complement } = req.body;
 
-    const address = [ description, street, number, neighborhood, zipCode, state, complement ];
+    const address = [ description, street, number, neighborhood, zipCode, state, city, complement ];
 
     const someWithValue = address.some(item => item !== undefined);
     address.pop();
@@ -21,16 +23,17 @@ export default async function uploadUserInformationController(req: Request, res:
     const allUndefined = address.every(item => item !== undefined);
 
     if( someWithValue && !allUndefined ){
-        return res.status(400).json({ 'error': 'Se você colocou algum campo de endereço, deve colocar todos os campos' });
-    }
-
-    const statusUpload = await uploadUserInformationService(req.userId, name, phone, description, street, number, neighborhood, zipCode, state, complement);
-
-    if(statusUpload == false){
-        res.status(400).json({ 'error': 'Não foi possível atualizar' });
+        sendResponse(res, null, 'Se você colocout algum campo de endereço, deve colocar todos os campos', null, null);
         return;
     }
 
-    res.status(200).json({ 'ok': 'Informações atualizada' });
+    const statusUpload = await uploadUserInformationService(req.userId, name, phone, description, street, number, neighborhood, zipCode, city, state, complement);
+
+    if(statusUpload == false){
+        sendResponse(res, null, 'Não foi possível atualizar', null, null);
+        return;
+    }
+
+    sendResponse(res, null, null, 'Informação atualizada', null);
     return;
 }

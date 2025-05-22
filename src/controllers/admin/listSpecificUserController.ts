@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 
 import listSpecificUserService from '../../services/admin/listSpecificUserService';
+import sendResponse from '../controllerSendPattern';
 
 export default async function listSpecificUserController(req: Request, res: Response){
     let user;
@@ -9,8 +10,11 @@ export default async function listSpecificUserController(req: Request, res: Resp
         user = await listSpecificUserService(req.params.id);
     }
 
-    if(!user) return res.status(400).json({ 'error': 'Usuário não encontrado' });
+    if(!user){
+        sendResponse(res, null, 'Usuário não encontrado', null, null);
+        return;
+    }
     
-    res.status(200).json({ 'ok': user });
+    sendResponse(res, null, null, null, user);
     return;
 }
