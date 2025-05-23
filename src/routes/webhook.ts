@@ -6,11 +6,11 @@ import uploadConfig from '../config/multer';
 import { setQrcode, setWhatsappReady } from './admin';
 import { regularlCondicionalRoutes } from '../middlewares/condicionalRoutes';
 
-const routerSystem = Router();
+const webhookRoute = Router();
 
 const upload = multer(uploadConfig.upload());
 
-routerSystem.post('/webhook/whatsapp', regularlCondicionalRoutes, upload.none(), (req: Request, res: Response) => {
+webhookRoute.post('/webhook/whatsapp', regularlCondicionalRoutes, upload.none(), (req: Request, res: Response) => {
     if(req.body.token == process.env.TOKEN_WEB_HOOK){
         if(req.body.data == 'Pronto'){
             setWhatsappReady(true);
@@ -23,4 +23,4 @@ routerSystem.post('/webhook/whatsapp', regularlCondicionalRoutes, upload.none(),
     }
 });
 
-export { routerSystem }
+export { webhookRoute }

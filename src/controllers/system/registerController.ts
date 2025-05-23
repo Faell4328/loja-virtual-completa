@@ -1,15 +1,15 @@
 import { Request, Response } from 'express';
 
-import createUserService from '../../services/user/createUserService';
+import createUserService from '../../services/system/registerService';
 import { validationResult } from 'express-validator';
-import sendResponse from '../controllerSendPattern';
+import serverSendingPattern from '../serverSendingPattern';
 
 export default async function registrerUserController(req: Request, res: Response){
 
     const errors:any = validationResult(req);
 
     if(!errors.isEmpty()){
-        sendResponse(res, null, errors.errors[0].msg, null, null);
+        serverSendingPattern(res, null, errors.errors[0].msg, null, null);
         return;
     }
 
@@ -17,11 +17,11 @@ export default async function registrerUserController(req: Request, res: Respons
 
     let retorno: boolean|string = await createUserService(name, email, phone, password);
     if(retorno === true){
-        sendResponse(res, '/confirmacao', null, 'Usuário cadastrado', null);
+        serverSendingPattern(res, '/confirmacao', null, 'Usuário cadastrado', null);
         return;
     }
     else{
-        sendResponse(res, null, retorno, null, null);
+        serverSendingPattern(res, null, retorno, null, null);
         return;
     }
 }

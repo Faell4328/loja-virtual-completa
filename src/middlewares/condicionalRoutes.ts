@@ -1,15 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
 import { statusSystem } from '../tools/status';
-import sendResponse from '../controllers/controllerSendPattern';
+import serverSendingPattern from '../controllers/serverSendingPattern';
 
 export function regularlCondicionalRoutes(req: Request, res: Response, next: NextFunction){
     if(statusSystem < 2){
         if(statusSystem == 1){
-            sendResponse(res, '/instalacao/admin', null, null, null);
+            serverSendingPattern(res, '/instalacao/admin', null, null, null);
             return;
         }
         else{
-            sendResponse(res, '/instalacao/config', null, null, null);
+            serverSendingPattern(res, '/instalacao/config', null, null, null);
             return;
         }
     }

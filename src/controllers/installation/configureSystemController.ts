@@ -3,14 +3,14 @@ import { unlink } from 'fs';
 import { resolve } from 'path';
 import { validationResult } from 'express-validator';
 
-import configureSystemService from '../../services/system/configureSystemService';
+import configureSystemService from '../../services/installation/configureSystemService';
 import { setStatus, statusSystem } from '../../tools/status';
-import sendResponse from '../controllerSendPattern';
+import serverSendingPattern from '../serverSendingPattern';
 
 export default async function configureSystemController(req: Request, res: Response){
 
     if(statusSystem >= 1){
-        sendResponse(res, '/instalacao/admin', 'Você já adicionou informações sobre sua loja, você poderá altera-las depois', null, null)
+        serverSendingPattern(res, '/instalacao/admin', 'Você já adicionou informações sobre sua loja, você poderá altera-las depois', null, null)
         return;
     }
 
@@ -22,7 +22,7 @@ export default async function configureSystemController(req: Request, res: Respo
                 if(err) console.log('error')
             })
         }
-        sendResponse(res, null, errors.errors[0].msg, null, null)
+        serverSendingPattern(res, null, errors.errors[0].msg, null, null)
         return;
     }
 
@@ -30,13 +30,13 @@ export default async function configureSystemController(req: Request, res: Respo
     const file = req.file;
 
     if(file === undefined){
-        sendResponse(res, null, 'Falta o arquivo', null, null);
+        serverSendingPattern(res, null, 'Falta o arquivo', null, null);
         return;
     }
 
     setStatus(1);
     configureSystemService(name, file);
 
-    sendResponse(res, '/instalacao/admin', null, 'Sistema configurado com sucesso', null);
+    serverSendingPattern(res, '/instalacao/admin', null, 'Sistema configurado com sucesso', null);
     return;
 }

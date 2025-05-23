@@ -2,14 +2,16 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
-import { router } from './routes/router';
-import { routerUser } from './routes/user';
-import { routerAdmin } from './routes/admin';
-import { instalationRouter } from './routes/installation';
-import { routerSystem } from './routes/system';
+import { router } from './routes';
+import { userRoute } from './routes/user';
+import { adminRoute } from './routes/admin';
+import { instalationRoute } from './routes/installation';
+import { webhookRoute } from './routes/webhook';
 import errorHandling from './middlewares/errorHandling';
 import acceptedMethod from './security/acceptedMethods';
-import DatabaseManager from './services/databaseManagerService';
+import DatabaseManager from './services/system/databaseManagerService';
+import { confirmationEmailRoute } from './routes/confirmationEmail';
+import { loginAndRegistrationRoute } from './routes/loginAndRegistration';
 
 const teste = express();
 
@@ -22,10 +24,12 @@ teste.use(cors({
 teste.use(acceptedMethod);
 teste.use(cookieParser());
 
-teste.use(instalationRouter);
-teste.use(routerUser);
-teste.use(routerAdmin);
-teste.use(routerSystem);
+teste.use(userRoute);
+teste.use(adminRoute);
+teste.use(instalationRoute);
+teste.use(webhookRoute);
+teste.use(confirmationEmailRoute);
+teste.use(loginAndRegistrationRoute);
 teste.use(router);
 
 teste.use(errorHandling);

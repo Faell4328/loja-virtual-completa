@@ -1,6 +1,6 @@
-import prismaClient from "../prisma";
+import prismaClient from "../../prisma";
 import crypto from 'crypto';
-import { statusSystem, setStatus } from "../tools/status";
+import { statusSystem, setStatus } from "../../tools/status";
 export default class DatabaseManager{
 
     static async checkStatusSystem(){

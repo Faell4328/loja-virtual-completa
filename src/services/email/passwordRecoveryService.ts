@@ -1,7 +1,7 @@
 import { whatsappReady } from "../../routes/admin";
-import DatabaseManager from "../databaseManagerService";
+import DatabaseManager from "../system/databaseManagerService";
 import sendMessageWhatappService from "../whatsapp/sendMessageWhatsappService";
-import sendEmail from "./sendEmailService";
+import sendEmail from "./sendEmailPattern";
 
 export default async function passwordRecoveryService(email: string){
     const returnDB = await DatabaseManager.consultByEmail(email);

@@ -1,8 +1,8 @@
 import { whatsappReady } from "../../routes/admin";
 import HashPassword from "../../security/hashPassword";
-import DatabaseManager from "../databaseManagerService";
+import DatabaseManager from "../system/databaseManagerService";
 import sendMessageWhatappService from "../whatsapp/sendMessageWhatsappService";
-import sendEmail from "./sendEmailService";
+import sendEmail from "./sendEmailPattern";
 
 export default async function passwordConfirmationService(hash: string, newPassword: string){
     let user = await DatabaseManager.checkPasswordRecovery(hash);

@@ -1,18 +1,13 @@
 import { Router, Request, Response } from 'express';
-import multer from 'multer';
 
-import uploadConfig from '../config/multer';
 import isAdmin from '../middlewares/isAdmin';
 
-import listUsersController from '../controllers/admin/listUsersController';
-import listSpecificUserController from '../controllers/admin/listSpecificUserController';
-import whatsappController from '../controllers/admin/whatsAppController';
+import whatsappController from '../controllers/admin/whatsappController';
 import generationWhatsappQrcodeService from '../services/whatsapp/generationWhatsappQrcodeService';
 import { regularlCondicionalRoutes } from '../middlewares/condicionalRoutes';
+import { listSpecificUserController, listUsersController } from '../controllers/admin/userController';
 
-const routerAdmin = Router();
-
-const upload = multer(uploadConfig.upload());
+const adminRoute = Router();
 
 let whatsappReady = false;
 let qrcode = '';
@@ -25,22 +20,22 @@ export function setWhatsappReady(data: boolean){
     whatsappReady = data;
 }
 
-routerAdmin.get('/admin/users', regularlCondicionalRoutes, isAdmin, (req: Request, res: Response) => {
+adminRoute.get('/admin/users', regularlCondicionalRoutes, isAdmin, (req: Request, res: Response) => {
     listUsersController(req, res);
     return;
 });
 
-routerAdmin.get('/admin/user/:id', regularlCondicionalRoutes, isAdmin, (req: Request, res: Response) => {
+adminRoute.get('/admin/user/:id', regularlCondicionalRoutes, isAdmin, (req: Request, res: Response) => {
     listSpecificUserController(req, res);
     return
 });
 
-routerAdmin.get('/admin/whatsapp', regularlCondicionalRoutes, isAdmin, (req: Request, res: Response) => {
+adminRoute.get('/admin/whatsapp', regularlCondicionalRoutes, isAdmin, (req: Request, res: Response) => {
     whatsappController(req, res);
     return
 });
 
-routerAdmin.get('/admin/whatsapp/qr', (req: Request, res: Response) => {
+adminRoute.get('/admin/whatsapp/qr', (req: Request, res: Response) => {
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');
     res.setHeader('Connection', 'keep-alive');
@@ -49,4 +44,4 @@ routerAdmin.get('/admin/whatsapp/qr', (req: Request, res: Response) => {
     generationWhatsappQrcodeService(res, qrcode);
 });
 
-export { routerAdmin, qrcode, whatsappReady }
+export { adminRoute, qrcode, whatsappReady }

@@ -1,6 +1,6 @@
 import { whatsappReady } from "../../routes/admin";
 import HashPassword from "../../security/hashPassword";
-import DatabaseManager from "../databaseManagerService";
+import DatabaseManager from "./databaseManagerService";
 import sendMessageWhatappService from "../whatsapp/sendMessageWhatsappService";
 
 export default async function loginService(email: string, password: string){

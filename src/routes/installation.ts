@@ -2,22 +2,22 @@ import { Router, Request, Response } from 'express';
 import multer from 'multer';
 
 import uploadConfig from '../config/multer';
-import createUserAdminController from '../controllers/admin/createUserAdminController';
-import configureSystemController from '../controllers/system/configureSystemController';
+import createUserAdminController from '../controllers/installation/createUserAdminController';
+import configureSystemController from '../controllers/installation/configureSystemController';
 import { validateRegister, validateSystemConfig } from '../middlewares/validatorInput';
 import { conditionalInstalationRoutes } from '../middlewares/condicionalRoutes';
 
-const instalationRouter = Router();
+const instalationRoute = Router();
 const upload = multer(uploadConfig.upload(true));
 
-instalationRouter.post('/instalacao/admin', conditionalInstalationRoutes, upload.none(), validateRegister, (req: Request, res: Response) => {
+instalationRoute.post('/instalacao/admin', conditionalInstalationRoutes, upload.none(), validateRegister, (req: Request, res: Response) => {
     createUserAdminController(req, res);
     return
 })
 
-instalationRouter.post('/instalacao/config', conditionalInstalationRoutes, upload.single('file'), validateSystemConfig, (req: Request, res: Response) => {
+instalationRoute.post('/instalacao/config', conditionalInstalationRoutes, upload.single('file'), validateSystemConfig, (req: Request, res: Response) => {
     configureSystemController(req, res);
     return;
 })
 
-export { instalationRouter };
+export { instalationRoute };

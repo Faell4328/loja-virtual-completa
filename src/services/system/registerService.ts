@@ -1,6 +1,6 @@
-import DatabaseManager from '../databaseManagerService';
+import DatabaseManager from './databaseManagerService';
 import HashPassword from '../../security/hashPassword';
-import sendEmail from '../email/sendEmailService';
+import sendEmail from '../email/sendEmailPattern';
 import { whatsappReady } from '../../routes/admin';
 import sendMessageWhatappService from '../whatsapp/sendMessageWhatsappService';
 
