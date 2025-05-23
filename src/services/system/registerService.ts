@@ -1,7 +1,7 @@
-import DatabaseManager from '../databaseManagerService';
+import DatabaseManager from './databaseManagerService';
 import HashPassword from '../../security/hashPassword';
-import sendEmail from '../email/sendEmailService';
-import { qrcode } from '../../routes/admin';
+import sendEmail from '../email/sendEmailPattern';
+import { whatsappReady } from '../../routes/admin';
 import sendMessageWhatappService from '../whatsapp/sendMessageWhatsappService';
 
 export default async function createUserService(name: string, email: string, phone: string, password: string){
@@ -15,7 +15,7 @@ export default async function createUserService(name: string, email: string, pho
     let hashEmail = await DatabaseManager.createEmailToken(email);
     sendEmail.sendEmailConfirmationService(email, hashEmail);
 
-    if(phone && qrcode == 'Pronto'){
+    if(phone && whatsappReady){
         sendMessageWhatappService('55'+phone, `Sejá bem-vindo ${name.split(' ')[0]}, seu cadastro foi realizado com sucesso, é necessário que você acesse eu email e confirme seu email`);
     }
     return true;

@@ -8,6 +8,8 @@ services:
     - "127.0.0.1:4000:4000"
     volumes:
     - zap:/src
+    environment:
+      TOKEN_WEB_HOOK: ${TOKEN_WEB_HOOK}
     command: "node index.js"
   db:
     container_name: postgres

@@ -1,26 +1,37 @@
-import prismaClient from "../prisma";
+import prismaClient from "../../prisma";
 import crypto from 'crypto';
-
-interface AddingInformationSystemProps{
-    name: string,
-    email: string,
-    hashPassword: string
-}
-
-interface LoginProps{
-    email: string,
-    hashPassword: string
-}
+import { statusSystem, setStatus } from "../../tools/status";
 export default class DatabaseManager{
 
-    static async addSystemConfiguration(nameStore: string, fileSoon: string){
-        await prismaClient.systemConfig.create({ data: { nameStore, fileSoon, statusWhatsapp: 'off', creationDate: new Date() } })
+    static async checkStatusSystem(){
+        const quantidade = await prismaClient.systemConfig.count({ where: { id: 1 } })
+        if(quantidade == 0){
+            return;
+        }
+
+        const status = await prismaClient.systemConfig.findMany({
+            where: { id: 1 },
+            select: { statusSystem: true }
+        })
+        if(status == null){
+            throw new Error('status connot be checked')
+        }
+        setStatus(status[0].statusSystem)
+        return;
     }
 
-    static async createUserAdmin({ name, email, hashPassword }: AddingInformationSystemProps){
+    static async addSystemConfiguration(nameStore: string, fileSoon: string){
+        await prismaClient.systemConfig.create({ data: { nameStore, fileSoon, statusSystem, creationDate: new Date() } })
+    }
+
+    static async createUserAdmin(name: string, email: string, phone: string, hashPassword: string){
         const userAdmin = await prismaClient.user.create({
-            data: {name, email, password: hashPassword, role: 'ADMIN'}
+            data: {name, email, phone, password: hashPassword, role: 'ADMIN'}
         })
+        await prismaClient.systemConfig.update({
+            where: {id: 1},
+            data: { statusSystem }
+        });
 
         if(!userAdmin) console.log('erro ao salvar');
         return;
@@ -42,7 +53,7 @@ export default class DatabaseManager{
 
     static async createEmailToken(email: string){
         const date = new Date();
-        date.setHours(date.getHours() + 1);
+        date.setMinutes(date.getMinutes() + 5);
         let hash = crypto.randomBytes(64).toString('hex');
         const createEmailToken = await prismaClient.user.update({
             where: { email },
@@ -71,7 +82,7 @@ export default class DatabaseManager{
 
     static async passwordRecovery(email: string){
         const date = new Date();
-        date.setMinutes(date.getMinutes() + 30);
+        date.setMinutes(date.getMinutes() + 5);
         let hash = crypto.randomBytes(64).toString('hex');
 
         let token = await prismaClient.user.update({
@@ -100,7 +111,7 @@ export default class DatabaseManager{
         return true;
     }
 
-    static async login ({ email, hashPassword }: LoginProps){
+    static async login (email: string, hashPassword: string){
         const date = new Date();
         date.setDate(date.getDate() + 20);
         let hash = crypto.randomBytes(64).toString('hex');
@@ -114,6 +125,16 @@ export default class DatabaseManager{
         return createLoginToken;
     }
 
+    static async logOut(userId: string){
+        const user = await prismaClient.user.update({
+            where: { id: userId },
+            data: { loginToken: null, loginTokenExpirationDate: null },
+            select: { id: true }
+        });
+
+        return user;
+    }
+
     static async validateLoginToken(token: string){
         return await prismaClient.user.findUnique({
             where: { loginToken: token }
@@ -123,6 +144,13 @@ export default class DatabaseManager{
     static async consultByEmail(email: string){
         let user = await prismaClient.user.findUnique({
             where: { email }
+        });
+        return user;
+    }
+    
+    static async consultByLoginToken(token: string){
+        let user = await prismaClient.user.findUnique({
+            where: { loginToken: token }
         });
         return user;
     }
@@ -139,7 +167,7 @@ export default class DatabaseManager{
 
         const userInformation = await prismaClient.user.findUnique({
             where: { id: userId },
-            select: { id: true, name: true, email: true, phone: true}
+            select: { id: true, name: true, email: true, phone: true, role: true, status: true }
         });
 
         if(userInformation == null) return null;
@@ -157,7 +185,7 @@ export default class DatabaseManager{
         const userAddress = await prismaClient.user.findUnique({
             where: { id: userId },
             include: { address: {
-                select: { description: true, street: true, number: true, neighborhood: true, zipCode: true, complement: true }
+                select: { description: true, street: true, number: true, neighborhood: true, zipCode: true, city: true, state: true, complement: true }
             }}
         });
 
@@ -173,7 +201,7 @@ export default class DatabaseManager{
         return true;
     }
 
-    static async updateUserAddressInformation(userId: string, description: string, street: string, number: string, neighborhood: string, zipCode: string, state: string, complement: string){
+    static async updateUserAddressInformation(userId: string, description: string, street: string, number: string, neighborhood: string, zipCode: string, city: string, state: string, complement: string){
         
 
         const countAddress = await prismaClient.address.count({
@@ -182,16 +210,16 @@ export default class DatabaseManager{
 
         if(countAddress == 0){
             await prismaClient.address.create({
-                data: { usersId: userId, description, street, number, neighborhood, zipCode, state, complement },
-                select: { description: true, street: true, number: true, neighborhood: true, zipCode: true, state: true, complement: true }
+                data: { usersId: userId, description, street, number, neighborhood, zipCode, city, state, complement },
+                select: { description: true, street: true, number: true, neighborhood: true, zipCode: true, city: true, state: true, complement: true }
             });
             return true;
         }
         else if(countAddress > 0){
             await prismaClient.address.update({
                 where: { usersId: userId },
-                data: { description, street, number, neighborhood, zipCode, state, complement },
-                select: { description: true, street: true, number: true, neighborhood: true, zipCode: true, state: true, complement: true }
+                data: { description, street, number, neighborhood, zipCode, city, state, complement },
+                select: { description: true, street: true, number: true, neighborhood: true, zipCode: true, city: true, state: true, complement: true }
             });
             return true;
         }
@@ -210,7 +238,7 @@ export default class DatabaseManager{
 
     static async listUsers(){
         const users = await prismaClient.user.findMany({
-            select: { id: true, name: true, phone: true, email: true, role: true, status: true }
+            select: { id: true, name: true, email: true, phone: true, role: true, status: true }
         });
         return users == null ? false : users;
     }

@@ -1,28 +1,37 @@
 import express from 'express';
-import { existsSync } from "fs";
-import { resolve } from 'path';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
-import { router } from './routes/router';
-import { instalationRouter } from './routes/installation';
+import { router } from './routes';
+import { userRoute } from './routes/user';
+import { adminRoute } from './routes/admin';
+import { instalationRoute } from './routes/installation';
+import { webhookRoute } from './routes/webhook';
 import errorHandling from './middlewares/errorHandling';
 import acceptedMethod from './security/acceptedMethods';
+import DatabaseManager from './services/system/databaseManagerService';
+import { confirmationEmailRoute } from './routes/confirmationEmail';
+import { loginAndRegistrationRoute } from './routes/loginAndRegistration';
 
-export const teste = express();
+const teste = express();
 
-teste.use(express.json());
+DatabaseManager.checkStatusSystem();
 
 teste.use(express.json());
 teste.use(cors({
-    methods: ['GET', 'POST', 'PULL', 'DELETE']
+    methods: ['GET', 'POST', 'PUT', 'DELETE']
 }));
 teste.use(acceptedMethod);
+teste.use(cookieParser());
 
-if(existsSync(resolve(__dirname, '..', 'config.json')) === false){
-    teste.use(instalationRouter);
-}
-else{
-    teste.use(router);
-}
+teste.use(userRoute);
+teste.use(adminRoute);
+teste.use(instalationRoute);
+teste.use(webhookRoute);
+teste.use(confirmationEmailRoute);
+teste.use(loginAndRegistrationRoute);
+teste.use(router);
 
 teste.use(errorHandling);
+
+export { teste }

@@ -1,25 +1,27 @@
 import { Request, Response } from 'express';
 
-import createUserService from '../../services/user/createUserService';
+import createUserService from '../../services/system/registerService';
 import { validationResult } from 'express-validator';
+import serverSendingPattern from '../serverSendingPattern';
 
 export default async function registrerUserController(req: Request, res: Response){
 
     const errors:any = validationResult(req);
 
     if(!errors.isEmpty()){
-        return res.status(400).json({ 'erro': errors.errors[0].msg });
+        serverSendingPattern(res, null, errors.errors[0].msg, null, null);
+        return;
     }
 
     const { name, email, phone, password } = req.body;
 
     let retorno: boolean|string = await createUserService(name, email, phone, password);
     if(retorno === true){
-        res.status(200).json({ 'ok': 'Usuário cadastrado' });
+        serverSendingPattern(res, '/confirmacao', null, 'Usuário cadastrado', null);
         return;
     }
     else{
-        res.status(400).json({ 'erro': retorno});
+        serverSendingPattern(res, null, retorno, null, null);
         return;
     }
 }
