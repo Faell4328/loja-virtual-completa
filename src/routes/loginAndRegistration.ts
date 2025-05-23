@@ -8,6 +8,8 @@ import isNotLogged from '../middlewares/isNotLogged';
 import { validateLogin, validateRegister } from '../middlewares/validatorInput';
 import { loginLimit } from '../security/requestLimit';
 import { regularlCondicionalRoutes } from '../middlewares/condicionalRoutes';
+import isLogged from '../middlewares/isLogged';
+import logOutController from '../controllers/system/logOutController';
 
 const loginAndRegistrationRoute = Router();
 
@@ -20,6 +22,11 @@ loginAndRegistrationRoute.post('/login', regularlCondicionalRoutes, isNotLogged,
 
 loginAndRegistrationRoute.post('/cadastrar', regularlCondicionalRoutes, isNotLogged, upload.none(), validateRegister, (req: Request, res: Response) => {
     registrerUserController(req, res);
+    return;
+});
+
+loginAndRegistrationRoute.put('/deslogar', regularlCondicionalRoutes, isLogged, (req: Request, res: Response) => {
+    logOutController(req, res);
     return;
 });
 

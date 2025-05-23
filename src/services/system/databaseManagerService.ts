@@ -125,6 +125,16 @@ export default class DatabaseManager{
         return createLoginToken;
     }
 
+    static async logOut(userId: string){
+        const user = await prismaClient.user.update({
+            where: { id: userId },
+            data: { loginToken: null, loginTokenExpirationDate: null },
+            select: { id: true }
+        });
+
+        return user;
+    }
+
     static async validateLoginToken(token: string){
         return await prismaClient.user.findUnique({
             where: { loginToken: token }
