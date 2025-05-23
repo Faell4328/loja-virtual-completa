@@ -29,9 +29,6 @@ export default async function checkStatusWhatsappService(res: Response){
     if(retorno == 'Não iniciado'){
         setWhatsappReady(false);
         setQrcode('');
-        res.set([
-
-        ])
         sendResponse(res, null, null, null, null);
     }
     else{

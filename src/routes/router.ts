@@ -26,7 +26,7 @@ router.get('/', regularlCondicionalRoutes, async (req: Request, res: Response) =
             sendResponse(res, null, null, null, user.role)
         }
         else{
-            res.end();
+            sendResponse(res, null, null, null, null);
         }
     }
     else{
@@ -35,12 +35,6 @@ router.get('/', regularlCondicionalRoutes, async (req: Request, res: Response) =
     return;
 });
 
-router.get('/confirmacao', regularlCondicionalRoutes, isNotLogged, (req: Request, res: Response) => {
-    res.send('Por favor, verifique o email que foi enviado para você com o link para ativação');
-    return;
-});
-
-// A pessoa deve enviar o email que ela gostaria que fosse reenviado o link de ativação de email na conta
 router.post('/confirmacao', regularlCondicionalRoutes, isNotLogged, resendEmailLimit, upload.none(), validateEmail, (req: Request, res: Response) => {
     resendEmailController(req, res);
     return;
@@ -66,7 +60,7 @@ router.post('/recuperacao/senha', regularlCondicionalRoutes, isNotLogged, upload
     return;
 });
 
-router.post('/recuperacao/senha/:hash', regularlCondicionalRoutes, isNotLogged, upload.none(), validatePassword, (req: Request, res: Response) => {
+router.put('/recuperacao/senha/:hash', regularlCondicionalRoutes, isNotLogged, upload.none(), validatePassword, (req: Request, res: Response) => {
     passwordConfirmationController(req, res);
     return;
 })

@@ -2,7 +2,7 @@
     "openapi": "3.0.0",
     "info": {
         "title": "Documentação das Rotas",
-        "version": "0.0.1"
+        "version": "0.2"
     },
     "paths": {
         "/instalacao/config":{
@@ -33,49 +33,72 @@
                     }
                 },
                 "responses": {
-                    "307": {
-                        "description": "Quando deu certo redicionar para \"/instalacao/config\" ou quando você já fez essa etapa antes",
-                        "content": {
-                            "application/json": {
-                                "example": {
-                                    "redirect": "/instalacao/admin"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Mensagem de erro",
+                    "200": {
                         "content": {
                             "application/json": {
                                 "examples": {
+                                    "Sucesso": {
+                                        "value": {
+                                            "redirect": "/instalacao/admin",
+                                            "error": null,
+                                            "ok": "Sistema configurado com sucesso",
+                                            "data": null
+                                        }
+                                    },
+                                    "Quando você já fez essa etapa antes": {
+                                        "value": {
+                                            "redirect": "/instalacao/admin",
+                                            "error": "Você já adicionou informações sobre sua loja, você poderá altera-las depois",
+                                            "ok": null,
+                                            "data": null
+                                        }
+                                    },
                                     "Falta o nome": {
                                         "value": {
-                                            "error": "Falta o nome"
+                                            "redirect": null,
+                                            "error": "Falta o nome",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Nome com menos de 2 caracteres":{
                                         "value": {
-                                            "error": "Nome precisa ter no mínimo 2 caracteres"
+                                            "redirect": null,
+                                            "error": "Nome precisa ter no mínimo 2 caracteres",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Nome com mais de 100 caracteres":{
                                         "value": {
-                                            "error": "O nome deve ter no máximo 100 caracteres"
+                                            "redirect": null,
+                                            "error": "O nome deve ter no máximo 100 caracteres",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Falta o arquivo": {
                                         "value": {
-                                            "error": "Falta o arquivo"
+                                            "redirect": null,
+                                            "error": "Falta o arquivo",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Enviado extensão inválida": {
                                         "value": {
-                                            "error": "É aceito apenas extensão .png, .jpg e .jpeg"
+                                            "redirect": null,
+                                            "error": "É aceito apenas extensão .png, .jpg e .jpeg",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Arquivo enviado é maior que 10 MB": {
                                         "value": {
-                                            "error": "A imagem enviada é maior que 10 MB"
+                                            "redirect": null,
+                                            "error": "A imagem enviada é maior que 10 MB",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     }
                                 }
@@ -112,7 +135,7 @@
                                     },
                                     "phone": {
                                         "type": "string",
-                                        "example": "40028922",
+                                        "example": "20028922",
                                         "description": "Tem que ser um número valido e seguir o seguinte formato: \"31xxxxxxxx\", não precisa do \"+55\" e nem do \"9\". Deve ter exatos 10 caracteres."
                                     },
                                     "email": {
@@ -132,88 +155,120 @@
                     }
                 },
                 "responses": {
-                    "307": {
-                        "description": "Quando deu certo redicionar para \"/confirmacao\" ou quando você pula etapa de instalação redicionar para a rota: \"/instalacao/config\"",
+                    "200": {
                         "content": {
                             "application/json": {
                                 "examples": {
                                     "Sucesso":{
                                         "value": {
-                                            "redirect": "/confirmacao"
+                                            "redirect": "/confirmacao",
+                                            "error": null,
+                                            "ok": "Usuário administrador criado",
+                                            "data": null
                                         }
                                     },
-                                    "Pulou etapa":{
+                                    "Pulou etapa anterior da instalação":{
                                         "value": {
-                                            "redirect": "/instalacao/config"
+                                            "redirect": "/instalacao/config",
+                                            "error": "Faça a configuração do sistema primeiro",
+                                            "ok": null,
+                                            "data": null
                                         }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Mensagem de erro",
-                        "content": {
-                            "application/json": {
-                                "examples": {
+                                    },
                                     "Falta o nome":{
                                         "value": {
-                                            "error": "Falta o nome"
+                                            "redirect": null,
+                                            "error": "Falta o nome",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Nome com menos de 2 caracteres":{
                                         "value": {
-                                            "error": "Nome precisa ter no mínimo 2 caracteres"
+                                            "redirect": null,
+                                            "error": "Nome precisa ter no mínimo 2 caracteres",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Nome com mais de 100 caracteres":{
                                         "value": {
-                                            "error": "O nome deve ter no máximo 100 caracteres"
+                                            "redirect": null,
+                                            "error": "O nome deve ter no máximo 100 caracteres",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Falta o telefone":{
                                         "value": {
-                                            "error": "Falta o telefone"
+                                            "redirect": null,
+                                            "error": "Falta o telefone",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Telefone com o tamanho diferente de 10":{
                                         "value": {
-                                            "error": "Seu número de telefone deve ter 10 caracteres"
+                                            "redirect": null,
+                                            "error": "Seu número de telefone deve ter 10 caracteres",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Falta o email":{
                                         "value": {
-                                            "error": "Falta o email"
+                                            "redirect": null,
+                                            "error": "Falta o email",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Email inválido":{
                                         "value": {
-                                            "error": "Email inválido"
+                                            "redirect": null,
+                                            "error": "Email inválido",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Email com menos de 2 caracteres":{
                                         "value": {
-                                            "error": "Email precisa ter no mínimo 2 caracteres"
+                                            "redirect": null,
+                                            "error": "Email precisa ter no mínimo 2 caracteres",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Email com mais de 100 caracteres":{
                                         "value": {
-                                            "error": "O email deve ter no máximo 100 caracteres"
+                                            "redirect": null,
+                                            "error": "O email deve ter no máximo 100 caracteres",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Falta a senha":{
                                         "value": {
-                                            "error": "Falta a senha"
+                                            "redirect": null,
+                                            "error": "Falta a senha",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Senha com menos de 8 caracteres":{
                                         "value": {
-                                            "error": "A senha deve ter no mínimo 8 caracteres"
+                                            "redirect": null,
+                                            "error": "A senha deve ter no mínimo 8 caracteres",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Senha com mais de 30 caracteres":{
                                         "value": {
-                                            "error": "A senha deve ter no máximo 30 caracteres"
+                                            "redirect": null,
+                                            "error": "A senha deve ter no máximo 30 caracteres",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     }
                                 }
@@ -233,27 +288,37 @@
                 }
             }
         },
-        "/confirmacao": {
+        "/": {
             "get": {
-                "summary": "Rota para mostrar uma mensagem para verificar no email. Futuramente será removida",
-                "tags": ["Ativação de Conta"],
+                "summary": "Rota para solicitar a role do usuário",
+                "tags": ["Home"],
                 "responses": {
                     "200": {
-                        "description": "Vai dar uma mensagem na tela avisando para verificar o email. É uma rota que futuramente será removida"
-                    },
-                    "307": {
-                        "description": "Quando você pula a etapa de instalação, redireciona para uma das rotas \"/instalacao/config\" ou \"/instalacao/admin\"",
                         "content": {
                             "application/json": {
                                 "examples": {
-                                    "Pulou etapa da instalação 1":{
+                                    "Se o usuário for admin": {
                                         "value": {
-                                            "redirect": "/instalacao/config"
+                                            "redirect": null,
+                                            "error": null,
+                                            "ok": null,
+                                            "data": "ADMIN"
                                         }
                                     },
-                                    "Pulou etapa da instalação 2":{
+                                    "Se for apenas um usuário": {
                                         "value": {
-                                            "redirect": "/instalacao/admin"
+                                            "redirect": null,
+                                            "error": null,
+                                            "ok": null,
+                                            "data": "USER"
+                                        }
+                                    },
+                                    "Se não tiver logado": {
+                                        "value": {
+                                            "redirect": null,
+                                            "error": null,
+                                            "ok": null,
+                                            "data": null
                                         }
                                     }
                                 }
@@ -261,7 +326,9 @@
                         }
                     }
                 }
-            },
+            }
+        },
+        "/confirmacao": {
             "post": {
                 "summary": "Rota para solicitar o reenvio via email, do link de verificação de email",
                 "tags": ["Ativação de Conta"],
@@ -284,67 +351,79 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Mensagem de sucesso",
-                        "content": {
-                            "application/json": {
-                                "example": {
-                                    "ok": "Foi reenviado para seu email: user@example.com"
-                                }
-                            }
-                        }
-                    },
-                    "307": {
-                        "description": "Quando você pula a etapa de instalação, redireciona para uma das rotas \"/instalacao/config\" ou \"/instalacao/admin\"",
                         "content": {
                             "application/json": {
                                 "examples": {
+                                    "Sucesso": {
+                                        "value": {
+                                            "redirect": null,
+                                            "error": null,
+                                            "ok": "Foi reenviado para seu email: user@example.com",
+                                            "data": null
+                                        }
+                                    },
                                     "Pulou etapa da instalação 1":{
                                         "value": {
-                                            "redirect": "/instalacao/config"
+                                            "redirect": "/instalacao/config",
+                                            "error": null,
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Pulou etapa da instalação 2":{
                                         "value": {
-                                            "redirect": "/instalacao/admin"
+                                            "redirect": "/instalacao/admin",
+                                            "error": null,
+                                            "ok": null,
+                                            "data": null
                                         }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Menagem de erro",
-                        "content": {
-                            "application/json": {
-                                "examples": {
+                                    },
                                     "Email não cadastrado":{
                                         "value": {
-                                            "error": "Esse email não está cadastrado"
+                                            "redirect": null,
+                                            "error": "Esse email não está cadastrado",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Conta que já foi ativada":{
                                         "value": {
-                                            "error": "Email já validado"
+                                            "redirect": null,
+                                            "error": "Email já validado",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Falta o email":{
                                         "value": {
-                                            "error": "Falta o email"
+                                            "redirect": null,
+                                            "error": "Falta o email",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Email inválido":{
                                         "value": {
-                                            "error": "Email inválido"
+                                            "redirect": null,
+                                            "error": "Email inválido",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Email com menos de 2 caracteres":{
                                         "value": {
-                                            "error": "Email precisa ter no mínimo 2 caracteres"
+                                            "redirect": null,
+                                            "error": "Email precisa ter no mínimo 2 caracteres",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Email com mais de 100 caracteres":{
                                         "value": {
-                                            "error": "O email deve ter no máximo 100 caracteres"
+                                            "redirect": null,
+                                            "error": "O email deve ter no máximo 100 caracteres",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     }
                                 }
@@ -371,52 +450,55 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Mensagem de sucesso",
-                        "content": {
-                            "application/json": {
-                                "example": {
-                                    "ok": "Email válidado"
-                                }
-                            }
-                        }
-                    },
-                    "307": {
-                        "description": "Quando você pula a etapa de instalação, redireciona para uma das rotas \"/instalacao/config\" ou \"/instalacao/admin\"",
                         "content": {
                             "application/json": {
                                 "examples": {
+                                    "Sucesso": {
+                                        "value": {
+                                            "redirect": null,
+                                            "error": "Email válidado",
+                                            "ok": null,
+                                            "data": null
+                                        }
+                                    },
                                     "Pulou etapa da instalação 1":{
                                         "value": {
-                                            "redirect": "/instalacao/config"
+                                            "redirect": "/instalacao/config",
+                                            "error": null,
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Pulou etapa da instalação 2":{
                                         "value": {
-                                            "redirect": "/instalacao/admin"
+                                            "redirect": "/instalacao/admin",
+                                            "error": null,
+                                            "ok": null,
+                                            "data": null
                                         }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Menagem de erro",
-                        "content": {
-                            "application/json": {
-                                "examples": {
+                                    },
                                     "Token enviado é inválido":{
                                         "value": {
-                                            "error": "Token inválido"
+                                            "redirect": null,
+                                            "error": "Token inválido",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Token enviado já foi expirado (válido por 5 minutos)":{
                                         "value": {
-                                            "error": "Token expirado"
+                                            "redirect": null,
+                                            "error": "Token expirado",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Conta que já foi ativada":{
                                         "value": {
-                                            "error": "Email já validado"
+                                            "redirect": null,
+                                            "error": "Email já validado",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     }
                                 }
@@ -443,7 +525,7 @@
                                     },
                                     "phone": {
                                         "type": "string",
-                                        "example": "40028922",
+                                        "example": "20028922",
                                         "description": "Tem que ser um número valido e seguir o seguinte formato: \"31xxxxxxxx\", não precisa do \"+55\" e nem do \"9\". Deve ter exatos 10 caracteres."
                                     },
                                     "email": {
@@ -464,97 +546,127 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Mensagem de sucesso",
-                        "content": {
-                            "application/json": {
-                                "example": {
-                                    "ok": "Usuário cadastrado"
-                                }
-                            }
-                        }
-                    },
-                    "307": {
-                        "description": "Quando você pula a etapa de instalação, redireciona para uma das rotas \"/instalacao/config\" ou \"/instalacao/admin\"",
                         "content": {
                             "application/json": {
                                 "examples": {
+                                    "Sucesso": {
+                                        "value": {
+                                            "redirect": null,
+                                            "error": null,
+                                            "ok": "Usuário cadastrado",
+                                            "data": null
+                                        }
+                                    },
                                     "Pulou etapa da instalação 1":{
                                         "value": {
-                                            "redirect": "/instalacao/config"
+                                            "redirect": "/instalacao/config",
+                                            "error": null,
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Pulou etapa da instalação 2":{
                                         "value": {
-                                            "redirect": "/instalacao/admin"
+                                            "redirect": "/instalacao/admin",
+                                            "error": null,
+                                            "ok": null,
+                                            "data": null
                                         }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Mensagem de erro",
-                        "content": {
-                            "application/json": {
-                                "examples": {
+                                    },
                                     "Falta o nome":{
                                         "value": {
-                                            "error": "Falta o nome"
+                                            "redirect": null,
+                                            "error": "Falta o nome",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Nome com menos de 2 caracteres":{
                                         "value": {
-                                            "error": "Nome precisa ter no mínimo 2 caracteres"
+                                            "redirect": null,
+                                            "error": "Nome precisa ter no mínimo 2 caracteres",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Nome com mais de 100 caracteres":{
                                         "value": {
-                                            "error": "O nome deve ter no máximo 100 caracteres"
+                                            "redirect": null,
+                                            "error": "O nome deve ter no máximo 100 caracteres",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Falta o telefone":{
                                         "value": {
-                                            "error": "Falta o telefone"
+                                            "redirect": null,
+                                            "error": "Falta o telefone",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Telefone com o tamanho diferente de 10":{
                                         "value": {
-                                            "error": "Seu número de telefone deve ter 10 caracteres"
+                                            "redirect": null,
+                                            "error": "Seu número de telefone deve ter 10 caracteres",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Falta o email":{
                                         "value": {
-                                            "error": "Falta o email"
+                                            "redirect": null,
+                                            "error": "Falta o email",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Email inválido":{
                                         "value": {
-                                            "error": "Email inválido"
+                                            "redirect": null,
+                                            "error": "Email inválido",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Email com menos de 2 caracteres":{
                                         "value": {
-                                            "error": "Email precisa ter no mínimo 2 caracteres"
+                                            "redirect": null,
+                                            "error": "Email precisa ter no mínimo 2 caracteres",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Email com mais de 100 caracteres":{
                                         "value": {
-                                            "error": "O email deve ter no máximo 100 caracteres"
+                                            "redirect": null,
+                                            "error": "O email deve ter no máximo 100 caracteres",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Falta a senha":{
                                         "value": {
-                                            "error": "Falta a senha"
+                                            "redirect": null,
+                                            "error": "Falta a senha",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Senha com menos de 8 caracteres":{
                                         "value": {
-                                            "error": "A senha deve ter no mínimo 8 caracteres"
+                                            "redirect": null,
+                                            "error": "A senha deve ter no mínimo 8 caracteres",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Senha com mais de 30 caracteres":{
                                         "value": {
-                                            "error": "A senha deve ter no máximo 30 caracteres"
+                                            "redirect": null,
+                                            "error": "A senha deve ter no máximo 30 caracteres",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     }
                                 }
@@ -592,67 +704,79 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Mensagem de sucesso",
-                        "content": {
-                            "application/json": {
-                                "example": {
-                                    "ok": "Login realizado"
-                                }
-                            }
-                        }
-                    },
-                    "307": {
-                        "description": "Quando a conta não foi ativada rediciona para a rata: \"/confirmacao\" e quando você pula a etapa de instalação redireciona para uma das rotas \"/instalacao/config\" ou \"/instalacao/admin\"",
                         "content": {
                             "application/json": {
                                 "examples": {
+                                    "Sucesso": {
+                                        "value": {
+                                            "redirect": "/",
+                                            "error": null,
+                                            "ok": "Login realizado",
+                                            "data": null
+                                        }
+                                    },
                                     "Conta não ativada":{
                                         "value": {
-                                            "redirect": "/confirmacao"
+                                            "redirect": "/confirmacao",
+                                            "error": "Você não confirmou o email ainda para realizar o login",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Pulou etapa da instalação 1":{
                                         "value": {
-                                            "redirect": "/instalacao/config"
+                                            "redirect": "/instalacao/config",
+                                            "error": null,
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Pulou etapa da instalação 2":{
                                         "value": {
-                                            "redirect": "/instalacao/admin"
+                                            "redirect": "/instalacao/admin",
+                                            "error": null,
+                                            "ok": null,
+                                            "data": null
                                         }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Mensagem de erro",
-                        "content": {
-                            "application/json": {
-                                "examples": {
+                                    },
                                     "Foi enviado email ou a senha incorreto": {
                                         "value": {
-                                            "error": "Email ou seja incorreto"
+                                            "redirect": null,
+                                            "error": "Email ou seja incorreto",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Falta o email":{
                                         "value": {
-                                            "error": "Falta o email"
+                                            "redirect": null,
+                                            "error": "Falta o email",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Email inválido":{
                                         "value": {
-                                            "error": "Email inválido"
+                                            "redirect": null,
+                                            "error": "Email inválido",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Email com mais de 100 caracteres":{
                                         "value": {
-                                            "error": "O email deve ter no máximo 100 caracteres"
+                                            "redirect": null,
+                                            "error": "O email deve ter no máximo 100 caracteres",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Falta a senha":{
                                         "value": {
-                                            "error": "Falta a senha"
+                                            "redirect": null,
+                                            "error": "Falta a senha",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     }
                                 }
@@ -685,57 +809,63 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Mensagem de sucesso",
-                        "content": {
-                            "application/json": {
-                                "example": {
-                                    "ok": "Foi enviado o link para redefinir a senha no seu email: user@example.com"
-                                }
-                            }
-                        }
-                    },
-                    "307": {
-                        "description": "Quando você pula a etapa de instalação redireciona para uma das rotas \"/instalacao/config\" ou \"/instalacao/admin\"",
                         "content": {
                             "application/json": {
                                 "examples": {
+                                    "Sucesso": {
+                                        "value": {
+                                            "redirect": null,
+                                            "error": null,
+                                            "ok": "Foi enviado o link para redefinir a senha no seu email: user@example.com",
+                                            "data": null
+                                        }
+                                    },
                                     "Pulou etapa da instalação 1":{
                                         "value": {
-                                            "redirect": "/instalacao/config"
+                                            "redirect": "/instalacao/config",
+                                            "error": null,
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Pulou etapa da instalação 2":{
                                         "value": {
-                                            "redirect": "/instalacao/admin"
+                                            "redirect": "/instalacao/admin",
+                                            "error": null,
+                                            "ok": null,
+                                            "data": null
                                         }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Mensagem de erro",
-                        "content": {
-                            "application/json": {
-                                "examples": {
+                                    },
                                     "Falta o email":{
                                         "value": {
-                                            "error": "Falta o email"
+                                            "redirect": null,
+                                            "error": "Falta o email",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Email inválido":{
                                         "value": {
-                                            "error": "Email inválido"
+                                            "redirect": null,
+                                            "error": "Email inválido",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Email com menos de 2 caracteres":{
                                         "value": {
-                                            "error": "Email precisa ter no mínimo 2 caracteres"
+                                            "redirect": null,
+                                            "error": "Email precisa ter no mínimo 2 caracteres",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Email com mais de 100 caracteres":{
                                         "value": {
-                                            "error": "O email deve ter no máximo 100 caracteres"
+                                            "redirect": null,
+                                            "error": "O email deve ter no máximo 100 caracteres",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     }
                                 }
@@ -746,7 +876,7 @@
             }
         },
         "/recuperacao/senha/{hash}": {
-            "post": {
+            "put": {
                 "summary": "Rota para redefinir a senha",
                 "tags": ["Recuperar senha"],
                 "parameters": [
@@ -784,69 +914,79 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Mensagem de sucesso",
                         "content": {
                             "application/json": {
                                 "examples": {
                                     "Sucesso": {
-                                        "ok": "Senha alterada"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "307": {
-                        "description": "Quando você pula a etapa de instalação redireciona para uma das rotas \"/instalacao/config\" ou \"/instalacao/admin\"",
-                        "content": {
-                            "application/json": {
-                                "examples": {
+                                        "value": {
+                                            "redirect": null,
+                                            "error": null,
+                                            "ok": "Senha alterada",
+                                            "data": null
+                                        }
+                                    },
                                     "Pulou etapa da instalação 1":{
                                         "value": {
-                                            "redirect": "/instalacao/config"
+                                            "redirect": "/instalacao/config",
+                                            "error": null,
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Pulou etapa da instalação 2":{
                                         "value": {
-                                            "redirect": "/instalacao/admin"
+                                            "redirect": "/instalacao/admin",
+                                            "error": null,
+                                            "ok": null,
+                                            "data": null
                                         }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Mensagem de erro",
-                        "content": {
-                            "application/json": {
-                                "examples": {
+                                    },
                                     "Token expirado (ele tem duração de 5 minutos)": {
                                         "value": {
-                                            "error": "Token expirado, foi enviado para seu email um novo link"
+                                            "redirect": null,
+                                            "error": "Token expirado, foi enviado para seu email um novo link",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Falta a senha 1":{
                                         "value": {
-                                            "error": "Falta a senha 1"
+                                            "redirect": null,
+                                            "error": "Falta a senha 1",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Falta a senha 2":{
                                         "value": {
-                                            "error": "Falta a senha 2"
+                                            "redirect": null,
+                                            "error": "Falta a senha 2",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Senha 1 com menos de 8 caracteres":{
                                         "value": {
-                                            "error": "A senha deve ter no mínimo 8 caracteres"
+                                            "redirect": null,
+                                            "error": "A senha deve ter no mínimo 8 caracteres",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Senha 1 com mais de 30 caracteres":{
                                         "value": {
-                                            "error": "A senha deve ter no máximo 30 caracteres"
+                                            "redirect": null,
+                                            "error": "A senha deve ter no máximo 30 caracteres",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Senha diferentes": {
                                         "value": {
-                                            "error": "As senhas estão diferentes"
+                                            "redirect": null,
+                                            "error": "As senhas estão diferentes",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     }
                                 }
@@ -862,59 +1002,64 @@
                 "tags": ["Usuário"],
                 "responses": {
                     "200": {
-                        "description": "Mensagem de sucesso",
                         "content": {
                             "application/json": {
                                 "examples": {
                                     "Com apenas informações obrigatórias": {
-                                        "ok": {
-                                            "name": "Marize",
-                                            "phone": "40028922"
+                                        "value": {
+                                            "redirect": null,
+                                            "error": null,
+                                            "ok": null,
+                                            "data": {
+                                                "name": "Marize",
+                                                "phone": "20028922"
+                                            }
                                         }
                                     },
                                     "Com todas informações completas": {
-                                        "ok": {
-                                            "name": "Marize",
-                                            "phone": "40028922",
-                                            "address": {
-                                                "description": "Descrição da casa/apartamento, ponto de referência e etc",
-                                                "street": "Rua",
-                                                "number": "Número",
-                                                "neighborhood": "Bairro",
-                                                "zipCode": "Estado",
-                                                "complement": "Complemento (ex: 2° andar, apartamento N° 209)"
+                                        "value": {
+                                            "redirect": null,
+                                            "error": null,
+                                            "ok": null,
+                                            "data": {
+                                                "name": "Marize",
+                                                "phone": "20028922",
+                                                "address": {
+                                                    "description": "Descrição da casa/apartamento, ponto de referência e etc",
+                                                    "street": "Rua",
+                                                    "number": "Número",
+                                                    "neighborhood": "Bairro",
+                                                    "city": "Cidade",
+                                                    "zipCode": "Estado",
+                                                    "complement": "Complemento (ex: 2° andar, apartamento N° 209)"
+                                                }
                                             }
                                         }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "307": {
-                        "description": "Quando você pula a etapa de instalação redireciona para uma das rotas \"/instalacao/config\" ou \"/instalacao/admin\"",
-                        "content": {
-                            "application/json": {
-                                "examples": {
+                                    },
                                     "Pulou etapa da instalação 1":{
                                         "value": {
-                                            "redirect": "/instalacao/config"
+                                            "redirect": "/instalacao/config",
+                                            "error": null,
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Pulou etapa da instalação 2":{
                                         "value": {
-                                            "redirect": "/instalacao/admin"
+                                            "redirect": "/instalacao/admin",
+                                            "error": null,
+                                            "ok": null,
+                                            "data": null
+                                        }
+                                    },
+                                    "Problemas ao consultar": {
+                                        "value": {
+                                            "redirect": null,
+                                            "error": "Problema ao listar",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Mensagem de erro",
-                        "content": {
-                            "application/json": {
-                                "example": {
-                                    "error": "Problema ao listar"
                                 }
                             }
                         }
@@ -927,107 +1072,143 @@
                 "tags": ["Usuário"],
                 "responses": {
                     "200": {
-                        "description": "Mensagem de sucesso",
-                        "content": {
-                            "application/json": {
-                                "example": {
-                                    "ok": "Informações atualizada"
-                                }
-                            }
-                        }
-                    },
-                    "307": {
-                        "description": "Quando você pula a etapa de instalação redireciona para uma das rotas \"/instalacao/config\" ou \"/instalacao/admin\"",
                         "content": {
                             "application/json": {
                                 "examples": {
+                                    "Sucesso": {
+                                        "value": {
+                                            "redirect": null,
+                                            "error": null,
+                                            "ok": "Informações atualizada",
+                                            "data": null
+                                        }
+                                    },
                                     "Pulou etapa da instalação 1":{
                                         "value": {
-                                            "redirect": "/instalacao/config"
+                                            "redirect": "/instalacao/config",
+                                            "error": null,
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Pulou etapa da instalação 2":{
                                         "value": {
-                                            "redirect": "/instalacao/admin"
+                                            "redirect": "/instalacao/admin",
+                                            "error": null,
+                                            "ok": null,
+                                            "data": null
                                         }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Mensagem de erro",
-                        "content": {
-                            "application/json": {
-                                "examples": {
+                                    },
                                     "Falta o nome":{
                                         "value": {
-                                            "error": "Falta o nome"
+                                            "redirect": null,
+                                            "error": "Falta o nome",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Nome com menos de 2 caracteres":{
                                         "value": {
-                                            "error": "Nome precisa ter no mínimo 2 caracteres"
+                                            "redirect": null,
+                                            "error": "Nome precisa ter no mínimo 2 caracteres",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Nome com mais de 100 caracteres":{
                                         "value": {
-                                            "error": "O nome deve ter no máximo 100 caracteres"
+                                            "redirect": null,
+                                            "error": "O nome deve ter no máximo 100 caracteres",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Falta o telefone":{
                                         "value": {
-                                            "error": "Falta o telefone"
+                                            "redirect": null,
+                                            "error": "Falta o telefone",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Telefone com o tamanho diferente de 10":{
                                         "value": {
-                                            "error": "Seu número de telefone deve ter 10 caracteres"
+                                            "redirect": null,
+                                            "error": "Seu número de telefone deve ter 10 caracteres",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Descrição passou do limite": {
                                         "value": {
-                                            "error": "A descrição não pode passar de 100 caracteres"
+                                            "redirect": null,
+                                            "error": "A descrição não pode passar de 100 caracteres",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "A rua passou do limite": {
                                         "value": {
-                                            "error": "Nome da rua não pode passar de 100 caracteres"
+                                            "redirect": null,
+                                            "error": "Nome da rua não pode passar de 100 caracteres",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "O número passou do limite": {
                                         "value": {
-                                            "error": "O número não pode passar de 20 caracteres"
+                                            "redirect": null,
+                                            "error": "O número não pode passar de 20 caracteres",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "O bairro não pode passar de 100 caracteres": {
                                         "value": {
-                                            "error": "O bairro não pode passar de 100 caracteres"
+                                            "redirect": null,
+                                            "error": "O bairro não pode passar de 100 caracteres",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "O CEP não pode passar de 9 caracteres": {
                                         "value": {
-                                            "error": "O CEP não pode passar de 9 caracteres"
+                                            "redirect": null,
+                                            "error": "O CEP não pode passar de 9 caracteres",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "O estado não pode passar de 2 caracteres": {
                                         "value": {
-                                            "error": "O estado deve ter 2 caracteres"
+                                            "redirect": null,
+                                            "error": "O estado deve ter 2 caracteres",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "O complemento não pode passar de 100 caracteres": {
                                         "value": {
-                                            "error": "O complemento não pode passar de 100 caracteres"
+                                            "redirect": null,
+                                            "error": "O complemento não pode passar de 100 caracteres",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Quando não coloca todos os campos obrigatórios": {
                                         "value": {
-                                            "error": "Se você colocou algum campo de endereço, deve colocar todos os campos"
+                                            "redirect": null,
+                                            "error": "Se você colocou algum campo de endereço, deve colocar todos os campos",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Não foi possível atualizar": {
                                         "value": {
-                                            "error": "Não foi possível atualizar"
+                                            "redirect": null,
+                                            "error": "Não foi possível atualizar",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     }
                                 }
@@ -1043,40 +1224,41 @@
                 "tags": ["Usuário"],
                 "responses": {
                     "200": {
-                        "description": "Mensagem de sucesso",
-                        "content": {
-                            "application/json": {
-                                "example": {
-                                    "ok": "Endereço deletado"
-                                }
-                            }
-                        }
-                    },
-                    "307": {
-                        "description": "Quando você pula a etapa de instalação redireciona para uma das rotas \"/instalacao/config\" ou \"/instalacao/admin\"",
                         "content": {
                             "application/json": {
                                 "examples": {
+                                    "Sucesso": {
+                                        "value": {
+                                            "redirect": null,
+                                            "error": null,
+                                            "ok": "Endereço deletado",
+                                            "data": null
+                                        }
+                                    },
                                     "Pulou etapa da instalação 1":{
                                         "value": {
-                                            "redirect": "/instalacao/config"
+                                            "redirect": "/instalacao/config",
+                                            "error": null,
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Pulou etapa da instalação 2":{
                                         "value": {
-                                            "redirect": "/instalacao/admin"
+                                            "redirect": "/instalacao/admin",
+                                            "error": null,
+                                            "ok": null,
+                                            "data": null
+                                        }
+                                    },
+                                    "Não é possível deletar o endereço": {
+                                        "value": {
+                                            "redirect": null,
+                                            "error": "Você não possui endereço cadastrado",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Mensagem de erro",
-                        "content": {
-                            "application/json": {
-                                "example": {
-                                    "error": "Você não possui endereço cadastrado"
                                 }
                             }
                         }
@@ -1093,17 +1275,32 @@
                         "description": "Mensagem de sucesso",
                         "content": {
                             "application/json": {
-                                "example": {
-                                    "ok": [
-                                        {
-                                            "id": "xxxx",
-                                            "name": "Marize",
-                                            "email": "user@example.com",
-                                            "phone": "40028922",
-                                            "role": "Usuário",
-                                            "status": "ok"
+                                "examples": {
+                                    "Sucesso": {
+                                        "value": {
+                                            "redirect": null,
+                                            "error": null,
+                                            "ok": null,
+                                            "data": [
+                                                {
+                                                    "id": "xxxx",
+                                                    "name": "Marize",
+                                                    "email": "user@example.com",
+                                                    "phone": "20028922",
+                                                    "role": "Usuário",
+                                                    "status": "ok"
+                                                }
+                                            ]
                                         }
-                                    ]
+                                    },
+                                    "Problema ao consultar": {
+                                        "value": {
+                                            "redirect": null,
+                                            "error": "Não foi possível listar os usuários",
+                                            "ok": null,
+                                            "data": null
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -1131,33 +1328,38 @@
                         "description": "Mensagem de sucesso",
                         "content": {
                             "application/json": {
-                                "example": {
-                                    "ok": {
-                                        "id": "xxxx",
-                                        "name": "Marize",
-                                        "email": "user@example.com",
-                                        "phone": "40028922",
-                                        "role": "Usuário",
-                                        "status": "ok",
-                                        "address": {
-                                                "description": "Descrição da casa/apartamento, ponto de referência e etc",
-                                                "street": "Rua",
-                                                "number": "Número",
-                                                "neighborhood": "Bairro",
-                                                "zipCode": "Estado",
-                                                "complement": "Complemento (ex: 2° andar, apartamento N° 209)"
+                                "examples": {
+                                    "Sucesso": {
+                                        "value": {
+                                            "redirect": null,
+                                            "error": null,
+                                            "ok": null,
+                                            "data": {
+                                                "id": "xxxx",
+                                                "name": "Marize",
+                                                "email": "user@example.com",
+                                                "phone": "20028922",
+                                                "role": "Usuário",
+                                                "status": "ok",
+                                                "address": {
+                                                        "description": "Descrição da casa/apartamento, ponto de referência e etc",
+                                                        "street": "Rua",
+                                                        "number": "Número",
+                                                        "neighborhood": "Bairro",
+                                                        "zipCode": "Estado",
+                                                        "complement": "Complemento (ex: 2° andar, apartamento N° 209)"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "Problema ao consultar": {
+                                        "value": {
+                                            "redirect": null,
+                                            "error": "Usuário não encontrado",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Mensagem de erro",
-                        "content": {
-                            "application/json": {
-                                "example": {
-                                    "error": "Usuário não encontrado"
                                 }
                             }
                         }
@@ -1177,24 +1379,28 @@
                                 "examples": {
                                     "Whatsapp não conectado": {
                                         "value": {
-                                            "ok": "<p>html da página (pretendo alterar, quando tiver front)</p>"
+                                            "redirect": null,
+                                            "error": null,
+                                            "ok": null,
+                                            "data": null
                                         }
                                     },
                                     "Whatsapp conectado": {
                                         "value": {
-                                            "ok": "Whatsapp conectado"
+                                            "redirect": null,
+                                            "error": null,
+                                            "ok": "Whatsapp conectado",
+                                            "data": null
+                                        }
+                                    },
+                                    "Problema ao consultar": {
+                                        "value": {
+                                            "redirect": null,
+                                            "error": "Erro, favor solicitar ajuda ao suporte",
+                                            "ok": null,
+                                            "data": null
                                         }
                                     }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Mensagem de error",
-                        "content": {
-                            "application/json": {
-                                "example": {
-                                    "error": "Erro, favor solicitar ajuda ao suporte"
                                 }
                             }
                         }
@@ -1213,10 +1419,20 @@
                             "application/json": {
                                 "examples": {
                                     "Enviar o QR Code": {
-                                        "value": "É enviado o QR Code em base 64, via SSE"
+                                        "value": {
+                                            "redirect": null,
+                                            "error": null,
+                                            "ok": null,
+                                            "data": "É enviado o QR Code em base 64, via SSE"
+                                        }
                                     },
                                     "Quando o Whastapp é conectado": {
-                                        "value": "Pronto"
+                                        "value": {
+                                            "redirect": null,
+                                            "error": null,
+                                            "ok": null,
+                                            "data": "Pronto"
+                                        }
                                     }
                                 }
                             }
@@ -1227,7 +1443,7 @@
         },
         "/webhook/whatsapp":{
             "post": {
-                "summary": "Rota para o microserviço do Whatsapp envia o QR Code (é necessário ter o token)",
+                "summary": "Rota para o microserviço do Whatsapp envia o QR Code (é necessário ter o token, que é definido no .env)",
                 "tags": ["Sistema"],
                 "requestBody": {
                     "content": {
