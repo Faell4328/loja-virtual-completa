@@ -35,7 +35,6 @@ app.use(instalationRoute);
 app.use(webhookRoute);
 app.use(confirmationEmailRoute);
 app.use(loginAndRegistrationRoute);
-app.use(router);
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 app.use(router);
 

@@ -511,7 +511,7 @@
         "/cadastrar": {
             "post": {
                 "summary": "Rota para realizar o cadastro de usuário",
-                "tags": ["Cadastro e Login"],
+                "tags": ["Cadastro, Login e LogOu"],
                 "requestBody": {
                     "content": {
                         "multipart/form-data": {
@@ -679,7 +679,7 @@
         "/login": {
             "post": {
                 "summary": "Rota para realizar o login (o token no cookie tem validade de 20 dias, depois é necessário fazer login novamente)",
-                "tags": ["Cadastro e Login"],
+                "tags": ["Cadastro, Login e LogOut"],
                 "requestBody": {
                     "content": {
                         "multipart/form-data": {
@@ -775,6 +775,38 @@
                                         "value": {
                                             "redirect": null,
                                             "error": "Falta a senha",
+                                            "ok": null,
+                                            "data": null
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/deslogar": {
+            "post": {
+                "summary": "Rota para dar logout",
+                "tags": ["Cadastro, Login e LogOut"],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "Sucesso": {
+                                        "value": {
+                                            "redirect": null,
+                                            "error": null,
+                                            "ok": "Deslogado com sucesso",
+                                            "data": null
+                                        }
+                                    },
+                                    "Não estando logado (não deveria acessar)": {
+                                        "value": {
+                                            "redirect": null,
+                                            "error": "Você não está logado",
                                             "ok": null,
                                             "data": null
                                         }

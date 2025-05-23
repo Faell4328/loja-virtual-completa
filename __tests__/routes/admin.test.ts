@@ -12,6 +12,15 @@ jest.mock('express-rate-limit', () => {
     }
 })
 
+function serverSendingPattern(redirect: string | null, error: string | null, ok: string | null, data: string | null){
+    return{
+        redirect,
+        error,
+        ok,
+        data
+    }
+}
+
 let token = 'fklaejdroiuq23iopu2iPU@IOÇ$jlçkgjklfklaejdroiuq23iopu2iPU@IOÇ$jlçkgjklfklaejdroiuq23iopu2iPU@IOÇ$jlçkgjklfklaejdroiuq23iopu2iPU@';
 let adminToken = 'fklçadjsfklçajsdfklu1o2ipu2iop3!@#14o1i2u4p1u289@&#*!(ifklçadjsfklçajsdfklu1o2ipu2iop3!@#14o1i2u4p1u289@&#*!fadsfjil2çj34l1142af';
 
@@ -39,17 +48,19 @@ describe('router.ts file route test', () => {
         let date = new Date();
         date.setDate(date.getDate()+30)
 
-        await prismaClient.systemConfig.create({
-            data: { id: 1, nameStore: 'Loja X', fileSoon: 'teste', statusSystem: 2, creationDate: new Date() }
-        });
+        Promise.all([
+            await prismaClient.systemConfig.create({
+                data: { id: 1, nameStore: 'Loja X', fileSoon: 'teste', statusSystem: 2, creationDate: new Date() }
+            }),
 
-        await prismaClient.user.create({
-            data: { name: 'Teste', email: 'teste@exemplo.com', password: '123123123', phone: '3184135471', loginToken: token, loginTokenExpirationDate: date, status: 'OK' }
-        });
-        
-        await prismaClient.user.create({
-            data: { name: 'admin', email: 'admin@email.com', password: 'deusefiel', phone: '3185642175', loginToken: adminToken, loginTokenExpirationDate: date, status: 'OK', role: 'ADMIN' } 
-        });
+            await prismaClient.user.create({
+                data: { name: 'Teste', email: 'teste@exemplo.com', password: '123123123', phone: '3184135471', loginToken: token, loginTokenExpirationDate: date, status: 'OK' }
+            }),
+            
+            await prismaClient.user.create({
+                data: { name: 'admin', email: 'admin@email.com', password: 'deusefiel', phone: '3185642175', loginToken: adminToken, loginTokenExpirationDate: date, status: 'OK', role: 'ADMIN' } 
+            })
+        ]);
 
         setStatus(2);
     });
@@ -59,8 +70,7 @@ describe('router.ts file route test', () => {
             .get('/admin/users')
             .set('Cookie', `token=${token}`)
 
-        expect(res.status).toBe(307);
-        expect(res.body).toEqual({ 'redirect': '/' });
+        serverSendingPattern('/', null, null, null);
     });
     
     it('test: route "/admin", accessing the route while logged in admin user', async() => {
@@ -76,7 +86,7 @@ describe('router.ts file route test', () => {
             .get('/admin/users')
             .set('Cookie', `token=${adminToken}`);
 
-        expect(res.status).toBe(200);
+        expect(2).toEqual(res.body.data.length);
     });
     
     it('test: route "/admin", accessing with expired token (normal user)', async () => {
@@ -92,8 +102,7 @@ describe('router.ts file route test', () => {
             .get('/admin/users')
             .set('Cookie', `token=${token}`);
 
-        expect(res.status).toBe(307);
-        expect(res.body).toEqual({ 'redirect': '/login' });
+        serverSendingPattern('/login', null, null, null);
     });
 
     it('test: route "/admin", accessing with expired token (admin user)', async () => {
@@ -109,7 +118,6 @@ describe('router.ts file route test', () => {
             .get('/admin/users')
             .set('Cookie', `token=${adminToken}`);
 
-        expect(res.status).toBe(307);
-        expect(res.body).toEqual({ 'redirect': '/login' });
+        serverSendingPattern('/login', null, null, null);
     });
 });

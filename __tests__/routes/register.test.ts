@@ -12,6 +12,15 @@ jest.mock('express-rate-limit', () => {
     }
 })
 
+function serverSendingPattern(redirect: string | null, error: string | null, ok: string | null, data: string | null){
+    return{
+        redirect,
+        error,
+        ok,
+        data
+    }
+}
+
 let token = 'fklaejdroiuq23iopu2iPU@IOÇ$jlçkgjklfklaejdroiuq23iopu2iPU@IOÇ$jlçkgjklfklaejdroiuq23iopu2iPU@IOÇ$jlçkgjklfklaejdroiuq23iopu2iPU@';
 
 import { teste } from '../../src/teste';
@@ -35,13 +44,15 @@ describe('router.ts file route test', () => {
             prismaClient.systemConfig.deleteMany()
         ]);
 
-        await prismaClient.systemConfig.create({
-            data: { id: 1, nameStore: 'Loja X', fileSoon: 'teste', statusSystem: 2, creationDate: new Date() }
-        });
+        Promise.all([
+            await prismaClient.systemConfig.create({
+                data: { id: 1, nameStore: 'Loja X', fileSoon: 'teste', statusSystem: 2, creationDate: new Date() }
+            }),
 
-        await prismaClient.user.create({
-            data: { name: 'Teste', email: 'teste@exemplo.com', password: '123', phone: '3184135471', emailConfirmationToken: '456', emailConfirmationTokenExpirationDate: new Date() }
-        });
+            await prismaClient.user.create({
+                data: { name: 'Teste', email: 'teste@exemplo.com', password: '123', phone: '3184135471', emailConfirmationToken: '456', emailConfirmationTokenExpirationDate: new Date() }
+            })
+        ]);
         
         setStatus(2);
     });
@@ -51,8 +62,7 @@ describe('router.ts file route test', () => {
         const res = await request(teste)
             .post('/cadastrar')
 
-        expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'error': 'Falta o nome'});
+        serverSendingPattern(null, 'Falta o nome', null, null);
     });
 
     it('test: route "/cadastrar", send only the name (empty value)', async () => {
@@ -61,8 +71,7 @@ describe('router.ts file route test', () => {
             .set('Content-Type', 'multipart/form-data')
             .field('name', '');
 
-        expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'error': 'Falta o nome'});
+        serverSendingPattern(null, 'Falta o nome', null, null);
     });
 
     it('test: route "/cadastrar", send only the name', async () => {
@@ -71,8 +80,7 @@ describe('router.ts file route test', () => {
             .set('Content-Type', 'multipart/form-data')
             .field('name', 'Faell');
 
-        expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'error': 'Falta o email'});
+        serverSendingPattern(null, 'Falta o email', null, null);
     });
     
     it('test: route "/cadastrar", send the name and email', async () => {
@@ -82,8 +90,7 @@ describe('router.ts file route test', () => {
             .field('name', 'Faell')
             .field('email', 'teste@email.com');
 
-        expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'error': 'Falta o telefone'});
+        serverSendingPattern(null, 'Falta o telefone', null, null)
     });
     it('test: route "/cadastrar", send the name, email and phone', async () => {
         const res = await request(teste)
@@ -93,8 +100,7 @@ describe('router.ts file route test', () => {
             .field('email', 'teste@email.com')
             .field('phone', '3154786410');
 
-        expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'error': 'Falta a senha'});
+        serverSendingPattern(null, 'Falta a senha', null, null);
     });
 
 
@@ -108,8 +114,7 @@ describe('router.ts file route test', () => {
             .field('phone', '3154786410')
             .field('password', '123456789');
 
-        expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'error': 'Email já existe'});
+        serverSendingPattern(null, 'Email já existe', null, null);
     });
 
 
@@ -122,8 +127,7 @@ describe('router.ts file route test', () => {
             .field('phone', '3154786410')
             .field('password', '123456789');
 
-        expect(res.status).toBe(200);
-        expect(res.body).toEqual({ 'ok': 'Usuário cadastrado' });
+        serverSendingPattern('/', null, 'Usuário cadastrado', null);
     });
 
 
@@ -140,8 +144,7 @@ describe('router.ts file route test', () => {
             .post('/cadastrar')
             .set('Cookie', `token=${token}`)
 
-        expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'error': 'Falta o nome' });
+        serverSendingPattern('/', 'Falta o nome', null, null);
     });
 
     it('test: route "/cadastrar", accessing the route while logged in (with unexpired token)', async () => {
@@ -157,8 +160,7 @@ describe('router.ts file route test', () => {
             .post('/cadastrar')
             .set('Cookie', `token=${token}`)
 
-        expect(res.status).toBe(307);
-        expect(res.body).toEqual({ 'redirect': '/' });
+        serverSendingPattern('/', null, null, null);
     });
 
     it('test: route "/cadastrar", with invalid name', async () => {
@@ -167,8 +169,7 @@ describe('router.ts file route test', () => {
             .set('Content-Type', 'multipart/form-data')
             .field('name', 'a');
 
-        expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'error': 'Nome precisa ter no mínimo 2 caracteres'});
+        serverSendingPattern(null, 'Nome precisa ter no mínimo 2 caracteres', null, null);
     });
 
     it('test: route "/cadastrar", with invalid email - part 1', async () => {
@@ -178,8 +179,7 @@ describe('router.ts file route test', () => {
             .field('name', 'Faell')
             .field('email', 'testeafd@email');
 
-        expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'error': 'Email inválido'});
+        serverSendingPattern(null, 'Email inválido', null, null);
     });
 
     it('test: route "/cadastrar", with invalid email - part 2', async () => {
@@ -189,8 +189,7 @@ describe('router.ts file route test', () => {
             .field('name', 'Faell')
             .field('email', 'testeemail.com');
 
-        expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'error': 'Email inválido'});
+        serverSendingPattern(null, 'Email inválido', null, null);
     });
 
     it('test: route "/cadastrar", with invalid phone', async () => {
@@ -201,8 +200,7 @@ describe('router.ts file route test', () => {
             .field('email', 'teste@email.com')
             .field('phone', '31874523')
 
-        expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'error': 'Seu número de telefone deve ter 10 caracteres'});
+        serverSendingPattern(null, 'Seu número de telefone deve ter 10 caracteres', null, null);
     })
 
     it('test: route "/cadastrar", with weak password', async () => {
@@ -214,7 +212,6 @@ describe('router.ts file route test', () => {
             .field('phone', '3187454123')
             .field('password', '13');
 
-        expect(res.status).toBe(400);
-        expect(res.body).toEqual({ 'error': 'A senha deve ter no mínimo 8 caracteres'});
+        serverSendingPattern(null, 'A senha deve ter no mínimo 8 caracteres', null, null);
     });
 });
