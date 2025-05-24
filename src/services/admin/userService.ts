@@ -63,7 +63,6 @@ function adjustStatusPattern(status: string){
 }
 
 export async function listSpecificUserService(userId: string){
-    console.log('ok')
     const information = await DatabaseManager.listInformationUser(userId);
     
         if(information == null) return null;

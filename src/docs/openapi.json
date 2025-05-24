@@ -511,7 +511,7 @@
         "/cadastrar": {
             "post": {
                 "summary": "Rota para realizar o cadastro de usuário",
-                "tags": ["Cadastro, Login e LogOu"],
+                "tags": ["Cadastro, Login e LogOut"],
                 "requestBody": {
                     "content": {
                         "multipart/form-data": {
@@ -1298,7 +1298,7 @@
                 }
             }
         },
-        "/admin/users": {
+        "/admin/usuarios": {
             "get": {
                 "summary": "Rota para lsitar todos os usuários",
                 "tags": ["Admin"],
@@ -1340,7 +1340,7 @@
                 }
             }
         },
-        "/admin/user/{id}": {
+        "/admin/usuario/{id}": {
             "get": {
                 "summary": "Rota para trazer informações sobre um usuário especifico",
                 "tags": ["Admin"],

@@ -20,12 +20,12 @@ export function setWhatsappReady(data: boolean){
     whatsappReady = data;
 }
 
-adminRoute.get('/admin/users', regularlCondicionalRoutes, isAdmin, (req: Request, res: Response) => {
+adminRoute.get('/admin/usuarios', regularlCondicionalRoutes, isAdmin, (req: Request, res: Response) => {
     listUsersController(req, res);
     return;
 });
 
-adminRoute.get('/admin/user/:id', regularlCondicionalRoutes, isAdmin, (req: Request, res: Response) => {
+adminRoute.get('/admin/usuario/:id', regularlCondicionalRoutes, isAdmin, (req: Request, res: Response) => {
     listSpecificUserController(req, res);
     return
 });

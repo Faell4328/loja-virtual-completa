@@ -31,7 +31,8 @@ O sistema busca ser o mais simples, intuitivo e direto possível, oferecendo:
 - Prisma ORM — acesso e manipulação do banco de dados usando ORM
 - qrcode — geração de códigos QR
 - swagger-ui-express — documentação interativa para APIs REST
-- whatsapp-web.js — biblioteca para enviar mensagens via WhatsApp Web
+- whatsapp-web.js — biblioteca para enviar mensagens via WhatsApp Web 
+    - ! Futuramente será trocado, para uma lib mais otimizada e escalável
 
 ### Desenvolvimento e testes:
 - TypeScript

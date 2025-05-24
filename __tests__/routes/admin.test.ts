@@ -67,7 +67,7 @@ describe('router.ts file route test', () => {
 
     it('test: route "/admin", accessing the route while logged in normal user', async() => {
         const res = await request(teste)
-            .get('/admin/users')
+            .get('/admin/usuarios')
             .set('Cookie', `token=${token}`)
 
         serverSendingPattern('/', null, null, null);
@@ -83,7 +83,7 @@ describe('router.ts file route test', () => {
         })
 
         const res = await request(teste)
-            .get('/admin/users')
+            .get('/admin/usuarios')
             .set('Cookie', `token=${adminToken}`);
 
         expect(2).toEqual(res.body.data.length);
@@ -99,7 +99,7 @@ describe('router.ts file route test', () => {
         })
 
         const res = await request(teste)
-            .get('/admin/users')
+            .get('/admin/usuarios')
             .set('Cookie', `token=${token}`);
 
         serverSendingPattern('/login', null, null, null);
@@ -115,7 +115,7 @@ describe('router.ts file route test', () => {
         })
 
         const res = await request(teste)
-            .get('/admin/users')
+            .get('/admin/usuarios')
             .set('Cookie', `token=${adminToken}`);
 
         serverSendingPattern('/login', null, null, null);

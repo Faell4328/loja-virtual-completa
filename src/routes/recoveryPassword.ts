@@ -6,19 +6,20 @@ import isNotLogged from '../middlewares/isNotLogged';
 import { validateEmail,validatePassword } from '../middlewares/validatorInput';
 import { regularlCondicionalRoutes } from '../middlewares/condicionalRoutes';
 import { passwordRecoveryConfirmationController, passwordRecoveryController } from '../controllers/email/passwordRecoveryController';
+import { confirmationLimit, emailLimit } from '../security/requestLimit';
 
-const router = Router();
+const recoveryPasswordRoute = Router();
 
 const upload = multer(uploadConfig.upload());
 
-router.post('/recuperacao/senha', regularlCondicionalRoutes, isNotLogged, upload.none(), validateEmail, (req: Request, res: Response) => {
+recoveryPasswordRoute.post('/recuperacao/senha', regularlCondicionalRoutes, emailLimit,isNotLogged, upload.none(), validateEmail, (req: Request, res: Response) => {
     passwordRecoveryController(req, res);
     return;
 });
 
-router.put('/recuperacao/senha/:hash', regularlCondicionalRoutes, isNotLogged, upload.none(), validatePassword, (req: Request, res: Response) => {
+recoveryPasswordRoute.put('/recuperacao/senha/:hash', regularlCondicionalRoutes, confirmationLimit, isNotLogged, upload.none(), validatePassword, (req: Request, res: Response) => {
     passwordRecoveryConfirmationController(req, res);
     return;
 })
 
-export { router };
+export { recoveryPasswordRoute };

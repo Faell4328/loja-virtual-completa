@@ -14,6 +14,7 @@ import { instalationRoute } from './routes/installation';
 import { webhookRoute } from './routes/webhook';
 import { confirmationEmailRoute } from './routes/confirmationEmail';
 import { loginAndRegistrationRoute } from './routes/loginAndRegistration';
+import { recoveryPasswordRoute } from './routes/recoveryPassword';
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.use(instalationRoute);
 app.use(webhookRoute);
 app.use(confirmationEmailRoute);
 app.use(loginAndRegistrationRoute);
+app.use(recoveryPasswordRoute);
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 app.use(router);
 
